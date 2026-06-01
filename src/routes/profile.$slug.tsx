@@ -184,44 +184,23 @@ function ProfilePage() {
       )}
 
       {/* Top bar (Hidden in print) */}
-      <div className="border-b-[3px] border-[#F9BF29] bg-[#12223A] text-white no-print">
+      <div className="border-b-[3px] border-[#F9BF29] bg-[#12223A] text-white no-print sticky top-0 z-50">
         <div className="mx-auto flex max-w-5xl flex-row items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <Link
               to="/candidates"
-              className="inline-flex items-center gap-1.5 rounded border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 transition shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 transition shadow-sm mr-2"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              Back to Candidates
+              Back
             </Link>
-            <Link
-              to="/"
-              className="hidden sm:inline-block text-xs font-semibold text-white/80 transition hover:text-[#F9BF29] ml-2"
-            >
-              Home
-            </Link>
-            {isAdmin ? (
-              <Link
-                to="/admin"
-                className="text-xs font-semibold text-[#F9BF29] hover:underline ml-2"
-              >
-                Admin Panel
-              </Link>
-            ) : (
-              <Link
-                to="/login"
-                className="text-xs font-semibold text-white/80 transition hover:text-[#F9BF29] ml-2"
-              >
-                Login
-              </Link>
-            )}
+            <SiteNav variant="dark" />
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="bg-white rounded px-3 py-1.5 flex items-center justify-center h-14 sm:h-16">
+            <div className="bg-white rounded px-2.5 py-1 flex items-center justify-center h-12">
               <img src="/image/reva_logi.png" alt="REVA University" className="h-full w-auto object-contain" />
             </div>
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-white/80">Academic E-Portfolio</span>
           </div>
         </div>
       </div>

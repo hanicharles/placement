@@ -60,28 +60,22 @@ function HiringPartnersPage() {
   return (
     <div className="min-h-screen bg-white pb-20 font-sans antialiased flex flex-col">
       {/* Top Navigation strip */}
-      <div className="border-b-[3px] border-[#FF5900] bg-[#FFFBDC] text-neutral-800 shadow-sm">
+      <div className="border-b-[3px] border-[#FF5900] bg-[#FFFBDC] text-neutral-800 shadow-sm sticky top-0 z-50 backdrop-blur-md bg-opacity-95">
         <div className="mx-auto flex max-w-6xl flex-row items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <Link
               to="/"
-              className="inline-flex items-center gap-1.5 rounded border border-black/15 bg-white/40 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-700 hover:bg-white/80 transition shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded border border-black/15 bg-white/40 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-700 hover:bg-white/80 transition shadow-sm mr-2"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              Back to Home
+              Back
             </Link>
-            <Link
-              to="/candidates"
-              className="text-xs font-bold text-neutral-700 hover:text-[#FF5900] transition ml-2"
-            >
-              Candidates
-            </Link>
+            <SiteNav variant="light" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-white rounded px-2 py-1 flex items-center justify-center h-12 sm:h-14">
+            <div className="bg-white rounded px-2.5 py-1 flex items-center justify-center h-12">
               <img src="/image/reva_logi.png" alt="REVA University" className="h-full w-auto object-contain" />
             </div>
-            <span className="hidden sm:inline-block text-xs font-semibold uppercase tracking-widest text-neutral-600">Placement Hub</span>
           </div>
         </div>
       </div>
