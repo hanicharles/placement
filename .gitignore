@@ -20,7 +20,6 @@ dist-ssr
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
-.vercel/
 
 # Local environment files
 .env
