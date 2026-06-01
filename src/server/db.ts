@@ -3,12 +3,28 @@ import path from "path";
 import fs from "fs";
 
 const DATA_DIR = path.resolve(process.cwd(), "data");
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-
 const SQLITE_PATH = path.join(DATA_DIR, "students.db");
 const JSON_PATH = path.join(DATA_DIR, "students.json");
+const SETTINGS_JSON_PATH = path.join(DATA_DIR, "settings.json");
+
+let isReadOnlyFileSystem = false;
+
+// Global in-memory fallback cache for read-only environments (like Cloudflare Workers)
+let memoryStudents: Student[] = [...initialStudents];
+let memorySettings = new Map<string, string>();
+
+try {
+  if (fs && typeof fs.existsSync === "function") {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+  } else {
+    isReadOnlyFileSystem = true;
+  }
+} catch (e) {
+  console.warn("Read-only filesystem detected or fs is unavailable. Using in-memory fallback.", e);
+  isReadOnlyFileSystem = true;
+}
 
 let dbInstance: any = null;
 let useJsonFallback = false;
@@ -16,6 +32,10 @@ let useJsonFallback = false;
 // Dynamic load of better-sqlite3 to prevent build-time crashes in serverless bundlers
 async function getSqliteDb() {
   if (dbInstance || useJsonFallback) return dbInstance;
+  if (isReadOnlyFileSystem) {
+    useJsonFallback = true;
+    return null;
+  }
 
   try {
     const Database = (await import("better-sqlite3")).default;
@@ -117,24 +137,34 @@ async function getSqliteDb() {
 
 // Fallback JSON-based Storage
 function initializeJsonDb() {
-  if (!fs.existsSync(JSON_PATH)) {
-    console.log("JSON Database empty. Seeding from students.ts...");
-    fs.writeFileSync(JSON_PATH, JSON.stringify(initialStudents, null, 2), "utf-8");
+  if (isReadOnlyFileSystem) return;
+  try {
+    if (fs && typeof fs.existsSync === "function" && !fs.existsSync(JSON_PATH)) {
+      console.log("JSON Database empty. Seeding from students.ts...");
+      fs.writeFileSync(JSON_PATH, JSON.stringify(initialStudents, null, 2), "utf-8");
+    }
+  } catch (error) {
+    console.warn("Failed to initialize JSON DB file:", error);
   }
 }
 
 function readJsonDb(): Student[] {
+  if (isReadOnlyFileSystem) {
+    return memoryStudents;
+  }
   try {
     initializeJsonDb();
     const data = fs.readFileSync(JSON_PATH, "utf-8");
     return JSON.parse(data);
   } catch (error) {
     console.error("Failed to read JSON DB:", error);
-    return initialStudents;
+    return memoryStudents;
   }
 }
 
 function writeJsonDb(data: Student[]) {
+  memoryStudents = data;
+  if (isReadOnlyFileSystem) return;
   try {
     fs.writeFileSync(JSON_PATH, JSON.stringify(data, null, 2), "utf-8");
   } catch (error) {
@@ -142,15 +172,25 @@ function writeJsonDb(data: Student[]) {
   }
 }
 
-const SETTINGS_JSON_PATH = path.join(DATA_DIR, "settings.json");
-
 function initializeSettingsJson() {
-  if (!fs.existsSync(SETTINGS_JSON_PATH)) {
-    fs.writeFileSync(SETTINGS_JSON_PATH, JSON.stringify({}, null, 2), "utf-8");
+  if (isReadOnlyFileSystem) return;
+  try {
+    if (fs && typeof fs.existsSync === "function" && !fs.existsSync(SETTINGS_JSON_PATH)) {
+      fs.writeFileSync(SETTINGS_JSON_PATH, JSON.stringify({}, null, 2), "utf-8");
+    }
+  } catch (error) {
+    console.warn("Failed to initialize settings JSON file:", error);
   }
 }
 
 function readSettingsJson(): Record<string, string> {
+  if (isReadOnlyFileSystem) {
+    const obj: Record<string, string> = {};
+    memorySettings.forEach((v, k) => {
+      obj[k] = v;
+    });
+    return obj;
+  }
   try {
     initializeSettingsJson();
     const data = fs.readFileSync(SETTINGS_JSON_PATH, "utf-8");
@@ -162,6 +202,10 @@ function readSettingsJson(): Record<string, string> {
 }
 
 function writeSettingsJson(data: Record<string, string>) {
+  Object.entries(data).forEach(([k, v]) => {
+    memorySettings.set(k, v);
+  });
+  if (isReadOnlyFileSystem) return;
   try {
     fs.writeFileSync(SETTINGS_JSON_PATH, JSON.stringify(data, null, 2), "utf-8");
   } catch (error) {
