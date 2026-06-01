@@ -18,6 +18,7 @@ import {
   ChevronUp,
   Award,
   ExternalLink,
+  Filter,
 } from "lucide-react";
 import { type Specialization, type Student } from "@/data/students";
 import { getStudentsFn, checkSessionFn } from "../actions";
@@ -69,6 +70,17 @@ function BrochurePage() {
   const [selectedCompare, setSelectedCompare] = useState<Set<string>>(new Set());
   const [compareOpen, setCompareOpen] = useState(false);
   const [quickViewStudent, setQuickViewStudent] = useState<Student | null>(null);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  // Active filters count helper
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (selectedSpecs.size > 0) count += selectedSpecs.size;
+    if (gender !== "All") count++;
+    if (selectedSkills.size > 0) count += selectedSkills.size;
+    if (placedOnly) count++;
+    return count;
+  }, [selectedSpecs, gender, selectedSkills, placedOnly]);
 
   // Auth State
   const [isAdmin, setIsAdmin] = useState(false);
@@ -309,6 +321,195 @@ function BrochurePage() {
     URL.revokeObjectURL(url);
   };
 
+  const renderFilterContent = () => (
+    <div className="space-y-1 divide-y divide-black/5">
+      {/* Search Accordion */}
+      <div className="p-4">
+        <button
+          type="button"
+          onClick={() => toggleFilterExpand("search")}
+          className="w-full flex items-center justify-between text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2 outline-none"
+        >
+          <span>Search</span>
+          {expandedFilters.search ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        </button>
+        {expandedFilters.search && (
+          <div className="relative mt-2">
+            <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Name, skills, summary…"
+              className="w-full rounded-lg border border-black/10 bg-white py-2 pl-8 pr-3 text-xs outline-none focus:border-[#FF5900] focus:ring-1 focus:ring-[#FF5900] transition duration-200"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Specialization Accordion */}
+      <div className="p-4">
+        <button
+          type="button"
+          onClick={() => toggleFilterExpand("specialization")}
+          className="w-full flex items-center justify-between text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2 outline-none"
+        >
+          <span>Specialization</span>
+          {expandedFilters.specialization ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        </button>
+        {expandedFilters.specialization && (
+          <div className="space-y-1.5 mt-2">
+            {SPECIALIZATIONS.map((b) => {
+              const count = students.filter((s) => s.specialization === b).length;
+              return (
+                <label key={b} className="flex cursor-pointer items-center justify-between text-xs hover:text-[#FF5900] transition-colors py-0.5">
+                  <span className="flex items-center gap-2 font-medium">
+                    <input
+                      type="checkbox"
+                      checked={selectedSpecs.has(b)}
+                      onChange={() => toggleSpec(b)}
+                      className="h-3.5 w-3.5 rounded accent-[#1E3E62] cursor-pointer"
+                    />
+                    {b}
+                  </span>
+                  <span className="text-muted-foreground font-bold">({count})</span>
+                </label>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Gender Accordion */}
+      <div className="p-4">
+        <button
+          type="button"
+          onClick={() => toggleFilterExpand("gender")}
+          className="w-full flex items-center justify-between text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2 outline-none"
+        >
+          <span>Gender</span>
+          {expandedFilters.gender ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        </button>
+        {expandedFilters.gender && (
+          <div className="flex gap-4 text-xs mt-2">
+            {(["All", "Male", "Female"] as const).map((g) => (
+              <label key={g} className="flex cursor-pointer items-center gap-1.5 font-medium hover:text-[#FF5900] transition-colors">
+                <input
+                  type="radio"
+                  name="gender"
+                  checked={gender === g}
+                  onChange={() => setGender(g)}
+                  className="accent-[#1E3E62] cursor-pointer"
+                />
+                {g}
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Skills Accordion */}
+      <div className="p-4">
+        <button
+          type="button"
+          onClick={() => toggleFilterExpand("skills")}
+          className="w-full flex items-center justify-between text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2 outline-none"
+        >
+          <span>Skills</span>
+          {expandedFilters.skills ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        </button>
+        {expandedFilters.skills && (
+          <div className="space-y-2 mt-2">
+            <input
+              value={skillsQuery}
+              onChange={(e) => setSkillsQuery(e.target.value)}
+              placeholder="Filter skills…"
+              className="w-full rounded-lg border border-black/10 bg-white px-2 py-2 text-xs outline-none focus:border-[#FF5900] focus:ring-1 focus:ring-[#FF5900] transition duration-200"
+            />
+
+            <div className="flex flex-wrap items-center gap-3 text-xs">
+              <label className="flex cursor-pointer items-center gap-1.5 font-semibold text-neutral-600">
+                <input
+                  type="radio"
+                  name="skillMatch"
+                  checked={skillMatchMode === "any"}
+                  onChange={() => setSkillMatchMode("any")}
+                  className="accent-[#1E3E62]"
+                />
+                Any
+              </label>
+              <label className="flex cursor-pointer items-center gap-1.5 font-semibold text-neutral-600">
+                <input
+                  type="radio"
+                  name="skillMatch"
+                  checked={skillMatchMode === "all"}
+                  onChange={() => setSkillMatchMode("all")}
+                  className="accent-[#1E3E62]"
+                />
+                All
+              </label>
+
+              {selectedSkills.size > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedSkills(new Set())}
+                  className="ml-auto text-[10px] font-bold text-[#FF5900] hover:underline"
+                >
+                  Clear Selection
+                </button>
+              )}
+            </div>
+
+            {selectedSkills.size > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {Array.from(selectedSkills)
+                  .sort((a, b) => (skillLabelByKey.get(a) ?? a).localeCompare(skillLabelByKey.get(b) ?? b))
+                  .map((k) => (
+                    <button
+                      key={k}
+                      type="button"
+                      onClick={() => toggleSkill(k)}
+                      className="inline-flex items-center gap-0.5 rounded bg-amber-50 border border-amber-200 px-1.5 py-0.5 text-[10px] text-amber-800 font-bold hover:bg-amber-100 transition"
+                      title="Remove"
+                    >
+                      {skillLabelByKey.get(k) ?? k}
+                      <X className="h-2.5 w-2.5" />
+                    </button>
+                  ))}
+              </div>
+            )}
+
+            <div className="max-h-56 overflow-auto rounded-lg border border-black/5 bg-white p-2 divide-y divide-black/5">
+              {visibleSkills.map((sk) => (
+                <label key={sk.key} className="flex cursor-pointer items-center justify-between gap-2 py-1.5 text-xs hover:text-[#FF5900] transition-colors">
+                  <span className="flex min-w-0 items-center gap-2 font-medium">
+                    <input
+                      type="checkbox"
+                      checked={selectedSkills.has(sk.key)}
+                      onChange={() => toggleSkill(sk.key)}
+                      className="h-3.5 w-3.5 rounded accent-[#1E3E62] cursor-pointer"
+                    />
+                    <span className="truncate">{sk.label}</span>
+                  </span>
+                  <span className="shrink-0 text-muted-foreground font-bold text-[10px]">({sk.count})</span>
+                </label>
+              ))}
+
+              {visibleSkills.length === 0 && (
+                <div className="py-2 text-[10px] text-muted-foreground text-center">
+                  No skills match “{skillsQuery.trim()}”
+                </div>
+              )}
+            </div>
+
+            <p className="text-[10px] text-muted-foreground font-semibold">
+              Selected skills: {selectedSkills.size} · Total skills: {skillCatalog.length}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#fafafa]">
       {/* Top bar */}
@@ -426,8 +627,8 @@ function BrochurePage() {
 
       {/* Body */}
       <main className="mx-auto grid max-w-7xl gap-6 px-4 py-8 lg:grid-cols-[300px_1fr]">
-        {/* Filters */}
-        <aside className="h-fit rounded-xl border border-black/5 bg-white shadow-sm overflow-hidden">
+        {/* Desktop Sidebar (lg:block hidden) */}
+        <aside className="hidden lg:block h-fit rounded-xl border border-black/5 bg-white shadow-sm overflow-hidden">
           <div className="bg-[#1E3E62] px-4 py-3 text-white border-b border-[#F9BF29] flex items-center justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-wider">Find Your Candidate</p>
@@ -443,197 +644,108 @@ function BrochurePage() {
               </button>
             )}
           </div>
+          {renderFilterContent()}
+        </aside>
 
-          <div className="space-y-1 divide-y divide-black/5">
-            {/* Search Accordion */}
-            <div className="p-4">
-              <button
-                type="button"
-                onClick={() => toggleFilterExpand("search")}
-                className="w-full flex items-center justify-between text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2 outline-none"
-              >
-                <span>Search</span>
-                {expandedFilters.search ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-              </button>
-              {expandedFilters.search && (
-                <div className="relative mt-2">
-                  <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Name, skills, summary…"
-                    className="w-full rounded-lg border border-black/10 bg-white py-2 pl-8 pr-3 text-xs outline-none focus:border-[#FF5900] focus:ring-1 focus:ring-[#FF5900] transition duration-200"
-                  />
+        {/* Mobile Filters Drawer Modal (lg:hidden) */}
+        {mobileFiltersOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden animate-fade-in" role="dialog" aria-modal="true">
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+              onClick={() => setMobileFiltersOpen(false)}
+            />
+            {/* Sliding Panel */}
+            <div className="fixed right-0 top-0 bottom-0 z-50 flex h-full w-full max-w-[320px] flex-col bg-[#fafafa] shadow-2xl outline-none border-l border-black/5 transition-transform duration-300 ease-out">
+              <div className="bg-[#1E3E62] px-4 py-4 text-white border-b border-[#F9BF29] flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider">Filters</p>
+                  <p className="text-[10px] text-white/80">Showing {filtered.length} of {DISPLAY_TOTAL_CANDIDATES}</p>
                 </div>
-              )}
-            </div>
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="rounded-lg p-1 text-white/70 hover:text-white transition hover:bg-white/10"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
 
-            {/* Specialization Accordion */}
-            <div className="p-4">
-              <button
-                type="button"
-                onClick={() => toggleFilterExpand("specialization")}
-                className="w-full flex items-center justify-between text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2 outline-none"
-              >
-                <span>Specialization</span>
-                {expandedFilters.specialization ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-              </button>
-              {expandedFilters.specialization && (
-                <div className="space-y-1.5 mt-2">
-                  {SPECIALIZATIONS.map((b) => {
-                    const count = students.filter((s) => s.specialization === b).length;
-                    return (
-                      <label key={b} className="flex cursor-pointer items-center justify-between text-xs hover:text-[#FF5900] transition-colors py-0.5">
-                        <span className="flex items-center gap-2 font-medium">
-                          <input
-                            type="checkbox"
-                            checked={selectedSpecs.has(b)}
-                            onChange={() => toggleSpec(b)}
-                            className="h-3.5 w-3.5 rounded accent-[#1E3E62] cursor-pointer"
-                          />
-                          {b}
-                        </span>
-                        <span className="text-muted-foreground font-bold">({count})</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+              {/* Scrollable Filters Content */}
+              <div className="flex-1 overflow-y-auto space-y-1 divide-y divide-black/5 pb-24 bg-white">
+                {renderFilterContent()}
+              </div>
 
-            {/* Gender Accordion */}
-            <div className="p-4">
-              <button
-                type="button"
-                onClick={() => toggleFilterExpand("gender")}
-                className="w-full flex items-center justify-between text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2 outline-none"
-              >
-                <span>Gender</span>
-                {expandedFilters.gender ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-              </button>
-              {expandedFilters.gender && (
-                <div className="flex gap-4 text-xs mt-2">
-                  {(["All", "Male", "Female"] as const).map((g) => (
-                    <label key={g} className="flex cursor-pointer items-center gap-1.5 font-medium hover:text-[#FF5900] transition-colors">
-                      <input
-                        type="radio"
-                        name="gender"
-                        checked={gender === g}
-                        onChange={() => setGender(g)}
-                        className="accent-[#1E3E62] cursor-pointer"
-                      />
-                      {g}
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Skills Accordion */}
-            <div className="p-4">
-              <button
-                type="button"
-                onClick={() => toggleFilterExpand("skills")}
-                className="w-full flex items-center justify-between text-xs font-bold text-neutral-800 uppercase tracking-wider mb-2 outline-none"
-              >
-                <span>Skills</span>
-                {expandedFilters.skills ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-              </button>
-              {expandedFilters.skills && (
-                <div className="space-y-2 mt-2">
-                  <input
-                    value={skillsQuery}
-                    onChange={(e) => setSkillsQuery(e.target.value)}
-                    placeholder="Filter skills…"
-                    className="w-full rounded-lg border border-black/10 bg-white px-2 py-2 text-xs outline-none focus:border-[#FF5900] focus:ring-1 focus:ring-[#FF5900] transition duration-200"
-                  />
-
-                  <div className="flex flex-wrap items-center gap-3 text-xs">
-                    <label className="flex cursor-pointer items-center gap-1.5 font-semibold text-neutral-600">
-                      <input
-                        type="radio"
-                        name="skillMatch"
-                        checked={skillMatchMode === "any"}
-                        onChange={() => setSkillMatchMode("any")}
-                        className="accent-[#1E3E62]"
-                      />
-                      Any
-                    </label>
-                    <label className="flex cursor-pointer items-center gap-1.5 font-semibold text-neutral-600">
-                      <input
-                        type="radio"
-                        name="skillMatch"
-                        checked={skillMatchMode === "all"}
-                        onChange={() => setSkillMatchMode("all")}
-                        className="accent-[#1E3E62]"
-                      />
-                      All
-                    </label>
-
-                    {selectedSkills.size > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setSelectedSkills(new Set())}
-                        className="ml-auto text-[10px] font-bold text-[#FF5900] hover:underline"
-                      >
-                        Clear Selection
-                      </button>
-                    )}
-                  </div>
-
-                  {selectedSkills.size > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {Array.from(selectedSkills)
-                        .sort((a, b) => (skillLabelByKey.get(a) ?? a).localeCompare(skillLabelByKey.get(b) ?? b))
-                        .map((k) => (
-                          <button
-                            key={k}
-                            type="button"
-                            onClick={() => toggleSkill(k)}
-                            className="inline-flex items-center gap-0.5 rounded bg-amber-50 border border-amber-200 px-1.5 py-0.5 text-[10px] text-amber-800 font-bold hover:bg-amber-100 transition"
-                            title="Remove"
-                          >
-                            {skillLabelByKey.get(k) ?? k}
-                            <X className="h-2.5 w-2.5" />
-                          </button>
-                        ))}
-                    </div>
-                  )}
-
-                  <div className="max-h-56 overflow-auto rounded-lg border border-black/5 bg-white p-2 divide-y divide-black/5">
-                    {visibleSkills.map((sk) => (
-                      <label key={sk.key} className="flex cursor-pointer items-center justify-between gap-2 py-1.5 text-xs hover:text-[#FF5900] transition-colors">
-                        <span className="flex min-w-0 items-center gap-2 font-medium">
-                          <input
-                            type="checkbox"
-                            checked={selectedSkills.has(sk.key)}
-                            onChange={() => toggleSkill(sk.key)}
-                            className="h-3.5 w-3.5 rounded accent-[#1E3E62] cursor-pointer"
-                          />
-                          <span className="truncate">{sk.label}</span>
-                        </span>
-                        <span className="shrink-0 text-muted-foreground font-bold text-[10px]">({sk.count})</span>
-                      </label>
-                    ))}
-
-                    {visibleSkills.length === 0 && (
-                      <div className="py-2 text-[10px] text-muted-foreground text-center">
-                        No skills match “{skillsQuery.trim()}”
-                      </div>
-                    )}
-                  </div>
-
-                  <p className="text-[10px] text-muted-foreground font-semibold">
-                    Selected skills: {selectedSkills.size} · Total skills: {skillCatalog.length}
-                  </p>
-                </div>
-              )}
+              {/* Footer Sticky Button */}
+              <div className="absolute bottom-0 left-0 right-0 border-t border-black/5 bg-[#fafafa] p-4 flex gap-2 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetAllFilters();
+                  }}
+                  className="flex-1 rounded-lg border border-black/10 py-2.5 text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition"
+                >
+                  Reset All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="flex-1 rounded-lg bg-[#1E3E62] py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#12223A] transition"
+                >
+                  Show {filtered.length} Results
+                </button>
+              </div>
             </div>
           </div>
-        </aside>
+        )}
 
         {/* Main Content Area */}
         <section id="candidates" className="space-y-4">
+          {/* Mobile Controls & Search bar (lg:hidden) */}
+          <div className="lg:hidden flex flex-col gap-3 bg-white border border-black/5 rounded-xl p-4 shadow-sm">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search candidates by name, skills, summary…"
+                className="w-full rounded-lg border border-black/10 bg-neutral-50 py-2.5 pl-10 pr-4 text-xs outline-none focus:border-[#FF5900] focus:ring-1 focus:ring-[#FF5900] transition bg-white"
+              />
+              {search && (
+                <button 
+                  type="button"
+                  onClick={() => setSearch("")} 
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setMobileFiltersOpen(true)}
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-black/10 bg-white py-2 px-3 text-xs font-bold text-neutral-700 shadow-xs hover:bg-neutral-50 transition"
+              >
+                <Filter className="h-3.5 w-3.5 text-[#1E3E62]" />
+                <span>Filters</span>
+                {activeFiltersCount > 0 && (
+                  <span className="rounded-full bg-[#FF5900] text-white px-2 py-0.5 text-[9px] font-black leading-none">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={exportCSV}
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-black/10 bg-neutral-50 py-2 px-3 text-xs font-bold text-neutral-700 shadow-xs hover:bg-[#1E3E62]/10 transition"
+              >
+                <Download className="h-3.5 w-3.5 text-neutral-500" />
+                <span>Export</span>
+              </button>
+            </div>
+          </div>
           {/* Controls Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white border border-black/5 rounded-xl p-4 shadow-sm">
             <p className="text-xs text-neutral-600 font-bold">
