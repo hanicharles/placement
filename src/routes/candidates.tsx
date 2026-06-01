@@ -511,7 +511,7 @@ function BrochurePage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-white">
       {/* Top bar */}
       <div className="border-b-[3px] border-[#F9BF29] bg-[#12223A] text-white">
         <div className="mx-auto flex max-w-7xl flex-row items-center justify-between px-4 py-3">
@@ -656,7 +656,7 @@ function BrochurePage() {
               onClick={() => setMobileFiltersOpen(false)}
             />
             {/* Sliding Panel */}
-            <div className="fixed right-0 top-0 bottom-0 z-50 flex h-full w-full max-w-[320px] flex-col bg-[#fafafa] shadow-2xl outline-none border-l border-black/5 transition-transform duration-300 ease-out">
+            <div className="fixed right-0 top-0 bottom-0 z-50 flex h-full w-full max-w-[320px] flex-col bg-white shadow-2xl outline-none border-l border-black/5 transition-transform duration-300 ease-out">
               <div className="bg-[#1E3E62] px-4 py-4 text-white border-b border-[#F9BF29] flex items-center justify-between">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider">Filters</p>
@@ -677,7 +677,7 @@ function BrochurePage() {
               </div>
 
               {/* Footer Sticky Button */}
-              <div className="absolute bottom-0 left-0 right-0 border-t border-black/5 bg-[#fafafa] p-4 flex gap-2 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+              <div className="absolute bottom-0 left-0 right-0 border-t border-black/5 bg-white p-4 flex gap-2 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
                 <button
                   type="button"
                   onClick={() => {

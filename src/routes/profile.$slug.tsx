@@ -93,7 +93,7 @@ function ProfilePage() {
   const publicationItems = (student.publications ?? []).filter((p) => !/patent/i.test(p));
 
   return (
-    <div className="min-h-screen bg-[#fafafa] pb-16 font-sans">
+    <div className="min-h-screen bg-white pb-16 font-sans">
       {/* Custom print stylesheet overrides */}
       <style
         dangerouslySetInnerHTML={{

@@ -58,7 +58,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa] flex flex-col font-sans">
+    <div className="min-h-screen bg-white flex flex-col font-sans">
       {/* Top Header Strip */}
       <div className="border-b-[3px] border-[#F9BF29] bg-[#12223A] text-white">
         <div className="mx-auto flex max-w-7xl flex-row items-center justify-between px-4 py-3">

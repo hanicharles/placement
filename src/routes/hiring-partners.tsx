@@ -58,7 +58,7 @@ function HiringPartnersPage() {
   }, [partners, searchQuery, activeCategory]);
 
   return (
-    <div className="min-h-screen bg-[#fafafa] pb-20 font-sans antialiased flex flex-col">
+    <div className="min-h-screen bg-white pb-20 font-sans antialiased flex flex-col">
       {/* Top Navigation strip */}
       <div className="border-b-[3px] border-[#FF5900] bg-[#FFFBDC] text-neutral-800 shadow-sm">
         <div className="mx-auto flex max-w-6xl flex-row items-center justify-between px-4 py-3">

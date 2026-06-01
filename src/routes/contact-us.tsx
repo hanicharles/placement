@@ -167,7 +167,7 @@ function ContactUsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa] font-sans antialiased">
+    <div className="min-h-screen bg-white font-sans antialiased">
       {/* Navigation Topbar */}
       <div className="border-b-[3px] border-[#FF5900] bg-[#FFFBDC] text-neutral-800 shadow-sm sticky top-0 z-50 backdrop-blur-md bg-opacity-95">
         <div className="mx-auto flex max-w-6xl flex-row items-center justify-between px-4 py-3">
