@@ -243,14 +243,19 @@ export const uploadResumeFn = createServerFn({ method: "POST" })
     const { slug, base64 } = data;
     
     const buffer = Buffer.from(base64.split(",")[1], "base64");
-    const uploadDir = path.resolve(process.cwd(), "public/uploads/resumes");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
+    let publicPath = base64;
     
-    const destPath = path.join(uploadDir, `${slug}.pdf`);
-    fs.writeFileSync(destPath, buffer);
-    const publicPath = `/uploads/resumes/${slug}.pdf`;
+    try {
+      const uploadDir = path.resolve(process.cwd(), "public/uploads/resumes");
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      const destPath = path.join(uploadDir, `${slug}.pdf`);
+      fs.writeFileSync(destPath, buffer);
+      publicPath = `/uploads/resumes/${slug}.pdf`;
+    } catch (error) {
+      console.warn("Write filesystem failed for resume, falling back to base64 inline storage:", error);
+    }
 
     try {
       const { PDFParse } = await import("pdf-parse");
@@ -277,15 +282,19 @@ export const uploadPhotoFn = createServerFn({ method: "POST" })
     verifyAuth();
     const { slug, base64 } = data;
     
-    const buffer = Buffer.from(base64.split(",")[1], "base64");
-    const uploadDir = path.resolve(process.cwd(), "public/uploads/photos");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    try {
+      const buffer = Buffer.from(base64.split(",")[1], "base64");
+      const uploadDir = path.resolve(process.cwd(), "public/uploads/photos");
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      const destPath = path.join(uploadDir, `${slug}.png`);
+      fs.writeFileSync(destPath, buffer);
+      return { success: true, filePath: `/uploads/photos/${slug}.png` };
+    } catch (error) {
+      console.warn("Write filesystem failed for photo, falling back to base64 inline storage:", error);
+      return { success: true, filePath: base64 };
     }
-    
-    const destPath = path.join(uploadDir, `${slug}.png`);
-    fs.writeFileSync(destPath, buffer);
-    return { success: true, filePath: `/uploads/photos/${slug}.png` };
   });
 
 // Fetch journey stats
@@ -670,13 +679,17 @@ export const uploadPartnerLogoFn = createServerFn({ method: "POST" })
     verifyAuth();
     const { slug, base64 } = data;
     
-    const buffer = Buffer.from(base64.split(",")[1], "base64");
-    const uploadDir = path.resolve(process.cwd(), "public/uploads/partner-logos");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    try {
+      const buffer = Buffer.from(base64.split(",")[1], "base64");
+      const uploadDir = path.resolve(process.cwd(), "public/uploads/partner-logos");
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      const destPath = path.join(uploadDir, `${slug}.png`);
+      fs.writeFileSync(destPath, buffer);
+      return { success: true, filePath: `/uploads/partner-logos/${slug}.png` };
+    } catch (error) {
+      console.warn("Write filesystem failed for partner logo, falling back to base64 inline storage:", error);
+      return { success: true, filePath: base64 };
     }
-    
-    const destPath = path.join(uploadDir, `${slug}.png`);
-    fs.writeFileSync(destPath, buffer);
-    return { success: true, filePath: `/uploads/partner-logos/${slug}.png` };
   });
