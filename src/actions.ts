@@ -693,3 +693,105 @@ export const uploadPartnerLogoFn = createServerFn({ method: "POST" })
       return { success: true, filePath: base64 };
     }
   });
+
+export interface ChartDataPoint {
+  year: string;
+  value: number;
+  hasAsterisk?: boolean;
+}
+
+export interface DashboardChart {
+  id: string;
+  title: string;
+  color: string;
+  footnote1: string;
+  footnote2: string;
+  data: ChartDataPoint[];
+}
+
+const DEFAULT_DASHBOARD_CHARTS: DashboardChart[] = [
+  {
+    id: "companies_visited",
+    title: "Companies Visited",
+    color: "#3b82f6",
+    footnote1: "*As on 27th Mar 2026",
+    footnote2: "*Internship and Placement for REVA University campuses",
+    data: [
+      { year: "2021", value: 844 },
+      { year: "2022", value: 975 },
+      { year: "2023", value: 945 },
+      { year: "2024", value: 873 },
+      { year: "2025", value: 1079 },
+      { year: "2026", value: 742, hasAsterisk: true }
+    ]
+  },
+  {
+    id: "students_placed",
+    title: "Students Placed",
+    color: "#2563eb",
+    footnote1: "*As on 27th Mar 2026",
+    footnote2: "*Internship and Placement for REVA University campuses",
+    data: [
+      { year: "2021", value: 5609 },
+      { year: "2022", value: 7683 },
+      { year: "2023", value: 8938 },
+      { year: "2024", value: 7586 },
+      { year: "2025", value: 11352 },
+      { year: "2026", value: 8911, hasAsterisk: true }
+    ]
+  },
+  {
+    id: "super_dream_offers",
+    title: "Super Dream Offers",
+    color: "#10b981",
+    footnote1: "*As on 27th Mar 2026",
+    footnote2: "*Internship and Placement for REVA University campuses",
+    data: [
+      { year: "2021", value: 1176 },
+      { year: "2022", value: 3419 },
+      { year: "2023", value: 4480 },
+      { year: "2024", value: 3369 },
+      { year: "2025", value: 3647 },
+      { year: "2026", value: 3097, hasAsterisk: true }
+    ]
+  },
+  {
+    id: "dream_offers",
+    title: "Dream Offers",
+    color: "#22c55e",
+    footnote1: "*As on 27th Mar 2026",
+    footnote2: "*Internship and Placement for REVA University campuses",
+    data: [
+      { year: "2021", value: 2186 },
+      { year: "2022", value: 4660 },
+      { year: "2023", value: 3531 },
+      { year: "2024", value: 3429 },
+      { year: "2025", value: 3954 },
+      { year: "2026", value: 2917, hasAsterisk: true }
+    ]
+  }
+];
+
+// Fetch Dashboard Charts
+export const getDashboardChartsFn = createServerFn({ method: "GET" }).handler(async () => {
+  const statsStr = await db.getSetting("placement_charts");
+  if (!statsStr) {
+    await db.saveSetting("placement_charts", JSON.stringify(DEFAULT_DASHBOARD_CHARTS));
+    return DEFAULT_DASHBOARD_CHARTS;
+  }
+  try {
+    return JSON.parse(statsStr) as DashboardChart[];
+  } catch (e) {
+    console.error("Failed to parse placement charts setting:", e);
+    return DEFAULT_DASHBOARD_CHARTS;
+  }
+});
+
+// Save Dashboard Charts
+export const saveDashboardChartsFn = createServerFn({ method: "POST" })
+  .inputValidator((stats: DashboardChart[]) => stats)
+  .handler(async ({ data: stats }) => {
+    verifyAuth();
+    await db.saveSetting("placement_charts", JSON.stringify(stats));
+    return { success: true };
+  });

@@ -15,10 +15,24 @@ import {
   getPlacementStatsFn,
   savePlacementStatsFn,
   uploadPartnerLogoFn,
+  getDashboardChartsFn,
+  saveDashboardChartsFn,
   type Partner,
   type PlacementStatRow,
+  type DashboardChart,
+  type ChartDataPoint,
 } from "../actions";
 import { type Student, type Specialization, type Gender, type EducationItem, type WorkItem, type ProjectItem, type SkillGroup } from "@/data/students";
+import {
+  BarChart as RechartsBarChart,
+  Bar as RechartsBar,
+  XAxis as RechartsXAxis,
+  YAxis as RechartsYAxis,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer as RechartsResponsiveContainer,
+  LabelList as RechartsLabelList,
+  CartesianGrid as RechartsCartesianGrid,
+} from "recharts";
 import {
   Home,
   LogOut,
@@ -46,6 +60,7 @@ import {
   TrendingUp,
   Users,
   Building,
+  BarChart,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -97,7 +112,7 @@ function AdminDashboardPage() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loadingSession, setLoadingSession] = useState(true);
-  const [currentSection, setCurrentSection] = useState<"dashboard" | "candidates" | "placement-stats" | "partners" | "journey-stats">("dashboard");
+  const [currentSection, setCurrentSection] = useState<"dashboard" | "candidates" | "placement-stats" | "partners" | "journey-stats" | "placement-charts">("dashboard");
 
   // Data States
   const [students, setStudents] = useState<Student[]>([]);
@@ -125,6 +140,11 @@ function AdminDashboardPage() {
   const [placementStats, setPlacementStats] = useState<PlacementStatRow[]>([]);
   const [loadingPlacementStats, setLoadingPlacementStats] = useState(true);
   const [isPlacementStatsEditorOpen, setIsPlacementStatsEditorOpen] = useState(false);
+
+  // Placement Dashboard Charts CRUD States
+  const [dashboardCharts, setDashboardCharts] = useState<DashboardChart[]>([]);
+  const [loadingDashboardCharts, setLoadingDashboardCharts] = useState(true);
+  const [selectedChartIdx, setSelectedChartIdx] = useState<number>(0);
 
   // CRUD States
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -155,6 +175,7 @@ function AdminDashboardPage() {
           fetchStats();
           fetchPartners();
           fetchPlacementStats();
+          fetchDashboardCharts();
         }
       })
       .catch((err) => {
@@ -237,6 +258,35 @@ function AdminDashboardPage() {
       showNotification("error", "Failed to load placement stats.");
     } finally {
       setLoadingPlacementStats(false);
+    }
+  };
+
+  const fetchDashboardCharts = async () => {
+    setLoadingDashboardCharts(true);
+    try {
+      const data = await getDashboardChartsFn();
+      setDashboardCharts(data);
+    } catch (err) {
+      console.error("Failed to load dashboard charts:", err);
+      showNotification("error", "Failed to load dashboard charts.");
+    } finally {
+      setLoadingDashboardCharts(false);
+    }
+  };
+
+  const handleSaveDashboardCharts = async (e: React.FormEvent) => {
+    if (e) e.preventDefault();
+    try {
+      const result = await saveDashboardChartsFn({ data: dashboardCharts });
+      if (result.success) {
+        showNotification("success", "Placement analytics charts updated successfully.");
+        fetchDashboardCharts();
+      } else {
+        showNotification("error", "Failed to save placement charts.");
+      }
+    } catch (err) {
+      console.error("Save placement charts failed:", err);
+      showNotification("error", "Error saving placement charts.");
     }
   };
 
@@ -803,6 +853,12 @@ function AdminDashboardPage() {
             onClick={() => setCurrentSection("journey-stats")}
             label="Journey Stats"
             icon={<Award className="h-3.5 w-3.5" />}
+          />
+          <TabButton
+            active={currentSection === "placement-charts"}
+            onClick={() => setCurrentSection("placement-charts")}
+            label="Placement Trends Charts"
+            icon={<BarChart className="h-3.5 w-3.5" />}
           />
         </div>
 
@@ -1772,6 +1828,360 @@ function AdminDashboardPage() {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {/* Section: Placement Analytics Charts */}
+        {currentSection === "placement-charts" && (
+          <div className="bg-white border border-black/5 rounded-2xl shadow-sm overflow-hidden flex flex-col animate-fade-in">
+            <div className="bg-[#12223A] text-white px-6 py-4 flex items-center justify-between border-b border-[#F9BF29]">
+              <div>
+                <h3 className="text-base font-black uppercase tracking-wider">Edit Placement Analytics Charts</h3>
+                <p className="text-[10px] text-[#F9BF29] font-bold mt-0.5">Customize Titles, Footnotes, Colors, and Year-by-Year data for the homepage charts</p>
+              </div>
+            </div>
+
+            <div className="p-6 flex flex-col lg:flex-row gap-6 min-h-[600px]">
+              {/* Left Column: Select which chart to edit */}
+              <div className="w-full lg:w-1/4 flex flex-col gap-2 border-b lg:border-b-0 lg:border-r border-black/5 pb-6 lg:pb-0 lg:pr-6 shrink-0">
+                <span className="text-xs font-black uppercase tracking-wider text-neutral-500 mb-2">Select Chart</span>
+                {loadingDashboardCharts ? (
+                  <div className="py-10 text-center space-y-2">
+                    <Loader2 className="h-5 w-5 animate-spin text-[#1E3E62] mx-auto" />
+                    <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Loading Charts...</p>
+                  </div>
+                ) : (
+                  dashboardCharts.map((chart, idx) => (
+                    <button
+                      key={chart.id}
+                      type="button"
+                      onClick={() => setSelectedChartIdx(idx)}
+                      className={`w-full text-left p-3.5 rounded-xl border transition-all duration-250 cursor-pointer flex items-center justify-between group ${
+                        selectedChartIdx === idx
+                          ? "bg-[#1E3E62] border-[#1E3E62] text-white shadow-sm"
+                          : "bg-white border-black/5 hover:border-neutral-300 text-neutral-800"
+                      }`}
+                    >
+                      <div className="min-w-0">
+                        <span className={`text-[10px] font-black uppercase tracking-wider block ${selectedChartIdx === idx ? "text-neutral-300" : "text-neutral-400"}`}>
+                          Chart #{idx + 1}
+                        </span>
+                        <span className="text-xs font-extrabold truncate block mt-0.5">{chart.title}</span>
+                      </div>
+                      <ChevronRight className={`h-4 w-4 shrink-0 transition-transform ${
+                        selectedChartIdx === idx ? "text-white rotate-90 lg:rotate-0" : "text-neutral-400 group-hover:translate-x-0.5"
+                      }`} />
+                    </button>
+                  ))
+                )}
+              </div>
+
+              {/* Right Column: Chart Editor & Live Preview */}
+              <div className="flex-1 flex flex-col lg:flex-row gap-6 min-w-0">
+                {loadingDashboardCharts ? (
+                  <div className="flex-1 flex items-center justify-center py-20">
+                    <Loader2 className="h-7 w-7 animate-spin text-[#1E3E62]" />
+                  </div>
+                ) : dashboardCharts[selectedChartIdx] ? (
+                  (() => {
+                    const currentChart = dashboardCharts[selectedChartIdx];
+
+                    // Helper to update a top-level field of the current chart
+                    const updateChartField = (field: keyof DashboardChart, value: any) => {
+                      const updatedCharts = [...dashboardCharts];
+                      updatedCharts[selectedChartIdx] = {
+                        ...currentChart,
+                        [field]: value,
+                      };
+                      setDashboardCharts(updatedCharts);
+                    };
+
+                    // Helper to update a data point
+                    const updateDataPoint = (dataIdx: number, field: keyof ChartDataPoint, value: any) => {
+                      const updatedData = [...currentChart.data];
+                      updatedData[dataIdx] = {
+                        ...updatedData[dataIdx],
+                        [field]: value,
+                      };
+                      updateChartField("data", updatedData);
+                    };
+
+                    // Helper to add data point
+                    const addDataPoint = () => {
+                      // default to next year
+                      let nextYearStr = "2027";
+                      if (currentChart.data.length > 0) {
+                        const lastYear = currentChart.data[currentChart.data.length - 1].year;
+                        const match = lastYear.match(/\d+/);
+                        if (match) {
+                          nextYearStr = String(Number(match[0]) + 1);
+                        }
+                      }
+                      const newDataPoint: ChartDataPoint = {
+                        year: nextYearStr,
+                        value: 0,
+                        hasAsterisk: false,
+                      };
+                      updateChartField("data", [...currentChart.data, newDataPoint]);
+                    };
+
+                    // Helper to remove data point
+                    const removeDataPoint = (dataIdx: number) => {
+                      const updatedData = currentChart.data.filter((_, i) => i !== dataIdx);
+                      updateChartField("data", updatedData);
+                    };
+
+                    return (
+                      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-2 gap-6">
+                        {/* Editor Form fields */}
+                        <div className="space-y-5">
+                          <h4 className="text-xs font-black text-neutral-800 uppercase tracking-wider pb-2 border-b border-black/5 flex items-center justify-between">
+                            <span>Edit Settings</span>
+                            <span className="text-[10px] font-bold text-neutral-400 normal-case italic">Changes update Live Preview on right</span>
+                          </h4>
+
+                          {/* Chart Title */}
+                          <div>
+                            <label className="block text-[10px] font-black text-neutral-400 uppercase tracking-wider mb-1">Chart Title</label>
+                            <input
+                              type="text"
+                              required
+                              value={currentChart.title}
+                              onChange={(e) => updateChartField("title", e.target.value)}
+                              className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                              placeholder="e.g. Companies Visited"
+                            />
+                          </div>
+
+                          {/* Color and Footnote 1 */}
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[10px] font-black text-neutral-400 uppercase tracking-wider mb-1">Theme Color</label>
+                              <select
+                                value={currentChart.color || "#3b82f6"}
+                                onChange={(e) => updateChartField("color", e.target.value)}
+                                className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62] cursor-pointer"
+                              >
+                                <option value="#3b82f6">Default Blue</option>
+                                <option value="#FF5900">REVA Orange</option>
+                                <option value="#10b981">Emerald Green</option>
+                                <option value="#f59e0b">Amber Yellow</option>
+                                <option value="#8b5cf6">Purple</option>
+                                <option value="#ec4899">Pink</option>
+                                <option value="#64748b">Slate Gray</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-black text-neutral-400 uppercase tracking-wider mb-1">Theme Preview</label>
+                              <div className="flex items-center gap-2 border border-black/10 rounded-xl px-3 py-2 bg-neutral-50 h-[34px]">
+                                <span className="h-4 w-4 rounded-md border border-neutral-300" style={{ backgroundColor: currentChart.color || "#3b82f6" }} />
+                                <span className="text-[10px] font-extrabold text-neutral-600 uppercase tracking-wider">Active Color</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Footnotes */}
+                          <div className="space-y-3">
+                            <div>
+                              <label className="block text-[10px] font-black text-neutral-400 uppercase tracking-wider mb-1">Footnote 1</label>
+                              <input
+                                type="text"
+                                value={currentChart.footnote1 || ""}
+                                onChange={(e) => updateChartField("footnote1", e.target.value)}
+                                className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                                placeholder="e.g. *Ongoing placement season"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-black text-neutral-400 uppercase tracking-wider mb-1">Footnote 2</label>
+                              <input
+                                type="text"
+                                value={currentChart.footnote2 || ""}
+                                onChange={(e) => updateChartField("footnote2", e.target.value)}
+                                className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                                placeholder="e.g. Offers till May 2026"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Data points table */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center pb-1">
+                              <span className="text-[10px] font-black uppercase text-neutral-400 tracking-wider">Yearly Data Points</span>
+                              <button
+                                type="button"
+                                onClick={addDataPoint}
+                                className="inline-flex items-center gap-1 bg-[#1E3E62]/10 hover:bg-[#1E3E62]/20 text-[#1E3E62] font-black text-[9px] px-2.5 py-1.5 rounded-lg transition uppercase tracking-wider cursor-pointer"
+                              >
+                                <Plus className="h-3 w-3 stroke-[3]" /> Add Year
+                              </button>
+                            </div>
+
+                            <div className="border border-black/5 rounded-xl overflow-hidden max-h-[220px] overflow-y-auto pr-1">
+                              <table className="w-full border-collapse text-left text-xs bg-white">
+                                <thead>
+                                  <tr className="bg-neutral-50 text-neutral-500 font-black uppercase tracking-wider text-[9px] border-b border-black/5">
+                                    <th className="p-2 w-[30%]">Academic Year</th>
+                                    <th className="p-2 w-[35%]">Value</th>
+                                    <th className="p-2 w-[20%] text-center">Has *</th>
+                                    <th className="p-2 w-[15%] text-center">Delete</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-black/5">
+                                  {currentChart.data.map((point, pIdx) => (
+                                    <tr key={pIdx}>
+                                      <td className="p-1">
+                                        <input
+                                          type="text"
+                                          required
+                                          value={point.year}
+                                          onChange={(e) => updateDataPoint(pIdx, "year", e.target.value)}
+                                          className="w-full rounded border border-black/10 px-2 py-1 text-xs outline-none focus:border-[#1E3E62] font-extrabold text-neutral-700 text-center"
+                                          placeholder="2026"
+                                        />
+                                      </td>
+                                      <td className="p-1">
+                                        <input
+                                          type="number"
+                                          required
+                                          min={0}
+                                          value={point.value}
+                                          onChange={(e) => updateDataPoint(pIdx, "value", Number(e.target.value))}
+                                          className="w-full rounded border border-black/10 px-2 py-1 text-xs outline-none focus:border-[#1E3E62] font-extrabold text-neutral-800"
+                                          placeholder="e.g. 742"
+                                        />
+                                      </td>
+                                      <td className="p-1 text-center">
+                                        <input
+                                          type="checkbox"
+                                          checked={point.hasAsterisk}
+                                          onChange={(e) => updateDataPoint(pIdx, "hasAsterisk", e.target.checked)}
+                                          className="rounded border border-black/10 outline-none text-[#1E3E62] focus:ring-[#1E3E62] h-3.5 w-3.5 cursor-pointer align-middle"
+                                        />
+                                      </td>
+                                      <td className="p-1 text-center">
+                                        <button
+                                          type="button"
+                                          onClick={() => removeDataPoint(pIdx)}
+                                          className="p-1 rounded text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition cursor-pointer"
+                                          title="Remove Year"
+                                        >
+                                          <Trash2 className="h-3.5 w-3.5" />
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+
+                          {/* Submit Actions */}
+                          <div className="pt-4 border-t border-black/5 flex items-center justify-end gap-3 shrink-0">
+                            <button
+                              type="button"
+                              onClick={(e) => handleSaveDashboardCharts(e)}
+                              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-black tracking-wider text-white shadow-md hover:bg-emerald-700 transition cursor-pointer uppercase"
+                            >
+                              Save All Charts
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Live Preview column */}
+                        <div className="space-y-4 flex flex-col">
+                          <h4 className="text-xs font-black text-neutral-800 uppercase tracking-wider pb-2 border-b border-black/5 shrink-0">
+                            Live Preview
+                          </h4>
+
+                          <div className="bg-neutral-50/50 border border-black/5 rounded-2xl p-6 flex flex-col justify-between flex-1 min-h-[300px]">
+                            <div>
+                              <div className="flex items-center justify-between mb-4">
+                                <h5 className="text-sm font-black text-neutral-900 tracking-tight">
+                                  {currentChart.title || "No Title"}
+                                </h5>
+                                <img src="/image/reva_logi.png" alt="REVA University" className="h-5 w-auto object-contain opacity-60" />
+                              </div>
+
+                              <div className="h-[200px] w-full mt-2 font-sans select-none relative">
+                                <RechartsResponsiveContainer width="100%" height="100%">
+                                  <RechartsBarChart
+                                    data={currentChart.data}
+                                    margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
+                                  >
+                                    <RechartsCartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e5e5" />
+                                    <RechartsXAxis
+                                      dataKey="year"
+                                      axisLine={false}
+                                      tickLine={false}
+                                      tick={{ fill: '#737373', fontSize: 10, fontWeight: 'bold' }}
+                                    />
+                                    <RechartsYAxis
+                                      axisLine={false}
+                                      tickLine={false}
+                                      tick={{ fill: '#737373', fontSize: 10, fontWeight: 'bold' }}
+                                    />
+                                    <RechartsTooltip
+                                      cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                                      contentStyle={{
+                                        background: '#ffffff',
+                                        border: '1px solid rgba(0,0,0,0.05)',
+                                        borderRadius: '10px',
+                                        boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
+                                        fontSize: '10px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    />
+                                    <RechartsBar
+                                      dataKey="value"
+                                      fill={currentChart.color || "#3b82f6"}
+                                      radius={[6, 6, 0, 0]}
+                                      maxBarSize={35}
+                                    >
+                                      <RechartsLabelList
+                                        dataKey="value"
+                                        content={(props: any) => {
+                                          const { x, y, width, value, index } = props;
+                                          const point = currentChart.data[index];
+                                          const labelText = point?.hasAsterisk ? `${value}*` : `${value}`;
+                                          return (
+                                            <text
+                                              x={x + width / 2}
+                                              y={y - 8}
+                                              fill="#404040"
+                                              textAnchor="middle"
+                                              fontSize={9}
+                                              fontWeight="extrabold"
+                                              className="font-sans"
+                                            >
+                                              {labelText}
+                                            </text>
+                                          );
+                                        }}
+                                      />
+                                    </RechartsBar>
+                                  </RechartsBarChart>
+                                </RechartsResponsiveContainer>
+                              </div>
+                            </div>
+
+                            <div className="mt-4 pt-3 border-t border-black/5 flex flex-col gap-0.5 text-[9px] text-neutral-400 font-semibold italic text-left">
+                              {currentChart.footnote1 && <p>{currentChart.footnote1}</p>}
+                              {currentChart.footnote2 && <p>{currentChart.footnote2}</p>}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-neutral-400 select-none">
+                    <BarChart className="h-10 w-10 text-neutral-300 mb-2.5" />
+                    <p className="text-xs font-bold uppercase tracking-wider">No Chart Selected</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </main>

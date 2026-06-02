@@ -1,16 +1,28 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { SiteNav } from "@/components/site-nav";
 import { Phone } from "lucide-react";
-import { getJourneyStatsFn, getHiringPartnersFn, getPlacementStatsFn } from "../actions";
+import { useState, useEffect } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  LabelList,
+  CartesianGrid,
+} from "recharts";
+import { getJourneyStatsFn, getHiringPartnersFn, getPlacementStatsFn, getDashboardChartsFn } from "../actions";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [stats, partners, placementStats] = await Promise.all([
+    const [stats, partners, placementStats, dashboardCharts] = await Promise.all([
       getJourneyStatsFn(),
       getHiringPartnersFn(),
       getPlacementStatsFn(),
+      getDashboardChartsFn(),
     ]);
-    return { stats, partners, placementStats };
+    return { stats, partners, placementStats, dashboardCharts };
   },
   head: () => ({
     meta: [
@@ -140,11 +152,16 @@ const iconMap: Record<string, any> = {
 };
 
 function HomePage() {
-  const { stats, partners, placementStats } = Route.useLoaderData() as {
+  const { stats, partners, placementStats, dashboardCharts } = Route.useLoaderData() as {
     stats: any[];
     partners: any[];
     placementStats: any[];
+    dashboardCharts: any[];
   };
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
       {/* Top Navigation */}
@@ -348,6 +365,116 @@ function HomePage() {
               </div>
             );
           })()}
+        </section>
+
+        {/* Section 3.6: Historical Placement Analytics */}
+        <section className="mt-16 border-t border-black/5 pt-12">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600 border border-emerald-500/15">
+              📈 Historical Year-on-Year Growth
+            </span>
+            <h2 className="text-3xl font-black text-neutral-900 tracking-tight mt-3">
+              Executive Placement Analytics
+            </h2>
+            <p className="text-sm text-neutral-500 mt-2 font-medium">
+              Verified year-by-year performance metrics displaying consistent transition achievements
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {dashboardCharts.map((chart) => (
+              <div
+                key={chart.id}
+                className="bg-white border border-black/5 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300 relative flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-black text-neutral-900 tracking-tight">
+                      {chart.title}
+                    </h3>
+                    <img src="/image/reva_logi.png" alt="REVA University" className="h-7 w-auto object-contain opacity-80" />
+                  </div>
+
+                  <div className="h-[250px] w-full mt-2 font-sans select-none">
+                    {isMounted ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={chart.data}
+                          margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f5" />
+                          <XAxis
+                            dataKey="year"
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: '#737373', fontSize: 11, fontWeight: 'bold' }}
+                          />
+                          <YAxis
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: '#737373', fontSize: 11, fontWeight: 'bold' }}
+                          />
+                          <Tooltip
+                            cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                            contentStyle={{
+                              background: '#ffffff',
+                              border: '1px solid rgba(0,0,0,0.05)',
+                              borderRadius: '12px',
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                              fontSize: '11px',
+                              fontWeight: 'bold',
+                            }}
+                            formatter={(value: any, name: any, props: any) => {
+                              const point = props.payload;
+                              const displayVal = point.hasAsterisk ? `${value}*` : `${value}`;
+                              return [displayVal, chart.title];
+                            }}
+                          />
+                          <Bar
+                            dataKey="value"
+                            fill={chart.color || "#3b82f6"}
+                            radius={[8, 8, 0, 0]}
+                            maxBarSize={45}
+                          >
+                            <LabelList
+                              dataKey="value"
+                              content={(props: any) => {
+                                const { x, y, width, value, index } = props;
+                                const point = chart.data[index];
+                                const labelText = point?.hasAsterisk ? `${value}*` : `${value}`;
+                                return (
+                                  <text
+                                    x={x + width / 2}
+                                    y={y - 8}
+                                    fill="#404040"
+                                    textAnchor="middle"
+                                    fontSize={10}
+                                    fontWeight="extrabold"
+                                    className="font-sans"
+                                  >
+                                    {labelText}
+                                  </text>
+                                );
+                              }}
+                            />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="h-full w-full bg-neutral-50 rounded-2xl flex items-center justify-center text-xs text-neutral-400 font-bold">
+                        Loading charts...
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-black/5 flex flex-col gap-1 text-[10px] text-neutral-500 font-semibold italic text-left">
+                  {chart.footnote1 && <p>{chart.footnote1}</p>}
+                  {chart.footnote2 && <p>{chart.footnote2}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Section 4: Detailed About & Infographics */}
