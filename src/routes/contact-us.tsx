@@ -208,7 +208,7 @@ function ContactUsPage() {
                   Explore Programs <Building className="h-4 w-4" />
                 </a>
                 <a
-                  href="#connect"
+                  href="#inquiry-form"
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-6 py-3.5 text-xs font-bold text-neutral-700 shadow-sm hover:bg-neutral-50 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer text-center"
                 >
                   <Phone className="h-3.5 w-3.5 text-[#FF5900]" /> Get In Touch
@@ -231,54 +231,6 @@ function ContactUsPage() {
           </div>
         </section>
 
-        {/* Admissions & Program Guidance */}
-        <section id="connect" className="mt-16 bg-white border border-black/5 rounded-3xl p-8 shadow-sm">
-          <div className="text-center mb-8 max-w-lg mx-auto">
-            <span className="inline-block p-3 rounded-2xl bg-[#FFFBDC] text-[#FF5900] mb-3">
-              <GraduationCap className="h-8 w-8" />
-            </span>
-            <h3 className="text-xl font-black text-neutral-900 tracking-tight">Admissions &amp; Program Guidance</h3>
-            <p className="text-xs text-neutral-500 font-medium mt-1">Get direct telephone guidance for academic admissions and schedules</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-black/5 gap-6 md:gap-0">
-            {/* Admissions 1 */}
-            <div className="text-center md:px-6 pb-6 md:pb-0 flex flex-col justify-center">
-              <p className="text-sm font-black text-neutral-900">
-                Maha Samruthaa G
-              </p>
-              <p className="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">Admissions Advisor</p>
-              <p className="mt-3 text-xs font-semibold text-neutral-600 flex items-center justify-center gap-1.5">
-                📞 <a className="text-[#FF5900] hover:underline" href="tel:7349797256">+91 73497 97256</a>
-              </p>
-              <p className="mt-1 text-[11px] font-semibold text-neutral-600 flex items-center justify-center gap-1.5">
-                ✉️ <a className="text-[#FF5900] hover:underline" href="mailto:mahasamruthaa.g@reva.edu.in">mahasamruthaa.g@reva.edu.in</a>
-              </p>
-            </div>
-
-            {/* Admissions 2 */}
-            <div className="text-center md:px-6 py-6 md:py-0 flex flex-col justify-center">
-              <p className="text-sm font-black text-neutral-900">
-                Chaithra V
-              </p>
-              <p className="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">Admissions Advisor</p>
-              <p className="mt-3 text-xs font-semibold text-neutral-600 flex items-center justify-center gap-1.5">
-                📞 <a className="text-[#FF5900] hover:underline" href="tel:8197858043">+91 81978 58043</a>
-              </p>
-              <p className="mt-1 text-[11px] font-semibold text-neutral-600 flex items-center justify-center gap-1.5">
-                ✉️ <a className="text-[#FF5900] hover:underline" href="mailto:chaithra.v@reva.edu.in">chaithra.v@reva.edu.in</a>
-              </p>
-            </div>
-
-            {/* Admissions 3 (Office Line) */}
-            <div className="text-center md:px-6 pt-6 md:pt-0 flex flex-col justify-center">
-              <p className="text-xs font-bold text-neutral-400 uppercase">General Office Hotline</p>
-              <p className="mt-3 text-2xl font-black text-[#1E3E62] tracking-tight">
-                📞 <a className="hover:underline" href="tel:8904058866">+91 89040 58866</a>
-              </p>
-            </div>
-          </div>
-        </section>
 
         {/* Corporate Research & Trainers */}
         <section className="mt-8 grid gap-6 md:grid-cols-2">
@@ -386,7 +338,7 @@ function ContactUsPage() {
         <section className="mt-16 grid gap-8 lg:grid-cols-2">
           
           {/* Contact Inquiry Form */}
-          <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm sm:p-8">
+          <div id="inquiry-form" className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm sm:p-8">
             <h2 className="text-xl font-black text-neutral-900 tracking-tight">Drop us a line</h2>
             <p className="mt-1 text-xs text-neutral-500 font-semibold leading-relaxed">
               If you have any direct inquiries, submit this contact form and our team will get back to you.
