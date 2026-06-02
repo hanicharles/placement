@@ -75,7 +75,7 @@ const FAQS: FAQItem[] = [
   },
   {
     question: "How can corporate organizations partner with RACE?",
-    answer: "Corporates can collaborate with us in multiple ways: custom corporate training programs, research consultancy contracts, guest lecture sponsorships, and direct hiring drives from our pre-screened talent cohorts. Please contact Dr. Shinu Abhi at shinuabhi@reva.edu.in for business engagements.",
+    answer: "Corporates can collaborate with us in multiple ways: custom corporate training programs, research consultancy contracts, guest lecture sponsorships, and direct hiring drives from our pre-screened talent cohorts. Please contact Paramesh G at paramesh.g@reva.edu.in for business engagements.",
   },
 ];
 
@@ -293,13 +293,13 @@ function ContactUsPage() {
                 Collaborate with our teams on corporate research studies and advanced computing consultancies.
               </p>
               <div className="mt-4 text-xs font-semibold text-neutral-600">
-                <p className="font-black text-neutral-900 text-sm">Dr. Shinu Abhi</p>
-                <p className="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">Director - Corporate Training</p>
+                <p className="font-black text-neutral-900 text-sm">Paramesh G</p>
+                <p className="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">Assistant Professor and Placement Head</p>
                 <p className="mt-2">
-                  📞 <a className="text-[#FF5900] hover:underline" href="tel:9972916030">+91 99729 16030</a>
+                  📞 <a className="text-[#FF5900] hover:underline" href="tel:9655628661">+91 96556 28661</a>
                 </p>
                 <p className="mt-0.5">
-                  ✉️ <a className="text-[#FF5900] hover:underline" href="mailto:shinuabhi@reva.edu.in">shinuabhi@reva.edu.in</a>
+                  ✉️ <a className="text-[#FF5900] hover:underline" href="mailto:paramesh.g@reva.edu.in">paramesh.g@reva.edu.in</a>
                 </p>
               </div>
             </div>
@@ -335,10 +335,10 @@ function ContactUsPage() {
                 Share your technical industry expertise. Apply to teach and mentor our executive M.Tech cohorts.
               </p>
               <div className="mt-4 text-xs font-semibold text-neutral-600">
-                <p className="font-black text-neutral-900 text-sm">Dr. Shinu Abhi</p>
-                <p className="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">Director - Corporate Training</p>
+                <p className="font-black text-neutral-900 text-sm">Paramesh G</p>
+                <p className="text-[10px] text-neutral-400 font-bold uppercase mt-0.5">Assistant Professor and Placement Head</p>
                 <p className="mt-2">
-                  ✉️ <a className="text-[#FF5900] hover:underline" href="mailto:shinuabhi@reva.edu.in">shinuabhi@reva.edu.in</a>
+                  ✉️ <a className="text-[#FF5900] hover:underline" href="mailto:paramesh.g@reva.edu.in">paramesh.g@reva.edu.in</a>
                 </p>
               </div>
             </div>
