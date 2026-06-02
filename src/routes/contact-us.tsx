@@ -127,7 +127,7 @@ function ContactBusinessCard({
   const isPhotoLeft = layout === "photo-left";
 
   return (
-    <div className={`relative w-full max-w-[720px] bg-[#F8F9FA] border border-black/5 rounded-[24px] shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden px-6 py-8 sm:px-10 sm:py-10 flex ${
+    <div className={`relative w-full max-w-[560px] bg-[#F8F9FA] border border-black/5 rounded-[24px] shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden px-6 py-8 sm:px-10 sm:py-10 flex ${
       isPhotoLeft ? "flex-col md:flex-row" : "flex-col-reverse md:flex-row"
     } gap-8 items-center justify-between min-h-[300px]`}>
       
@@ -428,7 +428,7 @@ function ContactUsPage() {
 
 
         {/* Corporate Research & Trainers */}
-        <section className="mt-12 flex flex-col gap-8 items-center">
+        <section className="mt-12 grid gap-8 grid-cols-1 lg:grid-cols-2 justify-items-center">
           <ContactBusinessCard
             layout="photo-left"
             name="PARAMESH G"
