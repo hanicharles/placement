@@ -108,6 +108,7 @@ interface ContactBusinessCardProps {
   name: string;
   role: string;
   phone?: string;
+  phone2?: string;
   email: string;
   web?: string;
   address: string;
@@ -119,6 +120,7 @@ function ContactBusinessCard({
   name,
   role,
   phone,
+  phone2,
   email,
   web = "race.reva.edu.in",
   address,
@@ -192,6 +194,17 @@ function ContactBusinessCard({
               </div>
               <a href={`tel:${phone.replace(/\s+/g, "")}`} className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#D4AF37] hover:underline transition-colors">
                 {phone}
+              </a>
+            </div>
+          )}
+
+          {phone2 && (
+            <div className="flex items-center gap-3">
+              <div className="w-7 h-7 rounded-full bg-[#D4AF37] flex items-center justify-center text-white shadow-sm shrink-0">
+                <Phone className="h-3.5 w-3.5" />
+              </div>
+              <a href={`tel:${phone2.split("Ext")[0].replace(/[^\d+]/g, "")}`} className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#D4AF37] hover:underline transition-colors">
+                {phone2}
               </a>
             </div>
           )}
@@ -386,13 +399,14 @@ function ContactUsPage() {
 
           <ContactBusinessCard
             title="Become a Certified Trainer"
-            name="PARAMESH G"
-            role="Assistant Professor & Placement Head"
-            phone="+91 96556 28661"
-            email="paramesh.g@reva.edu.in"
+            name="SHINU ABHI, PhD"
+            role="Director, Corporate Training"
+            phone="+91 99729 16030"
+            phone2="080-4696-6966 Ext. 274"
+            email="shinuabhi@reva.edu.in"
             web="race.reva.edu.in"
             address="RACE, REVA University, Bengaluru"
-            photoUrl="/image/paramesh_g.png"
+            photoUrl="/image/shinu_abhi.png"
           />
         </section>
 
