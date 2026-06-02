@@ -343,7 +343,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Provides cloud computing curriculum and academy resources to prepare students for AWS certifications.",
     logoLetter: "A",
     themeColor: "from-amber-500 to-orange-600",
-    placementCount: 0
+    placementCount: 0,
+    logoUrl: "https://logo.clearbit.com/amazon.com"
   },
   {
     name: "Microsoft Azure",
@@ -351,7 +352,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Enables cloud and academic research through advanced cloud infrastructure, services, and developer tools.",
     logoLetter: "M",
     themeColor: "from-blue-600 to-sky-600",
-    placementCount: 0
+    placementCount: 0,
+    logoUrl: "https://logo.clearbit.com/microsoft.com"
   },
   {
     name: "EC-Council",
@@ -359,7 +361,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "The world's leading cybersecurity technical certification body, providing professional security courses and certifications.",
     logoLetter: "E",
     themeColor: "from-red-600 to-rose-700",
-    placementCount: 0
+    placementCount: 0,
+    logoUrl: "https://logo.clearbit.com/eccouncil.org"
   },
   {
     name: "PurpleSynapz",
@@ -367,7 +370,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A premier cybersecurity lab partner specializing in threat simulations, red-teaming, and hands-on cyber drills.",
     logoLetter: "P",
     themeColor: "from-purple-600 to-indigo-700",
-    placementCount: 0
+    placementCount: 0,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=purplesynapz.com"
   },
   {
     name: "CloudxLabs",
@@ -375,7 +379,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "An online learning platform providing hands-on labs and sandboxes for DevOps, Cloud, AI, and Big Data.",
     logoLetter: "C",
     themeColor: "from-sky-500 to-blue-600",
-    placementCount: 0
+    placementCount: 0,
+    logoUrl: "https://logo.clearbit.com/cloudxlabs.com"
   },
   {
     name: "Deevia Software",
@@ -383,7 +388,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Specializes in AI-driven image processing, computer vision applications, and enterprise software engineering.",
     logoLetter: "D",
     themeColor: "from-blue-500 to-indigo-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=deevia.com"
   },
   {
     name: "Merck - Sigma Aldrich Chemicals",
@@ -391,7 +397,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A leading global life science and technology company providing chemicals, lab materials, and bio-pharmaceutical solutions.",
     logoLetter: "M",
     themeColor: "from-emerald-500 to-teal-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/merckgroup.com"
   },
   {
     name: "IISc (Indian Institute of Science)",
@@ -399,7 +406,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "India's premier research institution renowned globally for advanced scientific and technological research and education.",
     logoLetter: "I",
     themeColor: "from-amber-500 to-orange-600",
-    placementCount: 2
+    placementCount: 2,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=iisc.ac.in"
   },
   {
     name: "Continental",
@@ -407,7 +415,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A pioneer in automotive technology, smart mobility infrastructure, and advanced embedded systems engineering.",
     logoLetter: "C",
     themeColor: "from-slate-600 to-slate-800",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/continental.com"
   },
   {
     name: "Enhancesys Innovation",
@@ -415,7 +424,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Develops advanced IoT automation systems, cloud security telemetry, and network operations solutions.",
     logoLetter: "E",
     themeColor: "from-cyan-500 to-blue-600",
-    placementCount: 2
+    placementCount: 2,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=enhancesys.com"
   },
   {
     name: "Vconnex Pvt. Ltd",
@@ -423,7 +433,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Delivers end-to-end IT consulting, custom software architectures, and digital transformation solutions.",
     logoLetter: "V",
     themeColor: "from-rose-500 to-pink-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=vconnex.com"
   },
   {
     name: "Grant Thornton",
@@ -431,7 +442,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A leading global professional services network providing audit, tax, advisory, and corporate compliance services.",
     logoLetter: "G",
     themeColor: "from-purple-600 to-violet-700",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/grantthornton.com"
   },
   {
     name: "Senseops Tech Solutions",
@@ -439,7 +451,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Specializes in intelligent log analysis, threat intelligence modeling, and SOC automation solutions.",
     logoLetter: "S",
     themeColor: "from-red-500 to-rose-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=senseops.com"
   },
   {
     name: "66degrees",
@@ -447,7 +460,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "An elite Google Cloud Premier Partner focused on AI integration, big data analytics, and cloud modernization.",
     logoLetter: "6",
     themeColor: "from-sky-500 to-indigo-500",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/66degrees.com"
   },
   {
     name: "Virtually Testing Foundation",
@@ -455,7 +469,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A premier non-profit organization offering cybersecurity internships, lab testing, and vulnerability assessments.",
     logoLetter: "T",
     themeColor: "from-emerald-600 to-teal-700",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/virtuallytesting.com"
   },
   {
     name: "Terralogic",
@@ -463,7 +478,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Provides full-stack engineering, comprehensive cybersecurity operations, and digital infrastructure support.",
     logoLetter: "T",
     themeColor: "from-indigo-500 to-blue-700",
-    placementCount: 13
+    placementCount: 13,
+    logoUrl: "https://logo.clearbit.com/terralogic.com"
   },
   {
     name: "Cytrusst",
@@ -471,7 +487,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Specializes in governance, risk assessment, corporate information security auditing, and compliance.",
     logoLetter: "C",
     themeColor: "from-purple-500 to-indigo-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=cytrusst.com"
   },
   {
     name: "Ecolab",
@@ -479,7 +496,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "The global leader in water, hygiene, and infection prevention solutions and services.",
     logoLetter: "E",
     themeColor: "from-blue-600 to-sky-600",
-    placementCount: 4
+    placementCount: 4,
+    logoUrl: "https://logo.clearbit.com/ecolab.com"
   },
   {
     name: "Saint Gobain",
@@ -487,7 +505,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Designs, manufactures, and distributes high-performance materials and solutions for industrial applications.",
     logoLetter: "S",
     themeColor: "from-stone-500 to-stone-700",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/saint-gobain.com"
   },
   {
     name: "Cybrisk",
@@ -495,7 +514,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Focuses on active threat mitigation, incident response pipelines, and cybersecurity threat profiling.",
     logoLetter: "C",
     themeColor: "from-red-600 to-orange-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=cybrisk.com"
   },
   {
     name: "Visiminds",
@@ -503,7 +523,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Develops advanced computer vision models and monocular lane hazard anticipation systems.",
     logoLetter: "V",
     themeColor: "from-violet-500 to-purple-600",
-    placementCount: 6
+    placementCount: 6,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=visiminds.com"
   },
   {
     name: "Tsaaro",
@@ -511,7 +532,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A leading data privacy consulting firm specializing in GDPR, HIPAA, and custom compliance audits.",
     logoLetter: "T",
     themeColor: "from-orange-500 to-amber-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/tsaaro.com"
   },
   {
     name: "LKQ India Private Limited",
@@ -519,7 +541,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A leading distributor of alternative and specialty automotive parts and diagnostic components.",
     logoLetter: "L",
     themeColor: "from-slate-500 to-slate-700",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/lkqcorp.com"
   },
   {
     name: "Swiss Re",
@@ -527,7 +550,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "One of the world's leading providers of reinsurance, insurance-based risk transfer, and actuarial modeling.",
     logoLetter: "S",
     themeColor: "from-cyan-600 to-blue-700",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/swissre.com"
   },
   {
     name: "Endpoint E Clinical India Private Limited",
@@ -535,7 +559,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Develops interactive clinical trial software and secure data management pipelines for healthcare providers.",
     logoLetter: "E",
     themeColor: "from-emerald-500 to-green-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/endpointclinical.com"
   },
   {
     name: "Cyberium Labs",
@@ -543,7 +568,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Specializes in secure ledger technologies, advanced cryptography, and decentralized identity proofing.",
     logoLetter: "C",
     themeColor: "from-rose-600 to-red-700",
-    placementCount: 13
+    placementCount: 13,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=cyberiumlabs.com"
   },
   {
     name: "iCompaas",
@@ -551,7 +577,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "An automated cloud security and compliance platform optimizing configurations for multi-cloud environments.",
     logoLetter: "I",
     themeColor: "from-amber-600 to-yellow-600",
-    placementCount: 1
+    placementCount: 1,
+    logoUrl: "https://logo.clearbit.com/icompaas.com"
   },
   {
     name: "EY (Ernst & Young)",
@@ -559,7 +586,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A global leader in assurance, consulting, strategy, transactions, and corporate advisory services.",
     logoLetter: "E",
     themeColor: "from-yellow-500 to-amber-500",
-    placementCount: 3
+    placementCount: 3,
+    logoUrl: "https://logo.clearbit.com/ey.com"
   },
   {
     name: "AngelOne",
@@ -567,7 +595,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A prominent technology-led financial services brokerage and digital investment platform.",
     logoLetter: "A",
     themeColor: "from-indigo-600 to-violet-600",
-    placementCount: 5
+    placementCount: 5,
+    logoUrl: "https://logo.clearbit.com/ey.com" // fallback to clearbit or Google favicon
   },
   {
     name: "Skyworks Solutions",
@@ -575,7 +604,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "An innovator of high-performance analog semiconductors connecting wireless infrastructure and devices.",
     logoLetter: "S",
     themeColor: "from-sky-600 to-blue-800",
-    placementCount: 10
+    placementCount: 10,
+    logoUrl: "https://logo.clearbit.com/skyworksinc.com"
   },
   {
     name: "Zillion Technologies",
@@ -583,7 +613,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Offers global digital transformation consultation, systems integration, and software engineering services.",
     logoLetter: "Z",
     themeColor: "from-pink-500 to-purple-600",
-    placementCount: 0
+    placementCount: 0,
+    logoUrl: "https://logo.clearbit.com/zilliontechnologies.com"
   },
   {
     name: "Siemens Healthcare",
@@ -591,7 +622,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "A global medical technology pioneer delivering state-of-the-art diagnostic imaging and clinical software.",
     logoLetter: "S",
     themeColor: "from-teal-600 to-cyan-700",
-    placementCount: 0
+    placementCount: 0,
+    logoUrl: "https://logo.clearbit.com/siemens-healthineers.com"
   },
   {
     name: "Alxplora Technologies",
@@ -599,7 +631,8 @@ const DEFAULT_PARTNERS: Partner[] = [
     description: "Delivers data-driven product analytics, machine learning prototypes, and custom business intelligence dashboards.",
     logoLetter: "A",
     themeColor: "from-stone-600 to-stone-800",
-    placementCount: 2
+    placementCount: 2,
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=alxplora.com"
   }
 ];
 
@@ -613,15 +646,19 @@ export const getHiringPartnersFn = createServerFn({ method: "GET" }).handler(asy
   }
   try {
     const list = JSON.parse(partnersStr) as Partner[];
-    const needsMigration = list.length > 0 && !list.some((p) => p.placementCount !== undefined);
-    if (needsMigration) {
-      const migrated = list.map((item) => {
+    // Check if we need to migrate/update any missing logoUrls from defaults
+    let modified = false;
+    const migrated = list.map((item) => {
+      if (!item.logoUrl || !item.logoUrl.startsWith("http")) {
         const d = DEFAULT_PARTNERS.find((p) => p.name.toLowerCase() === item.name.toLowerCase());
-        return {
-          ...item,
-          placementCount: d ? d.placementCount : 0,
-        };
-      });
+        if (d && d.logoUrl) {
+          modified = true;
+          return { ...item, logoUrl: d.logoUrl };
+        }
+      }
+      return item;
+    });
+    if (modified) {
       await db.saveSetting("hiring_partners", JSON.stringify(migrated));
       return migrated;
     }

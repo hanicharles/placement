@@ -43,6 +43,27 @@ const CATEGORIES = [
   "Engineering & Logistics"
 ] as const;
 
+function CompanyLogo({ partner, className }: { partner: any; className?: string }) {
+  const [error, setError] = useState(false);
+  
+  if (partner.logoUrl && !error) {
+    return (
+      <img
+        src={partner.logoUrl}
+        alt={partner.name}
+        onError={() => setError(true)}
+        className={className || "h-full w-auto object-contain max-h-10 rounded"}
+      />
+    );
+  }
+  
+  return (
+    <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${partner.themeColor} text-white font-black text-lg flex items-center justify-center shadow-sm shrink-0`}>
+      {partner.logoLetter || partner.name.charAt(0)}
+    </div>
+  );
+}
+
 function HiringPartnersPage() {
   const { partners } = Route.useLoaderData() as { partners: Partner[] };
   const [searchQuery, setSearchQuery] = useState("");
@@ -149,15 +170,7 @@ function HiringPartnersPage() {
                 <div className="space-y-4">
                   {/* Top Header Card */}
                   <div className="flex items-center justify-between gap-3">
-                    <div className="h-11 w-24 flex items-center justify-start shrink-0 overflow-hidden select-none">
-                      {partner.logoUrl ? (
-                        <img src={partner.logoUrl} alt={partner.name} className="h-full w-auto object-contain max-h-10 rounded-lg" />
-                      ) : (
-                        <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${partner.themeColor} text-white font-black text-lg flex items-center justify-center shadow-sm shrink-0`}>
-                          {partner.logoLetter || partner.name.charAt(0)}
-                        </div>
-                      )}
-                    </div>
+                    <CompanyLogo partner={partner} />
                     <div className="flex flex-col items-end gap-1">
                       <span className="rounded bg-[#FFFBDC] border border-[#FFAA6E]/15 px-2.5 py-0.5 text-[9px] font-black uppercase text-neutral-700 tracking-wider leading-none truncate max-w-[150px]">
                         {partner.category}

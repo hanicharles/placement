@@ -88,6 +88,27 @@ function StatItem({ value, label, icon: Icon }: { value: string; label: string; 
   );
 }
 
+function CompanyLogo({ partner, className }: { partner: any; className?: string }) {
+  const [error, setError] = useState(false);
+  
+  if (partner.logoUrl && !error) {
+    return (
+      <img
+        src={partner.logoUrl}
+        alt={partner.name}
+        onError={() => setError(true)}
+        className={className || "h-full w-auto object-contain max-h-8 rounded"}
+      />
+    );
+  }
+  
+  return (
+    <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${partner.themeColor} text-white font-black text-xs flex items-center justify-center shadow-sm shrink-0`}>
+      {partner.logoLetter || partner.name.charAt(0)}
+    </div>
+  );
+}
+
 function ProgramCard({ title, icon: Icon, tag, description, duration, mode, link }: {
   title: string;
   icon: any;
@@ -730,36 +751,36 @@ function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {partners.slice(0, 6).map((partner, idx) => (
-              <div key={idx} className="border border-black/5 bg-white rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-                <div className="flex items-center justify-between">
-                  <div className="h-11 w-24 flex items-center justify-start shrink-0 overflow-hidden select-none">
-                    {partner.logoUrl ? (
-                      <img src={partner.logoUrl} alt={partner.name} className="h-full w-auto object-contain max-h-10 rounded-lg" />
-                    ) : (
-                      <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${partner.themeColor} text-white font-black text-lg flex items-center justify-center shadow-sm shrink-0`}>
-                        {partner.logoLetter || partner.name.charAt(0)}
-                      </div>
-                    )}
+          <div className="relative w-full overflow-hidden bg-neutral-50/50 py-8 border-y border-black/5 rounded-3xl mt-4 select-none">
+            {/* Left and Right blur shadows for premium look */}
+            <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-neutral-50 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-neutral-50 to-transparent z-10 pointer-events-none" />
+            
+            <div className="flex animate-marquee whitespace-nowrap">
+              {[...partners, ...partners].map((partner, idx) => (
+                <div
+                  key={idx}
+                  className="inline-flex items-center gap-4 bg-white border border-black/5 px-6 py-3.5 rounded-2xl shadow-sm mx-3 shrink-0 hover:border-[#FF5900] transition-colors duration-300 group/item cursor-pointer"
+                >
+                  <div className="h-8 w-16 flex items-center justify-center shrink-0">
+                    <CompanyLogo partner={partner} className="h-full w-auto object-contain max-h-7" />
                   </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <span className="rounded bg-[#FFFBDC] border border-[#FFAA6E]/15 px-2.5 py-0.5 text-[9px] font-black uppercase text-neutral-700 tracking-wider leading-none">
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-extrabold text-neutral-900 tracking-tight group-hover/item:text-[#FF5900] transition-colors duration-200">
+                      {partner.name}
+                    </span>
+                    <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider mt-0.5">
                       {partner.category}
                     </span>
                     {partner.placementCount !== undefined && partner.placementCount > 0 && (
-                      <span className="rounded bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-700 tracking-wider leading-none">
-                        ⚡ {partner.placementCount} {partner.placementCount === 1 ? "Offer" : "Offers"}
+                      <span className="text-[9px] font-black uppercase text-emerald-600 tracking-wide mt-0.5 flex items-center gap-0.5">
+                        ⚡ {partner.placementCount} Placements
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="mt-6">
-                  <h4 className="text-sm font-extrabold text-neutral-900 tracking-tight">{partner.name}</h4>
-                  <p className="mt-1 text-[11px] text-neutral-500 font-semibold line-clamp-2">{partner.description}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           <div className="mt-10 text-center">
