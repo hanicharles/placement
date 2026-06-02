@@ -104,11 +104,10 @@ function FAQAccordion({ item, isOpen, onClick }: { item: FAQItem; isOpen: boolea
 }
 
 interface ContactBusinessCardProps {
-  title: string;
+  layout: "photo-left" | "photo-right";
   name: string;
   role: string;
-  phone?: string;
-  phone2?: string;
+  phone: string;
   email: string;
   web?: string;
   address: string;
@@ -116,140 +115,184 @@ interface ContactBusinessCardProps {
 }
 
 function ContactBusinessCard({
-  title,
+  layout,
   name,
   role,
   phone,
-  phone2,
   email,
   web = "race.reva.edu.in",
   address,
   photoUrl,
 }: ContactBusinessCardProps) {
+  const isPhotoLeft = layout === "photo-left";
+
   return (
-    <div className="relative w-full max-w-[550px] bg-white border border-neutral-100 rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden px-6 py-8 sm:px-8 sm:py-9 flex flex-col-reverse sm:flex-row gap-6 sm:gap-8 items-center justify-between min-h-[320px]">
-      {/* Top-left corner sweep decoration */}
-      <div className="absolute top-0 left-0 w-32 h-32 pointer-events-none overflow-hidden select-none">
-        <svg className="w-full h-full" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#AA771C" />
-              <stop offset="25%" stopColor="#FDF6C7" />
-              <stop offset="50%" stopColor="#D4AF37" />
-              <stop offset="75%" stopColor="#F3E5AB" />
-              <stop offset="100%" stopColor="#AA771C" />
-            </linearGradient>
-          </defs>
-          <path d="M0 0 H 60 C 60 40, 40 80, 0 100 V 0 Z" fill="#FFD5B4" />
-          <path d="M0 100 C 50 80, 80 50, 100 0 H 115 C 95 65, 65 95, 0 115 V 100 Z" fill="url(#goldGradient)" />
-          <path d="M0 120 C 80 100, 100 80, 120 0" stroke="url(#goldGradient)" strokeWidth="3" />
-        </svg>
-      </div>
+    <div className={`relative w-full max-w-[720px] bg-[#F8F9FA] border border-black/5 rounded-[24px] shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden px-6 py-8 sm:px-10 sm:py-10 flex ${
+      isPhotoLeft ? "flex-col md:flex-row" : "flex-col-reverse md:flex-row"
+    } gap-8 items-center justify-between min-h-[300px]`}>
+      
+      {/* Background Zig-Zag Wave Decoration */}
+      <svg
+        className="absolute w-64 h-full text-[#FFDF9F]/15 pointer-events-none select-none z-0"
+        style={{
+          left: isPhotoLeft ? -30 : "auto",
+          right: isPhotoLeft ? "auto" : -30,
+          top: 0
+        }}
+        viewBox="0 0 100 200"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M 10,20 L 90,55 L 10,90 L 90,125 L 10,160 L 90,195" />
+      </svg>
 
-      {/* Bottom-right corner sweep decoration */}
-      <div className="absolute bottom-0 right-0 w-32 h-32 pointer-events-none overflow-hidden rotate-180 select-none">
-        <svg className="w-full h-full" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 0 H 60 C 60 40, 40 80, 0 100 V 0 Z" fill="#FFD5B4" />
-          <path d="M0 100 C 50 80, 80 50, 100 0 H 115 C 95 65, 65 95, 0 115 V 100 Z" fill="url(#goldGradient)" />
-          <path d="M0 120 C 80 100, 100 80, 120 0" stroke="url(#goldGradient)" strokeWidth="3" />
-        </svg>
-      </div>
-
-      {/* Left side: Contact Details */}
-      <div className="flex-1 text-left relative z-10 w-full mt-2 sm:mt-0">
-        {/* Topic/Category Title */}
-        <div className="mb-2">
-          <span className="text-[10px] uppercase tracking-wider font-extrabold text-[#AA771C] bg-neutral-900/5 px-2 py-0.5 rounded">
-            {title}
-          </span>
-        </div>
-
-        {/* Name */}
-        <h2 className="text-xl sm:text-2xl font-serif font-black tracking-wide text-neutral-900 leading-tight">
-          {name}
-        </h2>
-        
-        {/* Role/Subtitle */}
-        <p className="text-[11px] font-bold text-neutral-500 uppercase tracking-wide mt-1">
-          {role}
-        </p>
-
-        {/* Separator line */}
-        <div className="flex items-center gap-1.5 my-3.5 w-full max-w-[220px]">
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-[#D4AF37]" />
-          <div className="flex items-center gap-1 text-[#D4AF37]">
-            <span className="rotate-45 inline-block border border-[#D4AF37] w-1.5 h-1.5"></span>
-            <span className="rotate-45 inline-block bg-[#D4AF37] w-2 h-2"></span>
-            <span className="rotate-45 inline-block border border-[#D4AF37] w-1.5 h-1.5"></span>
-          </div>
-          <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent via-[#D4AF37] to-[#D4AF37]" />
-        </div>
-
-        {/* Details List */}
-        <div className="space-y-3 mt-3">
-          {phone && (
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-full bg-[#D4AF37] flex items-center justify-center text-white shadow-sm shrink-0">
-                <Phone className="h-3.5 w-3.5" />
-              </div>
-              <a href={`tel:${phone.replace(/\s+/g, "")}`} className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#D4AF37] hover:underline transition-colors">
-                {phone}
-              </a>
+      {/* Conditionally render photo first if photo-left, else render details first */}
+      {isPhotoLeft ? (
+        <>
+          {/* Photo container (Left on Desktop, Top on Mobile) */}
+          <div className="w-full md:w-[32%] shrink-0 flex items-center justify-center relative z-10">
+            <div className="w-40 h-52 sm:w-44 sm:h-56 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white">
+              <img
+                src={photoUrl}
+                alt={name}
+                className="w-full h-full object-cover"
+              />
             </div>
-          )}
-
-          {phone2 && (
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-full bg-[#D4AF37] flex items-center justify-center text-white shadow-sm shrink-0">
-                <Phone className="h-3.5 w-3.5" />
-              </div>
-              <a href={`tel:${phone2.split("Ext")[0].replace(/[^\d+]/g, "")}`} className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#D4AF37] hover:underline transition-colors">
-                {phone2}
-              </a>
-            </div>
-          )}
-
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-full bg-[#D4AF37] flex items-center justify-center text-white shadow-sm shrink-0">
-              <Mail className="h-3.5 w-3.5" />
-            </div>
-            <a href={`mailto:${email}`} className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#D4AF37] hover:underline transition-colors break-all">
-              {email}
-            </a>
           </div>
 
-          {web && (
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-full bg-[#D4AF37] flex items-center justify-center text-white shadow-sm shrink-0">
-                <Globe className="h-3.5 w-3.5" />
+          {/* Details container (Right on Desktop, Bottom on Mobile) */}
+          <div className="flex-1 text-left relative z-10 w-full flex flex-col justify-center">
+            {/* Name */}
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-900 leading-tight uppercase font-sans">
+              {name}
+            </h2>
+            
+            {/* Subtitle with gold accent line next to it */}
+            <div className="flex items-center gap-2.5 mt-2 mb-5">
+              <div className="h-[2.5px] w-6 bg-[#E59500] shrink-0" />
+              <span className="text-[11px] sm:text-xs font-bold text-[#E59500] tracking-wider uppercase">
+                {role}
+              </span>
+            </div>
+
+            {/* Details List */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Phone className="h-4.5 w-4.5 text-neutral-800 shrink-0" />
+                <a
+                  href={`tel:${phone.replace(/\s+/g, "")}`}
+                  className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#E59500] transition-colors"
+                >
+                  {phone}
+                </a>
               </div>
-              <a href={`https://${web}`} target="_blank" rel="noreferrer" className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#D4AF37] hover:underline transition-colors">
-                {web}
-              </a>
-            </div>
-          )}
 
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-full bg-[#D4AF37] flex items-center justify-center text-white shadow-sm shrink-0">
-              <MapPin className="h-3.5 w-3.5" />
+              <div className="flex items-center gap-3">
+                <Mail className="h-4.5 w-4.5 text-neutral-800 shrink-0" />
+                <a
+                  href={`mailto:${email}`}
+                  className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#E59500] transition-colors break-all"
+                >
+                  {email}
+                </a>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Globe className="h-4.5 w-4.5 text-neutral-800 shrink-0" />
+                <a
+                  href={`https://${web}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#E59500] transition-colors"
+                >
+                  {web}
+                </a>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <MapPin className="h-4.5 w-4.5 text-neutral-800 shrink-0 mt-0.5" />
+                <span className="text-xs sm:text-sm font-semibold text-neutral-700 leading-relaxed">
+                  {address}
+                </span>
+              </div>
             </div>
-            <span className="text-xs sm:text-sm font-semibold text-neutral-700 leading-snug">
-              {address}
-            </span>
           </div>
-        </div>
-      </div>
+        </>
+      ) : (
+        <>
+          {/* Details container (Left on Desktop, Top on Mobile) */}
+          <div className="flex-1 text-left relative z-10 w-full flex flex-col justify-center">
+            {/* Name */}
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-900 leading-tight uppercase font-sans">
+              {name}
+            </h2>
+            
+            {/* Subtitle with gold accent line next to it */}
+            <div className="flex items-center gap-2.5 mt-2 mb-5">
+              <div className="h-[2.5px] w-6 bg-[#E59500] shrink-0" />
+              <span className="text-[11px] sm:text-xs font-bold text-[#E59500] tracking-wider uppercase">
+                {role}
+              </span>
+            </div>
 
-      {/* Right side: Circular Photo */}
-      <div className="relative z-10 shrink-0 select-none">
-        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#D4AF37] shadow-lg overflow-hidden flex items-center justify-center bg-white">
-          <img
-            src={photoUrl}
-            alt={name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
+            {/* Details List */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Phone className="h-4.5 w-4.5 text-neutral-800 shrink-0" />
+                <a
+                  href={`tel:${phone.replace(/\s+/g, "")}`}
+                  className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#E59500] transition-colors"
+                >
+                  {phone}
+                </a>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Mail className="h-4.5 w-4.5 text-neutral-800 shrink-0" />
+                <a
+                  href={`mailto:${email}`}
+                  className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#E59500] transition-colors break-all"
+                >
+                  {email}
+                </a>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Globe className="h-4.5 w-4.5 text-neutral-800 shrink-0" />
+                <a
+                  href={`https://${web}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-[#E59500] transition-colors"
+                >
+                  {web}
+                </a>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <MapPin className="h-4.5 w-4.5 text-neutral-800 shrink-0 mt-0.5" />
+                <span className="text-xs sm:text-sm font-semibold text-neutral-700 leading-relaxed">
+                  {address}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Photo container (Right on Desktop, Bottom on Mobile) */}
+          <div className="w-full md:w-[32%] shrink-0 flex items-center justify-center relative z-10">
+            <div className="w-40 h-52 sm:w-44 sm:h-56 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white">
+              <img
+                src={photoUrl}
+                alt={name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -385,9 +428,9 @@ function ContactUsPage() {
 
 
         {/* Corporate Research & Trainers */}
-        <section className="mt-12 grid gap-8 grid-cols-1 lg:grid-cols-2 justify-items-center">
+        <section className="mt-12 flex flex-col gap-8 items-center">
           <ContactBusinessCard
-            title="Research & Consulting"
+            layout="photo-left"
             name="PARAMESH G"
             role="Assistant Professor & Placement Head"
             phone="+91 96556 28661"
@@ -398,7 +441,7 @@ function ContactUsPage() {
           />
 
           <ContactBusinessCard
-            title="Become a Certified Trainer"
+            layout="photo-right"
             name="SHINU ABHI, PhD"
             role="Director, Corporate Training"
             phone="+91 99729 16030"
