@@ -138,7 +138,7 @@ function ContactBusinessCard({
               <stop offset="100%" stopColor="#AA771C" />
             </linearGradient>
           </defs>
-          <path d="M0 0 H 60 C 60 40, 40 80, 0 100 V 0 Z" fill="#1E1E24" />
+          <path d="M0 0 H 60 C 60 40, 40 80, 0 100 V 0 Z" fill="#FFD5B4" />
           <path d="M0 100 C 50 80, 80 50, 100 0 H 115 C 95 65, 65 95, 0 115 V 100 Z" fill="url(#goldGradient)" />
           <path d="M0 120 C 80 100, 100 80, 120 0" stroke="url(#goldGradient)" strokeWidth="3" />
         </svg>
@@ -147,7 +147,7 @@ function ContactBusinessCard({
       {/* Bottom-right corner sweep decoration */}
       <div className="absolute bottom-0 right-0 w-32 h-32 pointer-events-none overflow-hidden rotate-180 select-none">
         <svg className="w-full h-full" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 0 H 60 C 60 40, 40 80, 0 100 V 0 Z" fill="#1E1E24" />
+          <path d="M0 0 H 60 C 60 40, 40 80, 0 100 V 0 Z" fill="#FFD5B4" />
           <path d="M0 100 C 50 80, 80 50, 100 0 H 115 C 95 65, 65 95, 0 115 V 100 Z" fill="url(#goldGradient)" />
           <path d="M0 120 C 80 100, 100 80, 120 0" stroke="url(#goldGradient)" strokeWidth="3" />
         </svg>
