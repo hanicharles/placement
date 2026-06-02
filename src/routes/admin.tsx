@@ -17,10 +17,13 @@ import {
   uploadPartnerLogoFn,
   getDashboardChartsFn,
   saveDashboardChartsFn,
+  getBatchPlacementRecordsFn,
+  saveBatchPlacementRecordsFn,
   type Partner,
   type PlacementStatRow,
   type DashboardChart,
   type ChartDataPoint,
+  type BatchPlacementRecord,
 } from "../actions";
 import { type Student, type Specialization, type Gender, type EducationItem, type WorkItem, type ProjectItem, type SkillGroup } from "@/data/students";
 import {
@@ -141,6 +144,10 @@ function AdminDashboardPage() {
   const [loadingPlacementStats, setLoadingPlacementStats] = useState(true);
   const [isPlacementStatsEditorOpen, setIsPlacementStatsEditorOpen] = useState(false);
 
+  // Batch Placement Records CRUD States
+  const [batchRecords, setBatchRecords] = useState<BatchPlacementRecord[]>([]);
+  const [loadingBatchRecords, setLoadingBatchRecords] = useState(true);
+
   // Placement Dashboard Charts CRUD States
   const [dashboardCharts, setDashboardCharts] = useState<DashboardChart[]>([]);
   const [loadingDashboardCharts, setLoadingDashboardCharts] = useState(true);
@@ -175,6 +182,7 @@ function AdminDashboardPage() {
           fetchStats();
           fetchPartners();
           fetchPlacementStats();
+          fetchBatchRecords();
           fetchDashboardCharts();
         }
       })
@@ -323,6 +331,51 @@ function AdminDashboardPage() {
       console.error("Save placement stats failed:", err);
       showNotification("error", "Error saving placement statistics.");
     }
+  };
+
+  const fetchBatchRecords = async () => {
+    setLoadingBatchRecords(true);
+    try {
+      const data = await getBatchPlacementRecordsFn();
+      setBatchRecords(data);
+    } catch (err) {
+      console.error("Failed to load batch records:", err);
+      showNotification("error", "Failed to load batch records.");
+    } finally {
+      setLoadingBatchRecords(false);
+    }
+  };
+
+  const handleSaveBatchRecords = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const result = await saveBatchPlacementRecordsFn({ data: batchRecords });
+      if (result.success) {
+        showNotification("success", "Batch Intake & Outcomes updated successfully.");
+        fetchBatchRecords();
+      } else {
+        showNotification("error", "Failed to save batch intake & outcomes.");
+      }
+    } catch (err) {
+      console.error("Save batch records failed:", err);
+      showNotification("error", "Error saving batch intake & outcomes.");
+    }
+  };
+
+  const handleAddBatchRecordRow = () => {
+    const newRow: BatchPlacementRecord = {
+      academicYear: "",
+      pgcet: 0,
+      uqmq: 0,
+      total: 0,
+      internship: 0,
+      ftPlacement: 0
+    };
+    setBatchRecords([...batchRecords, newRow]);
+  };
+
+  const handleRemoveBatchRecordRow = (idx: number) => {
+    setBatchRecords(batchRecords.filter((_, i) => i !== idx));
   };
 
   const handlePartnerLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1435,6 +1488,159 @@ function AdminDashboardPage() {
           </div>
         )}
 
+        {/* Section: Batch Intake & Outcomes */}
+        {currentSection === "placement-stats" && (
+          <div className="bg-white border border-black/5 rounded-2xl shadow-sm overflow-hidden flex flex-col mt-8 animate-fade-in">
+            <div className="bg-[#12223A] text-white px-6 py-4 flex items-center justify-between border-b border-[#F9BF29]">
+              <div>
+                <h3 className="text-base font-black uppercase tracking-wider">Edit Batch Intake & Outcomes</h3>
+                <p className="text-[10px] text-[#F9BF29] font-bold mt-0.5">Update the cohort batch sizes, admission intakes, and placements count shown on the home page</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSaveBatchRecords} className="p-6 space-y-4">
+              <div className="flex justify-between items-center mb-1 shrink-0">
+                <span className="text-xs font-black uppercase tracking-wider text-neutral-500">Batch Records</span>
+                <button
+                  type="button"
+                  onClick={handleAddBatchRecordRow}
+                  className="inline-flex items-center gap-1 bg-[#1E3E62] hover:bg-[#12223A] text-white font-extrabold text-[10px] px-3.5 py-2 rounded-xl transition shadow-sm uppercase tracking-wider cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5 stroke-[3]" /> Add New Batch Row
+                </button>
+              </div>
+
+              {loadingBatchRecords ? (
+                <div className="py-10 text-center space-y-2">
+                  <Loader2 className="h-6 w-6 animate-spin text-[#1E3E62] mx-auto" />
+                  <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Loading Batches...</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto border border-black/5 rounded-xl">
+                  <table className="w-full border-collapse text-left text-xs bg-white">
+                    <thead>
+                      <tr className="bg-neutral-50 text-neutral-500 font-black uppercase tracking-wider text-[10px] border-b border-black/5">
+                        <th className="p-3 w-[25%]">Academic Year</th>
+                        <th className="p-3 w-[15%] text-center">PGCET Intake</th>
+                        <th className="p-3 w-[15%] text-center">UQ/MQ Intake</th>
+                        <th className="p-3 w-[15%] text-center">Total Intake</th>
+                        <th className="p-3 w-[15%] text-center">Internships Placed</th>
+                        <th className="p-3 w-[15%] text-center">Full-Time Placements</th>
+                        <th className="p-3 w-[5%] text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-black/5">
+                      {batchRecords.map((row, idx) => {
+                        const calculatedTotal = (row.pgcet || 0) + (row.uqmq || 0);
+                        return (
+                          <tr key={idx} className="hover:bg-neutral-50/20 transition-colors">
+                            <td className="p-2">
+                              <input
+                                type="text"
+                                required
+                                value={row.academicYear}
+                                onChange={(e) => {
+                                  const updated = [...batchRecords];
+                                  updated[idx] = { ...row, academicYear: e.target.value };
+                                  setBatchRecords(updated);
+                                }}
+                                className="w-full rounded border border-black/10 px-2 py-1 text-xs outline-none focus:border-[#1E3E62]"
+                                placeholder="AY22–24 (FT Batch 1)"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                type="number"
+                                min={0}
+                                required
+                                value={row.pgcet}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value) || 0;
+                                  const updated = [...batchRecords];
+                                  updated[idx] = { ...row, pgcet: val, total: val + row.uqmq };
+                                  setBatchRecords(updated);
+                                }}
+                                className="w-full rounded border border-black/10 px-2 py-1 text-xs text-center outline-none focus:border-[#1E3E62]"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                type="number"
+                                min={0}
+                                required
+                                value={row.uqmq}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value) || 0;
+                                  const updated = [...batchRecords];
+                                  updated[idx] = { ...row, uqmq: val, total: row.pgcet + val };
+                                  setBatchRecords(updated);
+                                }}
+                                className="w-full rounded border border-black/10 px-2 py-1 text-xs text-center outline-none focus:border-[#1E3E62]"
+                              />
+                            </td>
+                            <td className="p-2 text-center font-bold text-neutral-800 bg-neutral-50/50">
+                              {calculatedTotal}
+                            </td>
+                            <td className="p-2">
+                              <input
+                                type="number"
+                                min={0}
+                                required
+                                value={row.internship}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value) || 0;
+                                  const updated = [...batchRecords];
+                                  updated[idx] = { ...row, internship: val };
+                                  setBatchRecords(updated);
+                                }}
+                                className="w-full rounded border border-black/10 px-2 py-1 text-xs text-center outline-none focus:border-[#1E3E62] text-amber-600 font-bold"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                type="number"
+                                min={0}
+                                required
+                                value={row.ftPlacement}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value) || 0;
+                                  const updated = [...batchRecords];
+                                  updated[idx] = { ...row, ftPlacement: val };
+                                  setBatchRecords(updated);
+                                }}
+                                className="w-full rounded border border-black/10 px-2 py-1 text-xs text-center outline-none focus:border-[#1E3E62] text-emerald-600 font-bold"
+                              />
+                            </td>
+                            <td className="p-2 text-center">
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveBatchRecordRow(idx)}
+                                className="p-1.5 rounded text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition cursor-pointer"
+                                title="Remove Row"
+                              >
+                                <Trash2 className="h-4.5 w-4.5" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              <div className="pt-4 border-t border-black/5 flex items-center justify-end gap-3 font-sans">
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E3E62] px-5 py-2.5 text-xs font-black tracking-wider text-white shadow-md hover:bg-[#12223A] transition cursor-pointer"
+                >
+                  Save Batch Intake & Outcomes
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
         {/* Section: Hiring Partners */}
         {currentSection === "partners" && (
           <div className="bg-white border border-black/5 rounded-2xl shadow-sm overflow-hidden flex flex-col animate-fade-in">
@@ -1468,6 +1674,7 @@ function AdminDashboardPage() {
                         description: "",
                         logoLetter: "",
                         themeColor: "from-blue-500 to-indigo-600",
+                        placementCount: 0,
                       });
                       setPartnerIndex(null);
                       setIsPartnerFormOpen(true);
@@ -1594,6 +1801,20 @@ function AdminDashboardPage() {
                           <option value="Healthcare & Biotech">Healthcare & Biotech</option>
                           <option value="Engineering & Logistics">Engineering & Logistics</option>
                         </select>
+                      </div>
+
+                      {/* Placement Count */}
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Placement Offer Count</label>
+                        <input
+                          type="number"
+                          min={0}
+                          required
+                          value={editingPartner.placementCount ?? 0}
+                          onChange={(e) => setEditingPartner({ ...editingPartner, placementCount: parseInt(e.target.value) || 0 })}
+                          className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                          placeholder="e.g. 5"
+                        />
                       </div>
 
                       {/* Logo Letter & Theme Color */}

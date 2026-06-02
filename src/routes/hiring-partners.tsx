@@ -158,9 +158,16 @@ function HiringPartnersPage() {
                         </div>
                       )}
                     </div>
-                    <span className="rounded bg-[#FFFBDC] border border-[#FFAA6E]/15 px-2.5 py-0.5 text-[9px] font-black uppercase text-neutral-700 tracking-wider leading-none truncate max-w-[150px]">
-                      {partner.category}
-                    </span>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="rounded bg-[#FFFBDC] border border-[#FFAA6E]/15 px-2.5 py-0.5 text-[9px] font-black uppercase text-neutral-700 tracking-wider leading-none truncate max-w-[150px]">
+                        {partner.category}
+                      </span>
+                      {partner.placementCount !== undefined && partner.placementCount > 0 && (
+                        <span className="rounded bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-700 tracking-wider leading-none">
+                          ⚡ {partner.placementCount} {partner.placementCount === 1 ? "Offer" : "Offers"}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   
                   {/* Company Info */}

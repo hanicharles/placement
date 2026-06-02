@@ -12,17 +12,18 @@ import {
   LabelList,
   CartesianGrid,
 } from "recharts";
-import { getJourneyStatsFn, getHiringPartnersFn, getPlacementStatsFn, getDashboardChartsFn } from "../actions";
+import { getJourneyStatsFn, getHiringPartnersFn, getPlacementStatsFn, getDashboardChartsFn, getBatchPlacementRecordsFn } from "../actions";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [stats, partners, placementStats, dashboardCharts] = await Promise.all([
+    const [stats, partners, placementStats, dashboardCharts, batchRecords] = await Promise.all([
       getJourneyStatsFn(),
       getHiringPartnersFn(),
       getPlacementStatsFn(),
       getDashboardChartsFn(),
+      getBatchPlacementRecordsFn(),
     ]);
-    return { stats, partners, placementStats, dashboardCharts };
+    return { stats, partners, placementStats, dashboardCharts, batchRecords };
   },
   head: () => ({
     meta: [
@@ -152,13 +153,15 @@ const iconMap: Record<string, any> = {
 };
 
 function HomePage() {
-  const { stats, partners, placementStats, dashboardCharts } = Route.useLoaderData() as {
+  const { stats, partners, placementStats, dashboardCharts, batchRecords } = Route.useLoaderData() as {
     stats: any[];
     partners: any[];
     placementStats: any[];
     dashboardCharts: any[];
+    batchRecords: any[];
   };
   const [isMounted, setIsMounted] = useState(false);
+  const [activePlacementTab, setActivePlacementTab] = useState<"intake" | "salary" | "recruiters">("intake");
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -365,6 +368,189 @@ function HomePage() {
               </div>
             );
           })()}
+
+          {/* Interactive Placement Data Center */}
+          <div className="bg-white border border-black/5 rounded-3xl shadow-sm overflow-hidden mt-8">
+            {/* Tab Navigation */}
+            <div className="bg-neutral-50 border-b border-black/5 px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h3 className="text-base font-black text-neutral-950 tracking-tight">RACE Placement Data Center</h3>
+                <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider mt-0.5">Explore intake outcomes, CTC metrics, and partner recruitment logs</p>
+              </div>
+              <div className="flex bg-neutral-200/50 p-1 rounded-xl gap-1 self-start sm:self-auto">
+                <button
+                  onClick={() => setActivePlacementTab("intake")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition duration-200 cursor-pointer ${
+                    activePlacementTab === "intake" ? "bg-[#1E3E62] text-white shadow-sm" : "text-neutral-600 hover:text-neutral-800"
+                  }`}
+                >
+                  📊 Intake & Outcomes
+                </button>
+                <button
+                  onClick={() => setActivePlacementTab("salary")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition duration-200 cursor-pointer ${
+                    activePlacementTab === "salary" ? "bg-[#1E3E62] text-white shadow-sm" : "text-neutral-600 hover:text-neutral-800"
+                  }`}
+                >
+                  💰 Salary & Stipends
+                </button>
+                <button
+                  onClick={() => setActivePlacementTab("recruiters")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition duration-200 cursor-pointer ${
+                    activePlacementTab === "recruiters" ? "bg-[#1E3E62] text-white shadow-sm" : "text-neutral-600 hover:text-neutral-800"
+                  }`}
+                >
+                  🏢 Recruiter Counts
+                </button>
+              </div>
+            </div>
+
+            {/* Tab Panels */}
+            <div className="p-6">
+              {/* Tab 1: Intake & Outcomes */}
+              {activePlacementTab === "intake" && (
+                <div className="space-y-4">
+                  <div className="overflow-x-auto border border-black/5 rounded-2xl shadow-sm">
+                    <table className="w-full border-collapse text-left text-xs bg-white">
+                      <thead>
+                        <tr className="bg-neutral-50 text-neutral-500 font-black uppercase tracking-wider text-[10px] border-b border-black/5">
+                          <th className="p-4">Academic Year</th>
+                          <th className="p-4 text-center">PGCET Intake</th>
+                          <th className="p-4 text-center">UQ/MQ Intake</th>
+                          <th className="p-4 text-center">Total Intake</th>
+                          <th className="p-4 text-center">Internships Placed</th>
+                          <th className="p-4 text-center">Full-Time Placements</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-black/5 font-semibold text-neutral-700">
+                        {batchRecords.map((r, idx) => (
+                          <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
+                            <td className="p-4 font-bold text-neutral-900">{r.academicYear}</td>
+                            <td className="p-4 text-center">{r.pgcet}</td>
+                            <td className="p-4 text-center">{r.uqmq}</td>
+                            <td className="p-4 text-center font-bold text-neutral-900">{r.total}</td>
+                            <td className="p-4 text-center text-amber-600">{r.internship}</td>
+                            <td className="p-4 text-center text-emerald-600 font-bold">{r.ftPlacement}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot>
+                        {(() => {
+                          const totalPgcet = batchRecords.reduce((acc, r) => acc + (r.pgcet || 0), 0);
+                          const totalMq = batchRecords.reduce((acc, r) => acc + (r.uqmq || 0), 0);
+                          const totalIntake = batchRecords.reduce((acc, r) => acc + (r.total || 0), 0);
+                          const totalInternship = batchRecords.reduce((acc, r) => acc + (r.internship || 0), 0);
+                          const totalFt = batchRecords.reduce((acc, r) => acc + (r.ftPlacement || 0), 0);
+                          return (
+                            <tr className="bg-emerald-50/20 font-extrabold border-t border-black/10 text-neutral-900 text-xs">
+                              <td className="p-4 uppercase tracking-wider font-black">Total / Cumulative</td>
+                              <td className="p-4 text-center">{totalPgcet}</td>
+                              <td className="p-4 text-center">{totalMq}</td>
+                              <td className="p-4 text-center font-black text-[#1E3E62]">{totalIntake}</td>
+                              <td className="p-4 text-center text-amber-700">{totalInternship}</td>
+                              <td className="p-4 text-center text-emerald-700 font-black">{totalFt}</td>
+                            </tr>
+                          );
+                        })()}
+                      </tfoot>
+                    </table>
+                  </div>
+                  <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider italic text-left">
+                    *AY25–27 (FT Batch 4) is currently ongoing. Placements and internships are actively in progress.
+                  </p>
+                </div>
+              )}
+
+              {/* Tab 2: Salary & Stipends */}
+              {activePlacementTab === "salary" && (
+                <div className="overflow-x-auto border border-black/5 rounded-2xl shadow-sm">
+                  <table className="w-full border-collapse text-left text-xs bg-white">
+                    <thead>
+                      <tr className="bg-neutral-50 text-neutral-500 font-black uppercase tracking-wider text-[10px] border-b border-black/5">
+                        <th className="p-4">Academic Year</th>
+                        <th className="p-4">Cohort Batch</th>
+                        <th className="p-4">Avg Stipend / Month</th>
+                        <th className="p-4">Median Stipend / Month</th>
+                        <th className="p-4">Highest Stipend / Month</th>
+                        <th className="p-4">Avg CTC (LPA)</th>
+                        <th className="p-4">Median CTC (LPA)</th>
+                        <th className="p-4">Highest CTC (LPA)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-black/5 font-semibold text-neutral-700">
+                      {placementStats.map((r, idx) => {
+                        const isOverall = r.academicYear.toLowerCase() === "overall";
+                        return (
+                          <tr
+                            key={idx}
+                            className={`hover:bg-neutral-50/50 transition-colors ${
+                              isOverall ? "bg-emerald-50/20 font-extrabold border-t border-black/10 text-neutral-900" : ""
+                            }`}
+                          >
+                            <td className="p-4 font-bold text-neutral-900">{r.academicYear}</td>
+                            <td className="p-4">{r.batch}</td>
+                            <td className="p-4 text-amber-600">{r.avgStipend}</td>
+                            <td className="p-4 text-neutral-600">{r.medianStipend}</td>
+                            <td className="p-4 text-[#FF5900] font-bold">{r.highestStipend}</td>
+                            <td className="p-4 text-neutral-600">{r.avgCtc}</td>
+                            <td className="p-4 text-neutral-600">{r.medianCtc}</td>
+                            <td className="p-4 text-emerald-600 font-bold">{r.highestCtc}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Tab 3: Recruiter Counts */}
+              {activePlacementTab === "recruiters" && (
+                <div className="space-y-4 animate-fade-in">
+                  <div className="overflow-x-auto border border-black/5 rounded-2xl shadow-sm">
+                    <table className="w-full border-collapse text-left text-xs bg-white">
+                      <thead>
+                        <tr className="bg-neutral-50 text-neutral-500 font-black uppercase tracking-wider text-[10px] border-b border-black/5">
+                          <th className="p-4 w-[10%] text-center">Rank</th>
+                          <th className="p-4">Recruiting Organization</th>
+                          <th className="p-4">Industry Sector</th>
+                          <th className="p-4 w-[25%] text-center">Offers Recorded</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-black/5 font-semibold text-neutral-700">
+                        {partners
+                          .filter((p) => (p.placementCount ?? 0) > 0)
+                          .sort((a, b) => (b.placementCount ?? 0) - (a.placementCount ?? 0))
+                          .map((p, idx) => (
+                            <tr key={idx} className="hover:bg-neutral-50/50 transition-colors">
+                              <td className="p-4 text-center font-bold text-neutral-400">#{idx + 1}</td>
+                              <td className="p-4 font-bold text-neutral-900 flex items-center gap-2.5">
+                                {p.logoUrl ? (
+                                  <img src={p.logoUrl} alt={p.name} className="h-6 w-auto object-contain max-h-5 rounded" />
+                                ) : (
+                                  <div className={`h-5 w-5 rounded bg-gradient-to-br ${p.themeColor} text-white font-black text-[9px] flex items-center justify-center`}>
+                                    {p.logoLetter || p.name.charAt(0)}
+                                  </div>
+                                )}
+                                {p.name}
+                              </td>
+                              <td className="p-4 text-neutral-500 text-[11px] font-bold uppercase tracking-wider">{p.category}</td>
+                              <td className="p-4 text-center">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/15 px-3 py-1 text-xs font-black text-emerald-700">
+                                  ⚡ {p.placementCount} Placements
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider italic text-left">
+                    *Includes full-time placements and corporate executive-level internship conversions.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </section>
 
         {/* Section 3.6: Historical Placement Analytics */}
@@ -739,9 +925,16 @@ function HomePage() {
                       </div>
                     )}
                   </div>
-                  <span className="rounded bg-[#FFFBDC] border border-[#FFAA6E]/15 px-2.5 py-0.5 text-[9px] font-black uppercase text-neutral-700 tracking-wider leading-none">
-                    {partner.category}
-                  </span>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="rounded bg-[#FFFBDC] border border-[#FFAA6E]/15 px-2.5 py-0.5 text-[9px] font-black uppercase text-neutral-700 tracking-wider leading-none">
+                      {partner.category}
+                    </span>
+                    {partner.placementCount !== undefined && partner.placementCount > 0 && (
+                      <span className="rounded bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-700 tracking-wider leading-none">
+                        ⚡ {partner.placementCount} {partner.placementCount === 1 ? "Offer" : "Offers"}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="mt-6">
                   <h4 className="text-sm font-extrabold text-neutral-900 tracking-tight">{partner.name}</h4>
