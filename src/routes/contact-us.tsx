@@ -394,27 +394,6 @@ function ContactUsPage() {
             address="RACE, REVA University, Bengaluru"
             photoUrl="/image/paramesh_g.png"
           />
-
-          <ContactBusinessCard
-            title="Publish With Us"
-            name="DR. RASHMI AGARWAL"
-            role="Associate Professor"
-            email="rashmi.agarwal@reva.edu.in"
-            web="race.reva.edu.in"
-            address="RACE, REVA University, Bengaluru"
-            photoUrl="/image/rashmi_agarwal.png"
-          />
-
-          <ContactBusinessCard
-            title="General Admissions Department"
-            name="ADMISSIONS OFFICE"
-            role="Course Curriculum & Calendar"
-            phone="+91 89040 58866"
-            email="race@reva.edu.in"
-            web="race.reva.edu.in"
-            address="RACE, REVA University, Bengaluru"
-            photoUrl="/image/general_admissions.png"
-          />
         </section>
 
         {/* Interactive FAQ Accordion */}
