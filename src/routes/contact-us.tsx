@@ -402,7 +402,6 @@ function ContactUsPage() {
             name="SHINU ABHI, PhD"
             role="Director, Corporate Training"
             phone="+91 99729 16030"
-            phone2="080-4696-6966 Ext. 274"
             email="shinuabhi@reva.edu.in"
             web="race.reva.edu.in"
             address="RACE, REVA University, Bengaluru"
