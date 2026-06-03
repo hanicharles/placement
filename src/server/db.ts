@@ -2,6 +2,7 @@ import { students as initialStudents, type Student } from "../data/students";
 import initialSettings from "../data/settings.json";
 import path from "path";
 import fs from "fs";
+import { Buffer } from "buffer";
 
 const DATA_DIR = path.resolve(process.cwd(), "data");
 const SQLITE_PATH = path.join(DATA_DIR, "students.db");
@@ -41,11 +42,8 @@ let dbInstance: any = null;
 let useJsonFallback = false;
 
 // Write helpers to synchronize data to static files for local Git push
-function writeToSourceStudents(studentsList: Student[]) {
-  if (isReadOnlyFileSystem) return;
-  try {
-    const filePath = path.resolve(process.cwd(), "src/data/students.ts");
-    const content = `export type Specialization = "Cybersecurity" | "Artificial Intelligence";
+function getSourceStudentsContent(studentsList: Student[]): string {
+  return `export type Specialization = "Cybersecurity" | "Artificial Intelligence";
 export type Gender = "Male" | "Female";
 
 export interface EducationItem {
@@ -103,6 +101,45 @@ export interface Student {
 
 export const students: Student[] = ${JSON.stringify(studentsList, null, 2)};
 `;
+}
+
+async function getSourceSettingsContent(): Promise<string> {
+  const settingsObj: Record<string, any> = {};
+  
+  let loaded = false;
+  if (dbInstance && !useJsonFallback) {
+    try {
+      const rows = dbInstance.prepare("SELECT * FROM settings").all() as any[];
+      for (const r of rows) {
+        try {
+          settingsObj[r.key] = JSON.parse(r.value);
+        } catch {
+          settingsObj[r.key] = r.value;
+        }
+      }
+      loaded = true;
+    } catch (e) {
+      console.warn("Failed to read settings from SQLite for sync:", e);
+    }
+  }
+  
+  if (!loaded) {
+    memorySettings.forEach((v, k) => {
+      try {
+        settingsObj[k] = JSON.parse(v);
+      } catch {
+        settingsObj[k] = v;
+      }
+    });
+  }
+  return JSON.stringify(settingsObj, null, 2);
+}
+
+function writeToSourceStudents(studentsList: Student[]) {
+  if (isReadOnlyFileSystem) return;
+  try {
+    const filePath = path.resolve(process.cwd(), "src/data/students.ts");
+    const content = getSourceStudentsContent(studentsList);
     fs.writeFileSync(filePath, content, "utf-8");
     console.log("Successfully synchronized src/data/students.ts with latest candidate data.");
   } catch (error) {
@@ -110,40 +147,12 @@ export const students: Student[] = ${JSON.stringify(studentsList, null, 2)};
   }
 }
 
-function writeToSourceSettings() {
+async function writeToSourceSettings() {
   if (isReadOnlyFileSystem) return;
   try {
     const filePath = path.resolve(process.cwd(), "src/data/settings.json");
-    const settingsObj: Record<string, any> = {};
-    
-    let loaded = false;
-    if (dbInstance && !useJsonFallback) {
-      try {
-        const rows = dbInstance.prepare("SELECT * FROM settings").all() as any[];
-        for (const r of rows) {
-          try {
-            settingsObj[r.key] = JSON.parse(r.value);
-          } catch {
-            settingsObj[r.key] = r.value;
-          }
-        }
-        loaded = true;
-      } catch (e) {
-        console.warn("Failed to read settings from SQLite for sync:", e);
-      }
-    }
-    
-    if (!loaded) {
-      memorySettings.forEach((v, k) => {
-        try {
-          settingsObj[k] = JSON.parse(v);
-        } catch {
-          settingsObj[k] = v;
-        }
-      });
-    }
-    
-    fs.writeFileSync(filePath, JSON.stringify(settingsObj, null, 2), "utf-8");
+    const content = await getSourceSettingsContent();
+    fs.writeFileSync(filePath, content, "utf-8");
     console.log("Successfully synchronized src/data/settings.json with latest settings.");
   } catch (error) {
     console.warn("Failed to synchronize src/data/settings.json:", error);
@@ -576,15 +585,118 @@ export const db = {
   },
 
   async syncToSourceFiles(): Promise<void> {
-    if (isReadOnlyFileSystem) return;
     try {
       const allStudents = await this.getStudents();
-      writeToSourceStudents(allStudents);
-      writeToSourceSettings();
-      console.log("Successfully batch-synchronized both students.ts and settings.json source files.");
+      const studentsContent = getSourceStudentsContent(allStudents);
+      const settingsContent = await getSourceSettingsContent();
+
+      let wroteLocal = false;
+      let pushedGithub = false;
+      let githubError: any = null;
+
+      // 1. Write locally if NOT in read-only environment
+      if (!isReadOnlyFileSystem) {
+        try {
+          const studentsPath = path.resolve(process.cwd(), "src/data/students.ts");
+          const settingsPath = path.resolve(process.cwd(), "src/data/settings.json");
+          fs.writeFileSync(studentsPath, studentsContent, "utf-8");
+          fs.writeFileSync(settingsPath, settingsContent, "utf-8");
+          console.log("Successfully wrote updated source files to local disk.");
+          wroteLocal = true;
+        } catch (e) {
+          console.warn("Failed to write source files to local filesystem:", e);
+        }
+      }
+
+      // 2. Push to GitHub if GITHUB_TOKEN is available
+      const token = process.env.GITHUB_TOKEN || (globalThis as any).GITHUB_TOKEN;
+      if (token) {
+        try {
+          await pushFileToGithub("src/data/students.ts", studentsContent, "db: sync candidates from admin panel");
+          await pushFileToGithub("src/data/settings.json", settingsContent, "db: sync settings from admin panel");
+          pushedGithub = true;
+        } catch (e: any) {
+          githubError = e;
+          console.error("Failed to push source files to GitHub:", e);
+        }
+      }
+
+      // 3. Return status or throw error if nothing succeeded
+      if (isReadOnlyFileSystem && !token) {
+        throw new Error(
+          "Synchronization failed: Write filesystem is read-only in production, and GITHUB_TOKEN environment variable is not configured. " +
+          "Please add a GITHUB_TOKEN environment variable (GitHub Personal Access Token with repo write permissions) in your Cloudflare Pages settings to enable saving changes on the live site."
+        );
+      }
+
+      if (githubError) {
+        throw new Error(`Sync succeeded locally but GitHub sync failed: ${githubError.message}`);
+      }
+      
+      console.log(`Synchronization complete. Local write: ${wroteLocal}, GitHub sync: ${pushedGithub}`);
     } catch (e) {
       console.error("Failed to sync to source files:", e);
       throw e;
     }
   }
 };
+
+async function pushFileToGithub(filePath: string, content: string, commitMessage: string) {
+  const token = process.env.GITHUB_TOKEN || (globalThis as any).GITHUB_TOKEN;
+  if (!token) {
+    console.warn("GITHUB_TOKEN not configured. Skipping GitHub push.");
+    return false;
+  }
+
+  const owner = "hanicharles";
+  const repo = "placement";
+  const branch = "main";
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+  try {
+    // 1. Get current file metadata to retrieve its SHA
+    let sha: string | undefined;
+    const getRes = await fetch(url + `?ref=${branch}`, {
+      headers: {
+        Authorization: `token ${token}`,
+        "User-Agent": "REVA-Race-Hub-App",
+      },
+    });
+    if (getRes.ok) {
+      const data = await getRes.json() as { sha: string };
+      sha = data.sha;
+    }
+
+    // 2. Put file content
+    const base64Content = Buffer.from(content, "utf-8").toString("base64");
+    const body: any = {
+      message: commitMessage,
+      content: base64Content,
+      branch: branch,
+    };
+    if (sha) {
+      body.sha = sha;
+    }
+
+    const putRes = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
+        "User-Agent": "REVA-Race-Hub-App",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!putRes.ok) {
+      const errText = await putRes.text();
+      throw new Error(`GitHub API upload failed: ${putRes.status} ${errText}`);
+    }
+
+    console.log(`Successfully pushed ${filePath} to GitHub repository.`);
+    return true;
+  } catch (error: any) {
+    console.error(`Failed to push ${filePath} to GitHub:`, error);
+    throw error;
+  }
+}
