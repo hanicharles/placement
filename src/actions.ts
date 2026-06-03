@@ -4,6 +4,7 @@ import { type Student } from "./data/students";
 import { getCookie, setCookie, deleteCookie } from "@tanstack/react-start/server";
 import path from "path";
 import fs from "fs";
+import { Buffer } from "buffer";
 
 const SESSION_COOKIE_NAME = "reva_admin_session";
 const SESSION_SECRET = process.env.SESSION_SECRET || "reva_race_hub_secret_2026";
