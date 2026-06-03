@@ -528,46 +528,8 @@ function AdminDashboardPage() {
     setUploadingBannerImage(true);
 
     try {
-      const compressedBase64 = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            try {
-              const canvas = document.createElement("canvas");
-              const MAX_WIDTH = 600;
-              const MAX_HEIGHT = 800;
-              let width = img.width;
-              let height = img.height;
-
-              if (width > height) {
-                if (width > MAX_WIDTH) {
-                  height *= MAX_WIDTH / width;
-                  width = MAX_WIDTH;
-                }
-              } else {
-                if (height > MAX_HEIGHT) {
-                  width *= MAX_HEIGHT / height;
-                  height = MAX_HEIGHT;
-                }
-              }
-
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext("2d");
-              ctx?.drawImage(img, 0, 0, width, height);
-              resolve(canvas.toDataURL("image/jpeg", 0.8));
-            } catch (err) {
-              console.warn("Canvas compression failed, falling back to original base64:", err);
-              resolve(event.target?.result as string);
-            }
-          };
-          img.onerror = () => resolve(event.target?.result as string);
-          img.src = event.target?.result as string;
-        };
-        reader.onerror = () => resolve("");
-        reader.readAsDataURL(file);
-      });
+      // Compress with 800px max bounds for high quality horizontal banners
+      const compressedBase64 = await compressImage(file, 800, 600, 0.7);
 
       const result = await uploadPlacementBannerFn({
         data: {
@@ -709,28 +671,32 @@ function AdminDashboardPage() {
   };
 
   // Convert and compress Image using canvas
-  const compressImage = (file: File): Promise<string> => {
+  const compressImage = (
+    file: File,
+    maxWidth = 300,
+    maxHeight = 300,
+    quality = 0.7
+  ): Promise<string> => {
     return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
+      let objectUrl: string | null = null;
+      try {
+        objectUrl = URL.createObjectURL(file);
         const img = new Image();
         img.onload = () => {
           try {
             const canvas = document.createElement("canvas");
-            const MAX_WIDTH = 300;
-            const MAX_HEIGHT = 300;
             let width = img.width;
             let height = img.height;
 
             if (width > height) {
-              if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
+              if (width > maxWidth) {
+                height *= maxWidth / width;
+                width = maxWidth;
               }
             } else {
-              if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
+              if (height > maxHeight) {
+                width *= maxHeight / height;
+                height = maxHeight;
               }
             }
 
@@ -738,23 +704,37 @@ function AdminDashboardPage() {
             canvas.height = height;
             const ctx = canvas.getContext("2d");
             ctx?.drawImage(img, 0, 0, width, height);
-            // Compress to JPEG with 0.7 quality to keep under 25KB
-            resolve(canvas.toDataURL("image/jpeg", 0.7));
+            const dataUrl = canvas.toDataURL("image/jpeg", quality);
+            if (objectUrl) URL.revokeObjectURL(objectUrl);
+            resolve(dataUrl);
           } catch (err) {
-            console.warn("Canvas compression failed, falling back to original base64:", err);
-            resolve(event.target?.result as string);
+            console.warn("Canvas compression failed, falling back to FileReader:", err);
+            if (objectUrl) URL.revokeObjectURL(objectUrl);
+            fallbackFileReader(file, resolve);
           }
         };
         img.onerror = () => {
-          resolve(event.target?.result as string);
+          if (objectUrl) URL.revokeObjectURL(objectUrl);
+          fallbackFileReader(file, resolve);
         };
-        img.src = event.target?.result as string;
-      };
-      reader.onerror = () => {
-        resolve("");
-      };
-      reader.readAsDataURL(file);
+        img.src = objectUrl;
+      } catch (e) {
+        console.warn("URL.createObjectURL failed, falling back to FileReader:", e);
+        if (objectUrl) {
+          try { URL.revokeObjectURL(objectUrl); } catch {}
+        }
+        fallbackFileReader(file, resolve);
+      }
     });
+  };
+
+  const fallbackFileReader = (file: File, resolve: (val: string) => void) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      resolve(event.target?.result as string || "");
+    };
+    reader.onerror = () => resolve("");
+    reader.readAsDataURL(file);
   };
 
   // Resume Upload & Parse handler

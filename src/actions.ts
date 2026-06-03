@@ -374,19 +374,26 @@ export const uploadResumeFn = createServerFn({ method: "POST" })
     verifyAuth();
     const { slug, base64 } = data;
     
-    const buffer = Buffer.from(base64.split(",")[1], "base64");
+    const isCloudflare = typeof globalThis !== "undefined" && (globalThis as any).cloudflareEnv !== undefined;
+    const parts = base64.split(",");
+    const base64Data = parts.length > 1 ? parts[1] : parts[0];
+    const buffer = Buffer.from(base64Data, "base64");
     let publicPath = base64;
     
-    try {
-      const uploadDir = path.resolve(process.cwd(), "public/uploads/resumes");
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
+    if (!isCloudflare) {
+      try {
+        const uploadDir = path.resolve(process.cwd(), "public/uploads/resumes");
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        const destPath = path.join(uploadDir, `${slug}.pdf`);
+        fs.writeFileSync(destPath, buffer);
+        publicPath = `/uploads/resumes/${slug}.pdf`;
+      } catch (error) {
+        console.warn("Write filesystem failed for resume, falling back to base64 inline storage:", error);
       }
-      const destPath = path.join(uploadDir, `${slug}.pdf`);
-      fs.writeFileSync(destPath, buffer);
-      publicPath = `/uploads/resumes/${slug}.pdf`;
-    } catch (error) {
-      console.warn("Write filesystem failed for resume, falling back to base64 inline storage:", error);
+    } else {
+      console.log("Cloudflare environment: Bypassing local filesystem write for resume.");
     }
 
     try {
@@ -414,8 +421,16 @@ export const uploadPhotoFn = createServerFn({ method: "POST" })
     verifyAuth();
     const { slug, base64 } = data;
     
+    const isCloudflare = typeof globalThis !== "undefined" && (globalThis as any).cloudflareEnv !== undefined;
+    if (isCloudflare) {
+      console.log("Cloudflare environment: Bypassing local filesystem write for photo.");
+      return { success: true, filePath: base64 };
+    }
+
     try {
-      const buffer = Buffer.from(base64.split(",")[1], "base64");
+      const parts = base64.split(",");
+      const base64Data = parts.length > 1 ? parts[1] : parts[0];
+      const buffer = Buffer.from(base64Data, "base64");
       const uploadDir = path.resolve(process.cwd(), "public/uploads/photos");
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
@@ -992,8 +1007,16 @@ export const uploadPartnerLogoFn = createServerFn({ method: "POST" })
     verifyAuth();
     const { slug, base64 } = data;
     
+    const isCloudflare = typeof globalThis !== "undefined" && (globalThis as any).cloudflareEnv !== undefined;
+    if (isCloudflare) {
+      console.log("Cloudflare environment: Bypassing local filesystem write for partner logo.");
+      return { success: true, filePath: base64 };
+    }
+
     try {
-      const buffer = Buffer.from(base64.split(",")[1], "base64");
+      const parts = base64.split(",");
+      const base64Data = parts.length > 1 ? parts[1] : parts[0];
+      const buffer = Buffer.from(base64Data, "base64");
       const uploadDir = path.resolve(process.cwd(), "public/uploads/partner-logos");
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
@@ -1230,8 +1253,17 @@ export const uploadPlacementBannerFn = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     verifyAuth();
     const { slug, base64 } = data;
+    
+    const isCloudflare = typeof globalThis !== "undefined" && (globalThis as any).cloudflareEnv !== undefined;
+    if (isCloudflare) {
+      console.log("Cloudflare environment: Bypassing local filesystem write for banner.");
+      return { success: true, filePath: base64 };
+    }
+
     try {
-      const buffer = Buffer.from(base64.split(",")[1], "base64");
+      const parts = base64.split(",");
+      const base64Data = parts.length > 1 ? parts[1] : parts[0];
+      const buffer = Buffer.from(base64Data, "base64");
       const uploadDir = path.resolve(process.cwd(), "public/uploads/banners");
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
