@@ -495,51 +495,6 @@ export interface Partner {
 
 const DEFAULT_PARTNERS: Partner[] = [
   {
-    name: "AWS Academy",
-    category: "Research & Academics",
-    description: "Provides cloud computing curriculum and academy resources to prepare students for AWS certifications.",
-    logoLetter: "A",
-    themeColor: "from-amber-500 to-orange-600",
-    placementCount: 0,
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=amazon.com"
-  },
-  {
-    name: "Microsoft Azure",
-    category: "Research & Academics",
-    description: "Enables cloud and academic research through advanced cloud infrastructure, services, and developer tools.",
-    logoLetter: "M",
-    themeColor: "from-blue-600 to-sky-600",
-    placementCount: 0,
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=microsoft.com"
-  },
-  {
-    name: "EC-Council",
-    category: "Cybersecurity & Ops",
-    description: "The world's leading cybersecurity technical certification body, providing professional security courses and certifications.",
-    logoLetter: "E",
-    themeColor: "from-red-600 to-rose-700",
-    placementCount: 0,
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=eccouncil.org"
-  },
-  {
-    name: "PurpleSynapz",
-    category: "Cybersecurity & Ops",
-    description: "A premier cybersecurity lab partner specializing in threat simulations, red-teaming, and hands-on cyber drills.",
-    logoLetter: "P",
-    themeColor: "from-purple-600 to-indigo-700",
-    placementCount: 0,
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=purplesynapz.com"
-  },
-  {
-    name: "CloudxLabs",
-    category: "Technology & Software",
-    description: "An online learning platform providing hands-on labs and sandboxes for DevOps, Cloud, AI, and Big Data.",
-    logoLetter: "C",
-    themeColor: "from-sky-500 to-blue-600",
-    placementCount: 0,
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=cloudxlabs.com"
-  },
-  {
     name: "Deevia Software",
     category: "Technology & Software",
     description: "Specializes in AI-driven image processing, computer vision applications, and enterprise software engineering.",
