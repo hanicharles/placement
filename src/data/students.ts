@@ -72,7 +72,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech in Artificial Intelligence",
-        "period": "Nov 2025 – Nov 2027"
+        "period": "Nov 2024 – Nov 2026"
       },
       {
         "institute": "GEC Ramangara",
@@ -187,7 +187,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2024 – Nov 2026",
+    "placement": {
+      "company": "Deevia Software",
+      "role": "AI Engineer"
+    }
   },
   {
     "slug": "alina-shibu",
@@ -206,7 +210,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University",
         "degree": "M.Tech in Artificial Intelligence",
-        "period": "2025 – 2027"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "Presidency University",
@@ -291,7 +295,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Visiminds",
+      "role": "Computer Vision Intern"
+    }
   },
   {
     "slug": "ambika-yallal",
@@ -419,7 +427,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2025 – Nov 2027",
+    "placement": {
+      "company": "IISc (Indian Institute of Science)",
+      "role": "Research Intern"
+    }
   },
   {
     "slug": "avish-t-s",
@@ -440,7 +452,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech in Artificial Intelligence",
-        "period": "2025 - Present"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "Sri Siddhartha Institute of Technology, Tumakuru",
@@ -565,7 +577,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Joining Date: 18/11/2025"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Cyberium Labs",
+      "role": "Associate Cybersecurity Engineer"
+    }
   },
   {
     "slug": "ayesha",
@@ -582,7 +598,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech in CyberSecurity",
-        "period": "2025 – 2027"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "REVA University",
@@ -670,7 +686,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Cyberium Labs",
+      "role": "Cybersecurity Analyst"
+    }
   },
   {
     "slug": "jothika-b",
@@ -690,7 +710,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech in Artificial Intelligence",
-        "period": "Nov 2025 – Nov 2027"
+        "period": "Nov 2024 – Nov 2026"
       },
       {
         "institute": "REVA University, Bengaluru, Karnataka",
@@ -772,10 +792,10 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Joining Date: 18/11/2025",
+    "programDates": "Nov 2024 – Nov 2026",
     "placement": {
-      "company": "Turmeric",
-      "role": "Intern"
+      "company": "Trmeric",
+      "role": "Full Time"
     }
   },
   {
@@ -796,7 +816,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech. in Artificial Intelligence",
-        "period": "Nov 2025 – Nov 2027"
+        "period": "Nov 2024 – Nov 2026"
       },
       {
         "institute": "REVA University",
@@ -908,7 +928,11 @@ export const students: Student[] = [
       "Identification of Different Medicinal Plants/Raw Materials through Image Processing Using Machine Learning Algorithms",
       "A Cyber Defensive Model for Diabetic Retinopathy Using Bit-Plane Methods"
     ],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2024 – Nov 2026",
+    "placement": {
+      "company": "Merck - Sigma Aldrich Chemicals",
+      "role": "Associate Software Engineer"
+    }
   },
   {
     "slug": "bhagyashree-patil",
@@ -928,7 +952,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University",
         "degree": "M.Tech Artificial Intelligence",
-        "period": "2025 – 2027"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "Presidency University",
@@ -1014,7 +1038,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Terralogic",
+      "role": "Associate Software Engineer"
+    }
   },
   {
     "slug": "chalukya-nayaka-bk",
@@ -1134,7 +1162,11 @@ export const students: Student[] = [
     "publications": [
       "Person Tracking System (Advanced Face Recognition, Anti-Spoofing & Secure Authentication Real-Time Monitoring)"
     ],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2025 – Nov 2027",
+    "placement": {
+      "company": "Enhancesys Innovation",
+      "role": "Cybersecurity Intern"
+    }
   },
   {
     "slug": "dattaguru-chettiar",
@@ -1153,7 +1185,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Sc. in Cyber Security",
-        "period": "Nov 2025 – Nov 2027"
+        "period": "Nov 2024 – Nov 2026"
       },
       {
         "institute": "REVA University",
@@ -1247,7 +1279,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027",
+    "programDates": "Nov 2024 – Nov 2026",
     "placement": {
       "company": "Justdial",
       "role": "Security Testing Intern"
@@ -1270,7 +1302,7 @@ export const students: Student[] = [
       {
         "institute": "REVA Academy for Corporate Excellence, REVA University, Bengaluru",
         "degree": "M.Tech in Artificial Intelligence",
-        "period": "Nov 2025 - Nov 2027"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "Nitte Meenakshi Institute of Technology, Bengaluru",
@@ -1386,7 +1418,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Joining Date: 18/11/2025"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Visiminds",
+      "role": "Computer Vision Intern"
+    }
   },
   {
     "slug": "janhvi-jeevan-revankar",
@@ -1407,7 +1443,7 @@ export const students: Student[] = [
       {
         "institute": "REVA Academy For Corporate Excellence, REVA University, Bengaluru, India",
         "degree": "M.Tech in Cybersecurity",
-        "period": "Nov 2025 - Nov 2027"
+        "period": "Nov 2025 – Nov 2027"
       },
       {
         "institute": "Government Engineering College, Karwar",
@@ -1509,9 +1545,9 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Joining Date: 29/10/2025",
+    "programDates": "Nov 2025 – Nov 2027",
     "placement": {
-      "company": "IISc Bangalore",
+      "company": "Ecolab",
       "role": "Intern"
     }
   },
@@ -1530,7 +1566,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Sc CS",
-        "period": "Joining: 18/11/2025"
+        "period": "Nov 2024 – Nov 2026"
       }
     ],
     "certifications": [],
@@ -1547,10 +1583,10 @@ export const students: Student[] = [
     "workExperience": [],
     "projects": [],
     "publications": [],
-    "programDates": "Joining Date: 18/11/2025",
+    "programDates": "Nov 2024 – Nov 2026",
     "placement": {
       "company": "AngelOne",
-      "role": "GRC"
+      "role": "GRC Analyst"
     }
   },
   {
@@ -1570,7 +1606,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech in Cybersecurity",
-        "period": "Nov 2025 - Nov 2027"
+        "period": "Nov 2024 – Nov 2026"
       },
       {
         "institute": "REVA University",
@@ -1681,7 +1717,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Joining Date: 09/10/2025"
+    "programDates": "Nov 2024 – Nov 2026",
+    "placement": {
+      "company": "EY (Ernst & Young)",
+      "role": "Associate Consultant"
+    }
   },
   {
     "slug": "mevada-vinit",
@@ -1701,7 +1741,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University, Bengaluru, India",
         "degree": "M.Tech in Cybersecurity",
-        "period": "Nov 2025 - Nov 2027"
+        "period": "Nov 2024 – Nov 2026"
       },
       {
         "institute": "VSITR, Gandhinagar, India",
@@ -1826,7 +1866,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Joining Date: 18/11/2025",
+    "programDates": "Nov 2024 – Nov 2026",
     "placement": {
       "company": "AngelOne",
       "role": "Security Assurance"
@@ -1954,7 +1994,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2025 – Nov 2027",
+    "placement": {
+      "company": "Cyberium Labs",
+      "role": "Cybersecurity Intern"
+    }
   },
   {
     "slug": "rajendra-rathod",
@@ -2076,7 +2120,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2025 – Nov 2027",
+    "placement": {
+      "company": "Terralogic",
+      "role": "Associate Software Engineer"
+    }
   },
   {
     "slug": "sai-krishna-km",
@@ -2096,7 +2144,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech. in Cyber Security",
-        "period": "Nov 2025 – Nov 2027"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "New Horizon College of Engineering",
@@ -2192,7 +2240,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Cyberium Labs",
+      "role": "Associate Software Engineer"
+    }
   },
   {
     "slug": "sewana-m",
@@ -2212,7 +2264,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech in Cyber Security",
-        "period": "Nov 2025 – Nov 2027"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "Sri Krishna Institute Of Technology",
@@ -2304,7 +2356,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Cyberium Labs",
+      "role": "Associate Software Engineer"
+    }
   },
   {
     "slug": "shaan-abraham",
@@ -2323,7 +2379,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Sc. in Cyber Security",
-        "period": "Nov 2025 – Nov 2027"
+        "period": "Nov 2024 – Nov 2026"
       },
       {
         "institute": "REVA University",
@@ -2436,7 +2492,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027",
+    "programDates": "Nov 2024 – Nov 2026",
     "placement": {
       "company": "Justdial",
       "role": "Security Testing Intern"
@@ -2552,8 +2608,8 @@ export const students: Student[] = [
     "publications": [],
     "programDates": "Nov 2025 – Nov 2027",
     "placement": {
-      "company": "Skyworks Solutions",
-      "role": "Intern"
+      "company": "Terralogic",
+      "role": "Software Engineering Intern"
     }
   },
   {
@@ -2574,7 +2630,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University",
         "degree": "M.Tech in Artificial Intelligence",
-        "period": "2025 – 2027"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "Sai Vidya Institute of Technology",
@@ -2657,7 +2713,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Skyworks Solutions",
+      "role": "Associate Software Engineer"
+    }
   },
   {
     "slug": "sneha-s",
@@ -2673,7 +2733,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech AI",
-        "period": "Joining: 18/11/2025"
+        "period": "Nov 2024 – Nov 2026"
       }
     ],
     "certifications": [],
@@ -2690,7 +2750,11 @@ export const students: Student[] = [
     "workExperience": [],
     "projects": [],
     "publications": [],
-    "programDates": "Joining Date: 18/11/2025"
+    "programDates": "Nov 2024 – Nov 2026",
+    "placement": {
+      "company": "BGS",
+      "role": "Associate Software Engineer"
+    }
   },
   {
     "slug": "sreediya-s",
@@ -2710,7 +2774,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech. in Cyber Security",
-        "period": "Nov 2025 – Nov 2027"
+        "period": "Nov 2023 – Nov 2025"
       },
       {
         "institute": "GEC Kushalnagar",
@@ -2811,7 +2875,11 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2023 – Nov 2025",
+    "placement": {
+      "company": "Cyberium Labs",
+      "role": "Associate Software Engineer"
+    }
   },
   {
     "slug": "veda-shivayogi",
@@ -2831,7 +2899,7 @@ export const students: Student[] = [
       {
         "institute": "REVA University (RACE)",
         "degree": "M.Tech. in Artificial Intelligence",
-        "period": "2025 – 2027"
+        "period": "Nov 2024 – Nov 2026"
       },
       {
         "institute": "University BDT College of Engineering",
@@ -2918,6 +2986,10 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027"
+    "programDates": "Nov 2024 – Nov 2026",
+    "placement": {
+      "company": "Terraign",
+      "role": "Associate Software Engineer"
+    }
   }
 ];

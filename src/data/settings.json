@@ -97,7 +97,7 @@
       "logoLetter": "I",
       "themeColor": "from-amber-500 to-orange-600",
       "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=iisc.ac.in",
-      "placementCount": 2
+      "placementCount": 3
     },
     {
       "name": "Continental",
@@ -169,7 +169,7 @@
       "logoLetter": "T",
       "themeColor": "from-indigo-500 to-blue-700",
       "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=terralogic.com",
-      "placementCount": 13
+      "placementCount": 10
     },
     {
       "name": "Cytrusst",
@@ -323,6 +323,33 @@
       "themeColor": "from-stone-600 to-stone-800",
       "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=alxplora.com",
       "placementCount": 2
+    },
+    {
+      "name": "BGS",
+      "category": "Technology & Software",
+      "description": "A prominent conglomerate offering services across engineering, education, and software sectors.",
+      "logoLetter": "B",
+      "themeColor": "from-blue-600 to-indigo-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=bgs.org.in",
+      "placementCount": 1
+    },
+    {
+      "name": "Terraign",
+      "category": "Technology & Software",
+      "description": "Specializes in digital mapping solutions, geographic information systems (GIS), and spatial data analytics.",
+      "logoLetter": "T",
+      "themeColor": "from-emerald-600 to-teal-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=terraign.com",
+      "placementCount": 3
+    },
+    {
+      "name": "Trmeric",
+      "category": "Technology & Software",
+      "description": "A digital solutions company specializing in modern web design, enterprise integration, and full-stack software development.",
+      "logoLetter": "T",
+      "themeColor": "from-amber-600 to-orange-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=trmeric.com",
+      "placementCount": 1
     }
   ],
   "placement_stats": [
