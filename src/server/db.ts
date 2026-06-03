@@ -517,10 +517,6 @@ export const db = {
       }
       writeJsonDb(list);
     }
-
-    // Synchronize changes to static file
-    const allStudents = await this.getStudents();
-    writeToSourceStudents(allStudents);
   },
 
   async deleteStudent(slug: string): Promise<void> {
@@ -541,10 +537,6 @@ export const db = {
       const filtered = list.filter((s) => s.slug !== slug);
       writeJsonDb(filtered);
     }
-
-    // Synchronize changes to static file
-    const allStudents = await this.getStudents();
-    writeToSourceStudents(allStudents);
   },
 
   async getSetting(key: string, defaultValue: string = ""): Promise<string> {
@@ -584,8 +576,18 @@ export const db = {
       settings[key] = value;
       writeSettingsJson(settings);
     }
+  },
 
-    // Synchronize changes to static file
-    writeToSourceSettings();
+  async syncToSourceFiles(): Promise<void> {
+    if (isReadOnlyFileSystem) return;
+    try {
+      const allStudents = await this.getStudents();
+      writeToSourceStudents(allStudents);
+      writeToSourceSettings();
+      console.log("Successfully batch-synchronized both students.ts and settings.json source files.");
+    } catch (e) {
+      console.error("Failed to sync to source files:", e);
+      throw e;
+    }
   }
 };

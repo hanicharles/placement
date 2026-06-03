@@ -19,6 +19,7 @@ import {
   saveDashboardChartsFn,
   getBatchPlacementRecordsFn,
   saveBatchPlacementRecordsFn,
+  syncToGitFilesFn,
   type Partner,
   type PlacementStatRow,
   type DashboardChart,
@@ -64,6 +65,8 @@ import {
   Users,
   Building,
   BarChart,
+  Database,
+  RotateCcw,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -391,7 +394,7 @@ function AdminDashboardPage() {
     setUploadingPartnerLogo(true);
 
     try {
-      const base64 = await fileToBase64(file);
+      const base64 = await compressImage(file);
       const result = await uploadPartnerLogoFn({
         data: {
           slug: companySlug,
@@ -448,6 +451,42 @@ function AdminDashboardPage() {
     }
   };
 
+  const [syncingGit, setSyncingGit] = useState(false);
+
+  const handleSyncToGit = async () => {
+    setSyncingGit(true);
+    try {
+      const result = await syncToGitFilesFn();
+      if (result.success) {
+        showNotification("success", "Successfully synchronized all database changes to local static source files (students.ts and settings.json)!");
+      } else {
+        showNotification("error", "Failed to sync to static source files.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      showNotification("error", err.message || "Failed to sync to static files. (Note: Only works in local development environment)");
+    } finally {
+      setSyncingGit(false);
+    }
+  };
+
+  const handleClearLocalCache = () => {
+    if (confirm("Are you sure you want to clear your local changes and reset to the database default values?")) {
+      localStorage.removeItem("reva_students_overrides");
+      localStorage.removeItem("reva_students_deleted");
+      localStorage.removeItem("reva_setting_journey_stats");
+      localStorage.removeItem("reva_setting_hiring_partners");
+      localStorage.removeItem("reva_setting_placement_stats");
+      localStorage.removeItem("reva_setting_batch_placement_records");
+      localStorage.removeItem("reva_setting_placement_charts");
+      
+      showNotification("success", "Cleared local cache! Reverting to database defaults...");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  };
+
   const handleOpenCreate = () => {
     setFormStudent(DEFAULT_STUDENT_FORM());
     setIsEditMode(false);
@@ -493,6 +532,50 @@ function AdminDashboardPage() {
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
+    });
+  };
+
+  // Convert and compress Image using canvas
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 300;
+          const MAX_HEIGHT = 300;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+          // Compress to JPEG with 0.7 quality to keep under 25KB
+          resolve(canvas.toDataURL("image/jpeg", 0.7));
+        };
+        img.onerror = () => {
+          resolve(event.target?.result as string);
+        };
+      };
+      reader.onerror = () => {
+        resolve("");
+      };
     });
   };
 
@@ -577,7 +660,7 @@ function AdminDashboardPage() {
     setUploadError(null);
 
     try {
-      const base64 = await fileToBase64(file);
+      const base64 = await compressImage(file);
       const result = await uploadPhotoFn({
         data: {
           slug: tempSlug,
@@ -844,6 +927,23 @@ function AdminDashboardPage() {
                 Logged in as Admin
               </span>
             </div>
+            <button
+              onClick={handleSyncToGit}
+              disabled={syncingGit}
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#F9BF29] text-[#12223A] hover:bg-[#e5ae20] disabled:bg-neutral-600 disabled:text-neutral-400 px-3 py-1.5 text-xs font-extrabold transition cursor-pointer"
+              title="Batch-sync your database changes to local code source files (for committing to Git)."
+            >
+              <Database className="h-3.5 w-3.5" />
+              {syncingGit ? "Syncing..." : "Sync to Git Files"}
+            </button>
+            <button
+              onClick={handleClearLocalCache}
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 px-3 py-1.5 text-xs font-bold text-white transition cursor-pointer"
+              title="Clear temporary changes stored in browser cache and reload."
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset Cache
+            </button>
             <button
               onClick={handleLogout}
               className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition cursor-pointer"

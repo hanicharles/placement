@@ -174,17 +174,46 @@ const iconMap: Record<string, any> = {
 };
 
 function HomePage() {
-  const { stats, partners, placementStats, dashboardCharts, batchRecords } = Route.useLoaderData() as {
+  const loaderData = Route.useLoaderData() as {
     stats: any[];
     partners: any[];
     placementStats: any[];
     dashboardCharts: any[];
     batchRecords: any[];
   };
+
+  const [stats, setStats] = useState(loaderData.stats);
+  const [partners, setPartners] = useState(loaderData.partners);
+  const [placementStats, setPlacementStats] = useState(loaderData.placementStats);
+  const [dashboardCharts, setDashboardCharts] = useState(loaderData.dashboardCharts);
+  const [batchRecords, setBatchRecords] = useState(loaderData.batchRecords);
+
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    if (typeof window !== "undefined") {
+      const statsStr = localStorage.getItem("reva_setting_journey_stats");
+      if (statsStr) {
+        try { setStats(JSON.parse(statsStr)); } catch (e) { console.error(e); }
+      }
+      const partnersStr = localStorage.getItem("reva_setting_hiring_partners");
+      if (partnersStr) {
+        try { setPartners(JSON.parse(partnersStr)); } catch (e) { console.error(e); }
+      }
+      const placementStatsStr = localStorage.getItem("reva_setting_placement_stats");
+      if (placementStatsStr) {
+        try { setPlacementStats(JSON.parse(placementStatsStr)); } catch (e) { console.error(e); }
+      }
+      const dashboardChartsStr = localStorage.getItem("reva_setting_placement_charts");
+      if (dashboardChartsStr) {
+        try { setDashboardCharts(JSON.parse(dashboardChartsStr)); } catch (e) { console.error(e); }
+      }
+      const batchRecordsStr = localStorage.getItem("reva_setting_batch_placement_records");
+      if (batchRecordsStr) {
+        try { setBatchRecords(JSON.parse(batchRecordsStr)); } catch (e) { console.error(e); }
+      }
+    }
+  }, [loaderData]);
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
       {/* Top Navigation */}

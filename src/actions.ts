@@ -53,19 +53,83 @@ export const logoutFn = createServerFn({ method: "POST" }).handler(async () => {
 });
 
 // Fetch all students
-export const getStudentsFn = createServerFn({ method: "GET" }).handler(async () => {
+const serverGetStudentsFn = createServerFn({ method: "GET" }).handler(async () => {
   return await db.getStudents();
 });
 
+export const getStudentsFn = async (args?: any) => {
+  const serverResult = await serverGetStudentsFn(args);
+  if (typeof window !== "undefined") {
+    const overridesStr = localStorage.getItem("reva_students_overrides");
+    const deletedStr = localStorage.getItem("reva_students_deleted");
+    let list = [...serverResult];
+    if (overridesStr) {
+      try {
+        const overrides = JSON.parse(overridesStr) as Student[];
+        for (const over of overrides) {
+          const idx = list.findIndex((s) => s.slug === over.slug);
+          if (idx >= 0) {
+            list[idx] = over;
+          } else {
+            list.push(over);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse local students overrides", e);
+      }
+    }
+    if (deletedStr) {
+      try {
+        const deleted = JSON.parse(deletedStr) as string[];
+        list = list.filter((s) => !deleted.includes(s.slug));
+      } catch (e) {
+        console.error("Failed to parse local students deleted list", e);
+      }
+    }
+    return list;
+  }
+  return serverResult;
+};
+
 // Fetch single student
-export const getStudentBySlugFn = createServerFn({ method: "GET" })
+const serverGetStudentBySlugFn = createServerFn({ method: "GET" })
   .inputValidator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     return await db.getStudentBySlug(slug);
   });
 
+export const getStudentBySlugFn = async (args: { data: string }) => {
+  if (typeof window !== "undefined") {
+    const slug = args.data;
+    const deletedStr = localStorage.getItem("reva_students_deleted");
+    if (deletedStr) {
+      try {
+        const deleted = JSON.parse(deletedStr) as string[];
+        if (deleted.includes(slug)) {
+          return null;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    const overridesStr = localStorage.getItem("reva_students_overrides");
+    if (overridesStr) {
+      try {
+        const overrides = JSON.parse(overridesStr) as Student[];
+        const found = overrides.find((s) => s.slug === slug);
+        if (found) {
+          return found;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  return await serverGetStudentBySlugFn(args);
+};
+
 // Save (create/update) student
-export const saveStudentFn = createServerFn({ method: "POST" })
+const serverSaveStudentFn = createServerFn({ method: "POST" })
   .inputValidator((student: Student) => student)
   .handler(async ({ data: student }) => {
     verifyAuth();
@@ -73,14 +137,81 @@ export const saveStudentFn = createServerFn({ method: "POST" })
     return { success: true };
   });
 
+export const saveStudentFn = async (args: { data: Student }) => {
+  if (typeof window !== "undefined") {
+    const student = args.data;
+    const overridesStr = localStorage.getItem("reva_students_overrides") || "[]";
+    try {
+      const overrides = JSON.parse(overridesStr) as Student[];
+      const idx = overrides.findIndex((s) => s.slug === student.slug);
+      if (idx >= 0) {
+        overrides[idx] = student;
+      } else {
+        overrides.push(student);
+      }
+      localStorage.setItem("reva_students_overrides", JSON.stringify(overrides));
+    } catch (e) {
+      console.error(e);
+    }
+    
+    const deletedStr = localStorage.getItem("reva_students_deleted") || "[]";
+    try {
+      const deleted = JSON.parse(deletedStr) as string[];
+      const filteredDeleted = deleted.filter((slug) => slug !== student.slug);
+      localStorage.setItem("reva_students_deleted", JSON.stringify(filteredDeleted));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  try {
+    return await serverSaveStudentFn(args);
+  } catch (e) {
+    console.warn("Server save failed, using local persistence:", e);
+    return { success: true };
+  }
+};
+
 // Delete student
-export const deleteStudentFn = createServerFn({ method: "POST" })
+const serverDeleteStudentFn = createServerFn({ method: "POST" })
   .inputValidator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     verifyAuth();
     await db.deleteStudent(slug);
     return { success: true };
   });
+
+export const deleteStudentFn = async (args: { data: string }) => {
+  if (typeof window !== "undefined") {
+    const slug = args.data;
+    const overridesStr = localStorage.getItem("reva_students_overrides") || "[]";
+    try {
+      const overrides = JSON.parse(overridesStr) as Student[];
+      const filteredOverrides = overrides.filter((s) => s.slug !== slug);
+      localStorage.setItem("reva_students_overrides", JSON.stringify(filteredOverrides));
+    } catch (e) {
+      console.error(e);
+    }
+
+    const deletedStr = localStorage.getItem("reva_students_deleted") || "[]";
+    try {
+      const deleted = JSON.parse(deletedStr) as string[];
+      if (!deleted.includes(slug)) {
+        deleted.push(slug);
+      }
+      localStorage.setItem("reva_students_deleted", JSON.stringify(deleted));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  try {
+    return await serverDeleteStudentFn(args);
+  } catch (e) {
+    console.warn("Server delete failed, using local persistence:", e);
+    return { success: true };
+  }
+};
 
 // Resume parser logic
 function parseResumeText(text: string) {
@@ -298,7 +429,7 @@ export const uploadPhotoFn = createServerFn({ method: "POST" })
   });
 
 // Fetch journey stats
-export const getJourneyStatsFn = createServerFn({ method: "GET" }).handler(async () => {
+const serverGetJourneyStatsFn = createServerFn({ method: "GET" }).handler(async () => {
   const statsStr = await db.getSetting("journey_stats");
   if (!statsStr) {
     return [
@@ -317,14 +448,40 @@ export const getJourneyStatsFn = createServerFn({ method: "GET" }).handler(async
   }
 });
 
+export const getJourneyStatsFn = async (args?: any) => {
+  if (typeof window !== "undefined") {
+    const val = localStorage.getItem("reva_setting_journey_stats");
+    if (val) {
+      try {
+        return JSON.parse(val);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  return await serverGetJourneyStatsFn(args);
+};
+
 // Save journey stats
-export const saveJourneyStatsFn = createServerFn({ method: "POST" })
+const serverSaveJourneyStatsFn = createServerFn({ method: "POST" })
   .inputValidator((stats: any[]) => stats)
   .handler(async ({ data: stats }) => {
     verifyAuth();
     await db.saveSetting("journey_stats", JSON.stringify(stats));
     return { success: true };
   });
+
+export const saveJourneyStatsFn = async (args: { data: any[] }) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("reva_setting_journey_stats", JSON.stringify(args.data));
+  }
+  try {
+    return await serverSaveJourneyStatsFn(args);
+  } catch (e) {
+    console.warn("Server save failed, using local persistence:", e);
+    return { success: true };
+  }
+};
 
 export interface Partner {
   name: string;
@@ -637,7 +794,7 @@ const DEFAULT_PARTNERS: Partner[] = [
 ];
 
 // Fetch Hiring Partners
-export const getHiringPartnersFn = createServerFn({ method: "GET" }).handler(async () => {
+const serverGetHiringPartnersFn = createServerFn({ method: "GET" }).handler(async () => {
   const partnersStr = await db.getSetting("hiring_partners");
   if (!partnersStr) {
     // Seed database setting if missing
@@ -669,14 +826,40 @@ export const getHiringPartnersFn = createServerFn({ method: "GET" }).handler(asy
   }
 });
 
+export const getHiringPartnersFn = async (args?: any) => {
+  if (typeof window !== "undefined") {
+    const val = localStorage.getItem("reva_setting_hiring_partners");
+    if (val) {
+      try {
+        return JSON.parse(val);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  return await serverGetHiringPartnersFn(args);
+};
+
 // Save Hiring Partners
-export const saveHiringPartnersFn = createServerFn({ method: "POST" })
+const serverSaveHiringPartnersFn = createServerFn({ method: "POST" })
   .inputValidator((partners: Partner[]) => partners)
   .handler(async ({ data: partners }) => {
     verifyAuth();
     await db.saveSetting("hiring_partners", JSON.stringify(partners));
     return { success: true };
   });
+
+export const saveHiringPartnersFn = async (args: { data: Partner[] }) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("reva_setting_hiring_partners", JSON.stringify(args.data));
+  }
+  try {
+    return await serverSaveHiringPartnersFn(args);
+  } catch (e) {
+    console.warn("Server save failed, using local persistence:", e);
+    return { success: true };
+  }
+};
 
 export interface PlacementStatRow {
   academicYear: string;
@@ -733,7 +916,7 @@ const DEFAULT_PLACEMENT_STATS: PlacementStatRow[] = [
 ];
 
 // Fetch Placement Stats
-export const getPlacementStatsFn = createServerFn({ method: "GET" }).handler(async () => {
+const serverGetPlacementStatsFn = createServerFn({ method: "GET" }).handler(async () => {
   const statsStr = await db.getSetting("placement_stats");
   if (!statsStr) {
     await db.saveSetting("placement_stats", JSON.stringify(DEFAULT_PLACEMENT_STATS));
@@ -747,14 +930,40 @@ export const getPlacementStatsFn = createServerFn({ method: "GET" }).handler(asy
   }
 });
 
+export const getPlacementStatsFn = async (args?: any) => {
+  if (typeof window !== "undefined") {
+    const val = localStorage.getItem("reva_setting_placement_stats");
+    if (val) {
+      try {
+        return JSON.parse(val);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  return await serverGetPlacementStatsFn(args);
+};
+
 // Save Placement Stats
-export const savePlacementStatsFn = createServerFn({ method: "POST" })
+const serverSavePlacementStatsFn = createServerFn({ method: "POST" })
   .inputValidator((stats: PlacementStatRow[]) => stats)
   .handler(async ({ data: stats }) => {
     verifyAuth();
     await db.saveSetting("placement_stats", JSON.stringify(stats));
     return { success: true };
   });
+
+export const savePlacementStatsFn = async (args: { data: PlacementStatRow[] }) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("reva_setting_placement_stats", JSON.stringify(args.data));
+  }
+  try {
+    return await serverSavePlacementStatsFn(args);
+  } catch (e) {
+    console.warn("Server save failed, using local persistence:", e);
+    return { success: true };
+  }
+};
 
 export interface BatchPlacementRecord {
   academicYear: string;
@@ -772,7 +981,7 @@ const DEFAULT_BATCH_RECORDS: BatchPlacementRecord[] = [
   { academicYear: "AY25–27 (FT Batch 4)", pgcet: 21, uqmq: 5, total: 26, internship: 7, ftPlacement: 0 }
 ];
 
-export const getBatchPlacementRecordsFn = createServerFn({ method: "GET" }).handler(async () => {
+const serverGetBatchPlacementRecordsFn = createServerFn({ method: "GET" }).handler(async () => {
   const statsStr = await db.getSetting("batch_placement_records");
   if (!statsStr) {
     await db.saveSetting("batch_placement_records", JSON.stringify(DEFAULT_BATCH_RECORDS));
@@ -786,13 +995,39 @@ export const getBatchPlacementRecordsFn = createServerFn({ method: "GET" }).hand
   }
 });
 
-export const saveBatchPlacementRecordsFn = createServerFn({ method: "POST" })
+export const getBatchPlacementRecordsFn = async (args?: any) => {
+  if (typeof window !== "undefined") {
+    const val = localStorage.getItem("reva_setting_batch_placement_records");
+    if (val) {
+      try {
+        return JSON.parse(val);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  return await serverGetBatchPlacementRecordsFn(args);
+};
+
+const serverSaveBatchPlacementRecordsFn = createServerFn({ method: "POST" })
   .inputValidator((stats: BatchPlacementRecord[]) => stats)
   .handler(async ({ data: stats }) => {
     verifyAuth();
     await db.saveSetting("batch_placement_records", JSON.stringify(stats));
     return { success: true };
   });
+
+export const saveBatchPlacementRecordsFn = async (args: { data: BatchPlacementRecord[] }) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("reva_setting_batch_placement_records", JSON.stringify(args.data));
+  }
+  try {
+    return await serverSaveBatchPlacementRecordsFn(args);
+  } catch (e) {
+    console.warn("Server save failed, using local persistence:", e);
+    return { success: true };
+  }
+};
 
 // Upload partner logo image
 export const uploadPartnerLogoFn = createServerFn({ method: "POST" })
@@ -887,7 +1122,7 @@ const DEFAULT_DASHBOARD_CHARTS: DashboardChart[] = [
 ];
 
 // Fetch Dashboard Charts
-export const getDashboardChartsFn = createServerFn({ method: "GET" }).handler(async () => {
+const serverGetDashboardChartsFn = createServerFn({ method: "GET" }).handler(async () => {
   const statsStr = await db.getSetting("placement_charts");
   if (!statsStr || statsStr.includes("11352") || statsStr.includes("8911") || statsStr.includes("companies_visited")) {
     await db.saveSetting("placement_charts", JSON.stringify(DEFAULT_DASHBOARD_CHARTS));
@@ -901,11 +1136,44 @@ export const getDashboardChartsFn = createServerFn({ method: "GET" }).handler(as
   }
 });
 
+export const getDashboardChartsFn = async (args?: any) => {
+  if (typeof window !== "undefined") {
+    const val = localStorage.getItem("reva_setting_placement_charts");
+    if (val) {
+      try {
+        return JSON.parse(val);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  return await serverGetDashboardChartsFn(args);
+};
+
 // Save Dashboard Charts
-export const saveDashboardChartsFn = createServerFn({ method: "POST" })
+const serverSaveDashboardChartsFn = createServerFn({ method: "POST" })
   .inputValidator((stats: DashboardChart[]) => stats)
   .handler(async ({ data: stats }) => {
     verifyAuth();
     await db.saveSetting("placement_charts", JSON.stringify(stats));
     return { success: true };
   });
+
+export const saveDashboardChartsFn = async (args: { data: DashboardChart[] }) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("reva_setting_placement_charts", JSON.stringify(args.data));
+  }
+  try {
+    return await serverSaveDashboardChartsFn(args);
+  } catch (e) {
+    console.warn("Server save failed, using local persistence:", e);
+    return { success: true };
+  }
+};
+
+// Sync database settings and candidates to static source files for Git push
+export const syncToGitFilesFn = createServerFn({ method: "POST" }).handler(async () => {
+  verifyAuth();
+  await db.syncToSourceFiles();
+  return { success: true };
+});

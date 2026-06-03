@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { SiteNav } from "@/components/site-nav";
 import {
   ArrowLeft,
@@ -65,7 +65,22 @@ function CompanyLogo({ partner, className }: { partner: any; className?: string 
 }
 
 function HiringPartnersPage() {
-  const { partners } = Route.useLoaderData() as { partners: Partner[] };
+  const { partners: serverPartners } = Route.useLoaderData() as { partners: Partner[] };
+  const [partners, setPartners] = useState<Partner[]>(serverPartners);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const overridesStr = localStorage.getItem("reva_setting_hiring_partners");
+      if (overridesStr) {
+        try {
+          setPartners(JSON.parse(overridesStr));
+        } catch (e) {
+          console.error("Failed to parse local hiring partners", e);
+        }
+      }
+    }
+  }, [serverPartners]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("All");
 

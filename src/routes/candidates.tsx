@@ -54,7 +54,41 @@ function specColor(s: Specialization) {
 }
 
 function BrochurePage() {
-  const { students } = Route.useLoaderData() as { students: Student[] };
+  const { students: serverStudents } = Route.useLoaderData() as { students: Student[] };
+  const [students, setStudents] = useState<Student[]>(serverStudents);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const overridesStr = localStorage.getItem("reva_students_overrides");
+      const deletedStr = localStorage.getItem("reva_students_deleted");
+      let list = [...serverStudents];
+      if (overridesStr) {
+        try {
+          const overrides = JSON.parse(overridesStr) as Student[];
+          for (const over of overrides) {
+            const idx = list.findIndex((s) => s.slug === over.slug);
+            if (idx >= 0) {
+              list[idx] = over;
+            } else {
+              list.push(over);
+            }
+          }
+        } catch (e) {
+          console.error("Failed to parse local students overrides", e);
+        }
+      }
+      if (deletedStr) {
+        try {
+          const deleted = JSON.parse(deletedStr) as string[];
+          list = list.filter((s) => !deleted.includes(s.slug));
+        } catch (e) {
+          console.error("Failed to parse local students deleted list", e);
+        }
+      }
+      setStudents(list);
+    }
+  }, [serverStudents]);
+
   const [search, setSearch] = useState("");
   const [selectedSpecs, setSelectedSpecs] = useState<Set<Specialization>>(new Set());
   const [gender, setGender] = useState<"All" | "Male" | "Female">("All");
@@ -136,7 +170,7 @@ function BrochurePage() {
     return Array.from(m.entries())
       .map(([key, v]) => ({ key, ...v }))
       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
-  }, []);
+  }, [students]);
 
   const skillLabelByKey = useMemo(() => {
     return new Map(skillCatalog.map((s) => [s.key, s.label] as const));
