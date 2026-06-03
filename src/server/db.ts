@@ -364,8 +364,149 @@ export function slugify(name: string): string {
 }
 
 // Unified Database API
+function getD1Db() {
+  const env = (globalThis as any).cloudflareEnv;
+  return env?.DB;
+}
+
+let d1Initialized = false;
+
+async function initializeD1(d1: any) {
+  if (d1Initialized) return;
+  try {
+    // 1. Create tables
+    await d1.prepare(`
+      CREATE TABLE IF NOT EXISTS students (
+        slug TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        headline TEXT NOT NULL,
+        specialization TEXT NOT NULL,
+        gender TEXT NOT NULL,
+        location TEXT,
+        phone TEXT,
+        email TEXT,
+        collegeEmail TEXT,
+        linkedin TEXT,
+        github TEXT,
+        photo TEXT,
+        resume TEXT,
+        about TEXT NOT NULL,
+        education TEXT,
+        certifications TEXT,
+        skills TEXT,
+        workExperience TEXT,
+        projects TEXT,
+        publications TEXT,
+        programDates TEXT,
+        placement TEXT
+      )
+    `).run();
+
+    await d1.prepare(`
+      CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      )
+    `).run();
+
+    // 2. Seed students if empty
+    const countRow = await d1.prepare("SELECT COUNT(*) as count FROM students").first() as { count: number } | null;
+    const studentCount = countRow?.count ?? 0;
+    if (studentCount === 0) {
+      console.log("D1 Database empty. Seeding from students.ts...");
+      for (const s of initialStudents) {
+        await d1.prepare(`
+          INSERT INTO students (
+            slug, name, headline, specialization, gender, location, phone, email, collegeEmail,
+            linkedin, github, photo, resume, about, education, certifications, skills,
+            workExperience, projects, publications, programDates, placement
+          ) VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+          )
+        `).bind(
+          s.slug,
+          s.name,
+          s.headline,
+          s.specialization,
+          s.gender,
+          s.location || null,
+          s.phone || null,
+          s.email || null,
+          s.collegeEmail || null,
+          s.linkedin || null,
+          s.github || null,
+          s.photo || null,
+          s.resume || null,
+          s.about,
+          JSON.stringify(s.education || []),
+          JSON.stringify(s.certifications || []),
+          JSON.stringify(s.skills || []),
+          JSON.stringify(s.workExperience || []),
+          JSON.stringify(s.projects || []),
+          JSON.stringify(s.publications || []),
+          s.programDates || null,
+          s.placement ? JSON.stringify(s.placement) : null
+        ).run();
+      }
+      console.log(`Seeded ${initialStudents.length} candidates into Cloudflare D1.`);
+    }
+
+    // 3. Seed settings if empty
+    const settingsCountRow = await d1.prepare("SELECT COUNT(*) as count FROM settings").first() as { count: number } | null;
+    const settingsCount = settingsCountRow?.count ?? 0;
+    if (settingsCount === 0) {
+      console.log("D1 Settings empty. Seeding from settings.json...");
+      for (const [k, v] of Object.entries(initialSettings)) {
+        await d1.prepare("INSERT INTO settings (key, value) VALUES (?, ?)")
+          .bind(k, typeof v === "string" ? v : JSON.stringify(v))
+          .run();
+      }
+      console.log("Seeded default settings into Cloudflare D1.");
+    }
+
+    d1Initialized = true;
+  } catch (err) {
+    console.error("Failed to initialize or seed Cloudflare D1 database:", err);
+  }
+}
+
+// Unified Database API
 export const db = {
   async getStudents(): Promise<Student[]> {
+    const d1 = getD1Db();
+    if (d1) {
+      try {
+        await initializeD1(d1);
+        const { results } = await d1.prepare("SELECT * FROM students ORDER BY name ASC").all();
+        return results.map((r: any) => ({
+          slug: r.slug,
+          name: r.name,
+          headline: r.headline,
+          specialization: r.specialization,
+          gender: r.gender,
+          location: r.location || undefined,
+          phone: r.phone || undefined,
+          email: r.email || undefined,
+          collegeEmail: r.collegeEmail || undefined,
+          linkedin: r.linkedin || undefined,
+          github: r.github || undefined,
+          photo: r.photo || undefined,
+          resume: r.resume || undefined,
+          about: r.about,
+          education: JSON.parse(r.education || "[]"),
+          certifications: JSON.parse(r.certifications || "[]"),
+          skills: JSON.parse(r.skills || "[]"),
+          workExperience: JSON.parse(r.workExperience || "[]"),
+          projects: JSON.parse(r.projects || "[]"),
+          publications: JSON.parse(r.publications || "[]"),
+          programDates: r.programDates || undefined,
+          placement: r.placement ? JSON.parse(r.placement) : undefined,
+        }));
+      } catch (error) {
+        console.error("Cloudflare D1 read failed, falling back to SQLite/JSON", error);
+      }
+    }
+
     const sqlite = await getSqliteDb();
     if (sqlite && !useJsonFallback) {
       try {
@@ -404,6 +545,42 @@ export const db = {
   },
 
   async getStudentBySlug(slug: string): Promise<Student | null> {
+    const d1 = getD1Db();
+    if (d1) {
+      try {
+        await initializeD1(d1);
+        const r = await d1.prepare("SELECT * FROM students WHERE slug = ?").bind(slug).first() as any;
+        if (r) {
+          return {
+            slug: r.slug,
+            name: r.name,
+            headline: r.headline,
+            specialization: r.specialization,
+            gender: r.gender,
+            location: r.location || undefined,
+            phone: r.phone || undefined,
+            email: r.email || undefined,
+            collegeEmail: r.collegeEmail || undefined,
+            linkedin: r.linkedin || undefined,
+            github: r.github || undefined,
+            photo: r.photo || undefined,
+            resume: r.resume || undefined,
+            about: r.about,
+            education: JSON.parse(r.education || "[]"),
+            certifications: JSON.parse(r.certifications || "[]"),
+            skills: JSON.parse(r.skills || "[]"),
+            workExperience: JSON.parse(r.workExperience || "[]"),
+            projects: JSON.parse(r.projects || "[]"),
+            publications: JSON.parse(r.publications || "[]"),
+            programDates: r.programDates || undefined,
+            placement: r.placement ? JSON.parse(r.placement) : undefined,
+          };
+        }
+      } catch (error) {
+        console.error("Cloudflare D1 query by slug failed, falling back to SQLite/JSON", error);
+      }
+    }
+
     const sqlite = await getSqliteDb();
     if (sqlite && !useJsonFallback) {
       try {
@@ -448,11 +625,13 @@ export const db = {
       s.slug = slugify(s.name);
     }
 
-    const sqlite = await getSqliteDb();
     let saved = false;
-    if (sqlite && !useJsonFallback) {
+
+    const d1 = getD1Db();
+    if (d1) {
       try {
-        sqlite.prepare(`
+        await initializeD1(d1);
+        await d1.prepare(`
           INSERT INTO students (
             slug, name, headline, specialization, gender, location, phone, email, collegeEmail,
             linkedin, github, photo, resume, about, education, certifications, skills,
@@ -482,7 +661,7 @@ export const db = {
             publications=excluded.publications,
             programDates=excluded.programDates,
             placement=excluded.placement
-        `).run(
+        `).bind(
           s.slug,
           s.name,
           s.headline,
@@ -505,10 +684,75 @@ export const db = {
           JSON.stringify(s.publications || []),
           s.programDates || null,
           s.placement ? JSON.stringify(s.placement) : null
-        );
+        ).run();
         saved = true;
       } catch (error) {
-        console.error("SQLite save failed, falling back to JSON", error);
+        console.error("Cloudflare D1 save failed, falling back to SQLite/JSON", error);
+      }
+    }
+
+    if (!saved) {
+      const sqlite = await getSqliteDb();
+      if (sqlite && !useJsonFallback) {
+        try {
+          sqlite.prepare(`
+            INSERT INTO students (
+              slug, name, headline, specialization, gender, location, phone, email, collegeEmail,
+              linkedin, github, photo, resume, about, education, certifications, skills,
+              workExperience, projects, publications, programDates, placement
+            ) VALUES (
+              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            )
+            ON CONFLICT(slug) DO UPDATE SET
+              name=excluded.name,
+              headline=excluded.headline,
+              specialization=excluded.specialization,
+              gender=excluded.gender,
+              location=excluded.location,
+              phone=excluded.phone,
+              email=excluded.email,
+              collegeEmail=excluded.collegeEmail,
+              linkedin=excluded.linkedin,
+              github=excluded.github,
+              photo=excluded.photo,
+              resume=excluded.resume,
+              about=excluded.about,
+              education=excluded.education,
+              certifications=excluded.certifications,
+              skills=excluded.skills,
+              workExperience=excluded.workExperience,
+              projects=excluded.projects,
+              publications=excluded.publications,
+              programDates=excluded.programDates,
+              placement=excluded.placement
+          `).run(
+            s.slug,
+            s.name,
+            s.headline,
+            s.specialization,
+            s.gender,
+            s.location || null,
+            s.phone || null,
+            s.email || null,
+            s.collegeEmail || null,
+            s.linkedin || null,
+            s.github || null,
+            s.photo || null,
+            s.resume || null,
+            s.about,
+            JSON.stringify(s.education || []),
+            JSON.stringify(s.certifications || []),
+            JSON.stringify(s.skills || []),
+            JSON.stringify(s.workExperience || []),
+            JSON.stringify(s.projects || []),
+            JSON.stringify(s.publications || []),
+            s.programDates || null,
+            s.placement ? JSON.stringify(s.placement) : null
+          );
+          saved = true;
+        } catch (error) {
+          console.error("SQLite save failed, falling back to JSON", error);
+        }
       }
     }
 
@@ -526,14 +770,28 @@ export const db = {
   },
 
   async deleteStudent(slug: string): Promise<void> {
-    const sqlite = await getSqliteDb();
     let deleted = false;
-    if (sqlite && !useJsonFallback) {
+
+    const d1 = getD1Db();
+    if (d1) {
       try {
-        sqlite.prepare("DELETE FROM students WHERE slug = ?").run(slug);
+        await initializeD1(d1);
+        await d1.prepare("DELETE FROM students WHERE slug = ?").bind(slug).run();
         deleted = true;
       } catch (error) {
-        console.error("SQLite delete failed, falling back to JSON", error);
+        console.error("Cloudflare D1 delete failed, falling back to SQLite/JSON", error);
+      }
+    }
+
+    if (!deleted) {
+      const sqlite = await getSqliteDb();
+      if (sqlite && !useJsonFallback) {
+        try {
+          sqlite.prepare("DELETE FROM students WHERE slug = ?").run(slug);
+          deleted = true;
+        } catch (error) {
+          console.error("SQLite delete failed, falling back to JSON", error);
+        }
       }
     }
 
@@ -546,6 +804,17 @@ export const db = {
   },
 
   async getSetting(key: string, defaultValue: string = ""): Promise<string> {
+    const d1 = getD1Db();
+    if (d1) {
+      try {
+        await initializeD1(d1);
+        const r = await d1.prepare("SELECT value FROM settings WHERE key = ?").bind(key).first() as { value: string } | null;
+        if (r) return r.value;
+      } catch (error) {
+        console.error("Cloudflare D1 getSetting failed, falling back to SQLite/JSON", error);
+      }
+    }
+
     const sqlite = await getSqliteDb();
     if (sqlite && !useJsonFallback) {
       try {
@@ -560,17 +829,34 @@ export const db = {
   },
 
   async saveSetting(key: string, value: string): Promise<void> {
-    const sqlite = await getSqliteDb();
     let saved = false;
-    if (sqlite && !useJsonFallback) {
+
+    const d1 = getD1Db();
+    if (d1) {
       try {
-        sqlite.prepare(`
+        await initializeD1(d1);
+        await d1.prepare(`
           INSERT INTO settings (key, value) VALUES (?, ?)
           ON CONFLICT(key) DO UPDATE SET value=excluded.value
-        `).run(key, value);
+        `).bind(key, value).run();
         saved = true;
       } catch (error) {
-        console.error("SQLite saveSetting failed, falling back to JSON", error);
+        console.error("Cloudflare D1 saveSetting failed, falling back to SQLite/JSON", error);
+      }
+    }
+
+    if (!saved) {
+      const sqlite = await getSqliteDb();
+      if (sqlite && !useJsonFallback) {
+        try {
+          sqlite.prepare(`
+            INSERT INTO settings (key, value) VALUES (?, ?)
+            ON CONFLICT(key) DO UPDATE SET value=excluded.value
+          `).run(key, value);
+          saved = true;
+        } catch (error) {
+          console.error("SQLite saveSetting failed, falling back to JSON", error);
+        }
       }
     }
 
