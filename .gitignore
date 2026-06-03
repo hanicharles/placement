@@ -38,9 +38,7 @@ data/*.db-wal
 data/*.db-shm
 
 # Candidate resumes & uploaded files (containing PII/sensitive info)
-rez/
-public/rez/
-public/uploads/
+/rez/
 
 # Local scratch directory
 scratch/
