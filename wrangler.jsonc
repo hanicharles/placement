@@ -8,7 +8,7 @@
     {
       "binding": "DB",
       "database_name": "reva-placement-db",
-      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+      "database_id": "23f33622-8291-427c-9f32-2403ea3551ff"
     }
   ]
 }
