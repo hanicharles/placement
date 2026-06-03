@@ -530,10 +530,8 @@ function AdminDashboardPage() {
     try {
       const compressedBase64 = await new Promise<string>((resolve) => {
         const reader = new FileReader();
-        reader.readAsDataURL(file);
         reader.onload = (event) => {
           const img = new Image();
-          img.src = event.target?.result as string;
           img.onload = () => {
             const canvas = document.createElement("canvas");
             const MAX_WIDTH = 600;
@@ -560,7 +558,10 @@ function AdminDashboardPage() {
             resolve(canvas.toDataURL("image/jpeg", 0.8));
           };
           img.onerror = () => resolve(event.target?.result as string);
+          img.src = event.target?.result as string;
         };
+        reader.onerror = () => resolve("");
+        reader.readAsDataURL(file);
       });
 
       const result = await uploadPlacementBannerFn({
@@ -706,10 +707,8 @@ function AdminDashboardPage() {
   const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve) => {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
       reader.onload = (event) => {
         const img = new Image();
-        img.src = event.target?.result as string;
         img.onload = () => {
           const canvas = document.createElement("canvas");
           const MAX_WIDTH = 300;
@@ -739,10 +738,12 @@ function AdminDashboardPage() {
         img.onerror = () => {
           resolve(event.target?.result as string);
         };
+        img.src = event.target?.result as string;
       };
       reader.onerror = () => {
         resolve("");
       };
+      reader.readAsDataURL(file);
     });
   };
 
