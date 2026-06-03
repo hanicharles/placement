@@ -6,7 +6,7 @@
       "iconName": "GraduationCap"
     },
     {
-      "value": "44",
+      "value": "48",
       "label": "FT Placement",
       "iconName": "Users"
     },
@@ -28,12 +28,58 @@
   ],
   "hiring_partners": [
     {
+      "name": "AWS Academy",
+      "category": "Research & Academics",
+      "description": "Provides cloud computing curriculum and academy resources to prepare students for AWS certifications.",
+      "logoLetter": "A",
+      "themeColor": "from-amber-500 to-orange-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=amazon.com",
+      "placementCount": 0
+    },
+    {
+      "name": "Microsoft Azure",
+      "category": "Research & Academics",
+      "description": "Enables cloud and academic research through advanced cloud infrastructure, services, and developer tools.",
+      "logoLetter": "M",
+      "themeColor": "from-blue-600 to-sky-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=microsoft.com",
+      "placementCount": 0
+    },
+    {
+      "name": "EC-Council",
+      "category": "Cybersecurity & Ops",
+      "description": "The world's leading cybersecurity technical certification body, providing professional security courses and certifications.",
+      "logoLetter": "E",
+      "themeColor": "from-red-600 to-rose-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=eccouncil.org",
+      "placementCount": 0
+    },
+    {
+      "name": "PurpleSynapz",
+      "category": "Cybersecurity & Ops",
+      "description": "A premier cybersecurity lab partner specializing in threat simulations, red-teaming, and hands-on cyber drills.",
+      "logoLetter": "P",
+      "themeColor": "from-purple-600 to-indigo-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=purplesynapz.com",
+      "placementCount": 0
+    },
+    {
+      "name": "CloudxLabs",
+      "category": "Technology & Software",
+      "description": "An online learning platform providing hands-on labs and sandboxes for DevOps, Cloud, AI, and Big Data.",
+      "logoLetter": "C",
+      "themeColor": "from-sky-500 to-blue-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cloudxlabs.com",
+      "placementCount": 0
+    },
+    {
       "name": "Deevia Software",
       "category": "Technology & Software",
       "description": "Specializes in AI-driven image processing, computer vision applications, and enterprise software engineering.",
       "logoLetter": "D",
       "themeColor": "from-blue-500 to-indigo-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=deevia.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=deevia.com",
+      "placementCount": 1
     },
     {
       "name": "Merck - Sigma Aldrich Chemicals",
@@ -41,7 +87,8 @@
       "description": "A leading global life science and technology company providing chemicals, lab materials, and bio-pharmaceutical solutions.",
       "logoLetter": "M",
       "themeColor": "from-emerald-500 to-teal-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=sigmaaldrich.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=sigmaaldrich.com",
+      "placementCount": 1
     },
     {
       "name": "IISc (Indian Institute of Science)",
@@ -49,7 +96,8 @@
       "description": "India's premier research institution renowned globally for advanced scientific and technological research and education.",
       "logoLetter": "I",
       "themeColor": "from-amber-500 to-orange-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=iisc.ac.in"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=iisc.ac.in",
+      "placementCount": 2
     },
     {
       "name": "Continental",
@@ -57,7 +105,8 @@
       "description": "A pioneer in automotive technology, smart mobility infrastructure, and advanced embedded systems engineering.",
       "logoLetter": "C",
       "themeColor": "from-slate-600 to-slate-800",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=continental.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=continental.com",
+      "placementCount": 1
     },
     {
       "name": "Enhancesys Innovation",
@@ -65,7 +114,8 @@
       "description": "Develops advanced IoT automation systems, cloud security telemetry, and network operations solutions.",
       "logoLetter": "E",
       "themeColor": "from-cyan-500 to-blue-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=enhancesys.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=enhancesys.com",
+      "placementCount": 2
     },
     {
       "name": "Vconnex Pvt. Ltd",
@@ -73,7 +123,8 @@
       "description": "Delivers end-to-end IT consulting, custom software architectures, and digital transformation solutions.",
       "logoLetter": "V",
       "themeColor": "from-rose-500 to-pink-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=vconnex.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=vconnex.com",
+      "placementCount": 1
     },
     {
       "name": "Grant Thornton",
@@ -81,7 +132,8 @@
       "description": "A leading global professional services network providing audit, tax, advisory, and corporate compliance services.",
       "logoLetter": "G",
       "themeColor": "from-purple-600 to-violet-700",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=grantthornton.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=grantthornton.com",
+      "placementCount": 1
     },
     {
       "name": "Senseops Tech Solutions",
@@ -89,7 +141,8 @@
       "description": "Specializes in intelligent log analysis, threat intelligence modeling, and SOC automation solutions.",
       "logoLetter": "S",
       "themeColor": "from-red-500 to-rose-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=senseops.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=senseops.com",
+      "placementCount": 1
     },
     {
       "name": "66degrees",
@@ -97,7 +150,8 @@
       "description": "An elite Google Cloud Premier Partner focused on AI integration, big data analytics, and cloud modernization.",
       "logoLetter": "6",
       "themeColor": "from-sky-500 to-indigo-500",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=66degrees.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=66degrees.com",
+      "placementCount": 1
     },
     {
       "name": "Virtually Testing Foundation",
@@ -105,7 +159,8 @@
       "description": "A premier non-profit organization offering cybersecurity internships, lab testing, and vulnerability assessments.",
       "logoLetter": "T",
       "themeColor": "from-emerald-600 to-teal-700",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=virtuallytesting.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=virtuallytesting.com",
+      "placementCount": 1
     },
     {
       "name": "Terralogic",
@@ -113,7 +168,8 @@
       "description": "Provides full-stack engineering, comprehensive cybersecurity operations, and digital infrastructure support.",
       "logoLetter": "T",
       "themeColor": "from-indigo-500 to-blue-700",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=terralogic.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=terralogic.com",
+      "placementCount": 13
     },
     {
       "name": "Cytrusst",
@@ -121,7 +177,8 @@
       "description": "Specializes in governance, risk assessment, corporate information security auditing, and compliance.",
       "logoLetter": "C",
       "themeColor": "from-purple-500 to-indigo-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cytrusst.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cytrusst.com",
+      "placementCount": 1
     },
     {
       "name": "Ecolab",
@@ -129,7 +186,8 @@
       "description": "The global leader in water, hygiene, and infection prevention solutions and services.",
       "logoLetter": "E",
       "themeColor": "from-blue-600 to-sky-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=ecolab.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=ecolab.com",
+      "placementCount": 3
     },
     {
       "name": "Saint Gobain",
@@ -137,7 +195,8 @@
       "description": "Designs, manufactures, and distributes high-performance materials and solutions for industrial applications.",
       "logoLetter": "S",
       "themeColor": "from-stone-500 to-stone-700",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=saint-gobain.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=saint-gobain.com",
+      "placementCount": 1
     },
     {
       "name": "Cybrisk",
@@ -145,7 +204,8 @@
       "description": "Focuses on active threat mitigation, incident response pipelines, and cybersecurity threat profiling.",
       "logoLetter": "C",
       "themeColor": "from-red-600 to-orange-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cybrisk.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cybrisk.com",
+      "placementCount": 1
     },
     {
       "name": "Visiminds",
@@ -153,7 +213,8 @@
       "description": "Develops advanced computer vision models and monocular lane hazard anticipation systems.",
       "logoLetter": "V",
       "themeColor": "from-violet-500 to-purple-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=visiminds.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=visiminds.com",
+      "placementCount": 6
     },
     {
       "name": "Tsaaro",
@@ -161,7 +222,8 @@
       "description": "A leading data privacy consulting firm specializing in GDPR, HIPAA, and custom compliance audits.",
       "logoLetter": "T",
       "themeColor": "from-orange-500 to-amber-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=tsaaro.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=tsaaro.com",
+      "placementCount": 1
     },
     {
       "name": "LKQ India Private Limited",
@@ -169,7 +231,8 @@
       "description": "A leading distributor of alternative and specialty automotive parts and diagnostic components.",
       "logoLetter": "L",
       "themeColor": "from-slate-500 to-slate-700",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=lkqcorp.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=lkqcorp.com",
+      "placementCount": 1
     },
     {
       "name": "Swiss Re",
@@ -177,7 +240,8 @@
       "description": "One of the world's leading providers of reinsurance, insurance-based risk transfer, and actuarial modeling.",
       "logoLetter": "S",
       "themeColor": "from-cyan-600 to-blue-700",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=swissre.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=swissre.com",
+      "placementCount": 1
     },
     {
       "name": "Endpoint E Clinical India Private Limited",
@@ -185,7 +249,8 @@
       "description": "Develops interactive clinical trial software and secure data management pipelines for healthcare providers.",
       "logoLetter": "E",
       "themeColor": "from-emerald-500 to-green-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=endpointclinical.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=endpointclinical.com",
+      "placementCount": 1
     },
     {
       "name": "Cyberium Labs",
@@ -193,7 +258,8 @@
       "description": "Specializes in secure ledger technologies, advanced cryptography, and decentralized identity proofing.",
       "logoLetter": "C",
       "themeColor": "from-rose-600 to-red-700",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cyberiumlabs.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cyberiumlabs.com",
+      "placementCount": 13
     },
     {
       "name": "iCompaas",
@@ -201,7 +267,8 @@
       "description": "An automated cloud security and compliance platform optimizing configurations for multi-cloud environments.",
       "logoLetter": "I",
       "themeColor": "from-amber-600 to-yellow-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=icompaas.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=icompaas.com",
+      "placementCount": 1
     },
     {
       "name": "EY (Ernst & Young)",
@@ -209,7 +276,8 @@
       "description": "A global leader in assurance, consulting, strategy, transactions, and corporate advisory services.",
       "logoLetter": "E",
       "themeColor": "from-yellow-500 to-amber-500",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=ey.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=ey.com",
+      "placementCount": 3
     },
     {
       "name": "AngelOne",
@@ -217,7 +285,8 @@
       "description": "A prominent technology-led financial services brokerage and digital investment platform.",
       "logoLetter": "A",
       "themeColor": "from-indigo-600 to-violet-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=angelone.in"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=angelone.in",
+      "placementCount": 5
     },
     {
       "name": "Skyworks Solutions",
@@ -225,7 +294,8 @@
       "description": "An innovator of high-performance analog semiconductors connecting wireless infrastructure and devices.",
       "logoLetter": "S",
       "themeColor": "from-sky-600 to-blue-800",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=skyworksinc.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=skyworksinc.com",
+      "placementCount": 10
     },
     {
       "name": "Zillion Technologies",
@@ -233,7 +303,8 @@
       "description": "Offers global digital transformation consultation, systems integration, and software engineering services.",
       "logoLetter": "Z",
       "themeColor": "from-pink-500 to-purple-600",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=zilliontechnologies.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=zilliontechnologies.com",
+      "placementCount": 0
     },
     {
       "name": "Siemens Healthcare",
@@ -241,7 +312,8 @@
       "description": "A global medical technology pioneer delivering state-of-the-art diagnostic imaging and clinical software.",
       "logoLetter": "S",
       "themeColor": "from-teal-600 to-cyan-700",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=siemens-healthineers.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=siemens-healthineers.com",
+      "placementCount": 0
     },
     {
       "name": "Alxplora Technologies",
@@ -249,7 +321,8 @@
       "description": "Delivers data-driven product analytics, machine learning prototypes, and custom business intelligence dashboards.",
       "logoLetter": "A",
       "themeColor": "from-stone-600 to-stone-800",
-      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=alxplora.com"
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=alxplora.com",
+      "placementCount": 2
     }
   ],
   "placement_stats": [
@@ -266,17 +339,17 @@
     {
       "academicYear": "AY23–25",
       "batch": "FT Batch 2",
-      "avgStipend": "₹ 28,000.00",
+      "avgStipend": "₹ 26,000.00",
       "medianStipend": "₹ 30,000.00",
       "highestStipend": "₹ 42,000.00",
-      "avgCtc": "₹ 9.13 LPA",
+      "avgCtc": "₹ 9.15 LPA",
       "medianCtc": "₹ 7.00 LPA",
       "highestCtc": "₹ 39.76 LPA"
     },
     {
       "academicYear": "AY24–26",
       "batch": "FT Batch 3",
-      "avgStipend": "₹ 23,000.00",
+      "avgStipend": "₹ 25,000.00",
       "medianStipend": "₹ 25,000.00",
       "highestStipend": "₹ 35,000.00",
       "avgCtc": "₹ 6.00 LPA",
@@ -294,6 +367,143 @@
       "highestCtc": "₹ 39.76 LPA"
     }
   ],
-  "batch_placement_records": [],
-  "placement_charts": []
+  "batch_placement_records": [
+    {
+      "academicYear": "AY22–24 (FT Batch 1)",
+      "pgcet": 3,
+      "uqmq": 6,
+      "total": 9,
+      "internship": 9,
+      "ftPlacement": 8
+    },
+    {
+      "academicYear": "AY23–25 (FT Batch 2)",
+      "pgcet": 19,
+      "uqmq": 10,
+      "total": 29,
+      "internship": 26,
+      "ftPlacement": 25
+    },
+    {
+      "academicYear": "AY24–26 (FT Batch 3)",
+      "pgcet": 18,
+      "uqmq": 14,
+      "total": 32,
+      "internship": 28,
+      "ftPlacement": 15
+    },
+    {
+      "academicYear": "AY25–27 (FT Batch 4)",
+      "pgcet": 21,
+      "uqmq": 5,
+      "total": 26,
+      "internship": 7,
+      "ftPlacement": 0
+    }
+  ],
+  "placement_charts": [
+    {
+      "id": "batch_size",
+      "title": "Total Admitted Students",
+      "color": "#3b82f6",
+      "footnote1": "*M.Tech AI & Cybersecurity executive cohorts",
+      "footnote2": "*REVA University Department of RACE",
+      "data": [
+        {
+          "year": "AY22-24",
+          "value": 9
+        },
+        {
+          "year": "AY23-25",
+          "value": 29
+        },
+        {
+          "year": "AY24-26",
+          "value": 32
+        },
+        {
+          "year": "AY25-27",
+          "value": 26
+        }
+      ]
+    },
+    {
+      "id": "internship_offers",
+      "title": "Internship Offers",
+      "color": "#f59e0b",
+      "footnote1": "*Includes paid corporate executive internships",
+      "footnote2": "*AY25-27 batch is currently ongoing",
+      "data": [
+        {
+          "year": "AY22-24",
+          "value": 9
+        },
+        {
+          "year": "AY23-25",
+          "value": 26
+        },
+        {
+          "year": "AY24-26",
+          "value": 28
+        },
+        {
+          "year": "AY25-27",
+          "value": 7,
+          "hasAsterisk": true
+        }
+      ]
+    },
+    {
+      "id": "ft_placements",
+      "title": "Full-Time Placements",
+      "color": "#10b981",
+      "footnote1": "*Lateral executive placement transitions",
+      "footnote2": "*AY24-26 & AY25-27 placements are ongoing",
+      "data": [
+        {
+          "year": "AY22-24",
+          "value": 8
+        },
+        {
+          "year": "AY23-25",
+          "value": 25
+        },
+        {
+          "year": "AY24-26",
+          "value": 15,
+          "hasAsterisk": true
+        },
+        {
+          "year": "AY25-27",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "highest_ctc",
+      "title": "Highest Package Offered (LPA)",
+      "color": "#FF5900",
+      "footnote1": "*In Lakhs Per Annum (INR)",
+      "footnote2": "*Highest compensation package recorded per batch",
+      "data": [
+        {
+          "year": "AY22-24",
+          "value": 10
+        },
+        {
+          "year": "AY23-25",
+          "value": 39.76
+        },
+        {
+          "year": "AY24-26",
+          "value": 15,
+          "hasAsterisk": true
+        },
+        {
+          "year": "AY25-27",
+          "value": 0
+        }
+      ]
+    }
+  ]
 }
