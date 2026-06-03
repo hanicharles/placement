@@ -197,32 +197,12 @@ function HomePage() {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
-    if (typeof window !== "undefined") {
-      const statsStr = localStorage.getItem("reva_setting_journey_stats");
-      if (statsStr) {
-        try { setStats(JSON.parse(statsStr)); } catch (e) { console.error(e); }
-      }
-      const partnersStr = localStorage.getItem("reva_setting_hiring_partners");
-      if (partnersStr) {
-        try { setPartners(JSON.parse(partnersStr)); } catch (e) { console.error(e); }
-      }
-      const placementStatsStr = localStorage.getItem("reva_setting_placement_stats");
-      if (placementStatsStr) {
-        try { setPlacementStats(JSON.parse(placementStatsStr)); } catch (e) { console.error(e); }
-      }
-      const dashboardChartsStr = localStorage.getItem("reva_setting_placement_charts");
-      if (dashboardChartsStr) {
-        try { setDashboardCharts(JSON.parse(dashboardChartsStr)); } catch (e) { console.error(e); }
-      }
-      const batchRecordsStr = localStorage.getItem("reva_setting_batch_placement_records");
-      if (batchRecordsStr) {
-        try { setBatchRecords(JSON.parse(batchRecordsStr)); } catch (e) { console.error(e); }
-      }
-      const bannersStr = localStorage.getItem("reva_setting_placement_banners");
-      if (bannersStr) {
-        try { setPlacementBanners(JSON.parse(bannersStr)); } catch (e) { console.error(e); }
-      }
-    }
+    setStats(loaderData.journeyStats);
+    setPartners(loaderData.partners);
+    setPlacementStats(loaderData.placementStats);
+    setDashboardCharts(loaderData.dashboardCharts);
+    setBatchRecords(loaderData.batchRecords);
+    setPlacementBanners(loaderData.placementBanners);
   }, [loaderData]);
   return (
     <div className="min-h-screen bg-white font-sans antialiased">

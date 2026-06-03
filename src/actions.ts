@@ -59,37 +59,7 @@ const serverGetStudentsFn = createServerFn({ method: "GET" }).handler(async () =
 });
 
 export const getStudentsFn = async (args?: any) => {
-  const serverResult = await serverGetStudentsFn(args);
-  if (typeof window !== "undefined") {
-    const overridesStr = localStorage.getItem("reva_students_overrides");
-    const deletedStr = localStorage.getItem("reva_students_deleted");
-    let list = [...serverResult];
-    if (overridesStr) {
-      try {
-        const overrides = JSON.parse(overridesStr) as Student[];
-        for (const over of overrides) {
-          const idx = list.findIndex((s) => s.slug === over.slug);
-          if (idx >= 0) {
-            list[idx] = over;
-          } else {
-            list.push(over);
-          }
-        }
-      } catch (e) {
-        console.error("Failed to parse local students overrides", e);
-      }
-    }
-    if (deletedStr) {
-      try {
-        const deleted = JSON.parse(deletedStr) as string[];
-        list = list.filter((s) => !deleted.includes(s.slug));
-      } catch (e) {
-        console.error("Failed to parse local students deleted list", e);
-      }
-    }
-    return list;
-  }
-  return serverResult;
+  return await serverGetStudentsFn(args);
 };
 
 // Fetch single student
@@ -100,32 +70,6 @@ const serverGetStudentBySlugFn = createServerFn({ method: "GET" })
   });
 
 export const getStudentBySlugFn = async (args: { data: string }) => {
-  if (typeof window !== "undefined") {
-    const slug = args.data;
-    const deletedStr = localStorage.getItem("reva_students_deleted");
-    if (deletedStr) {
-      try {
-        const deleted = JSON.parse(deletedStr) as string[];
-        if (deleted.includes(slug)) {
-          return null;
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    const overridesStr = localStorage.getItem("reva_students_overrides");
-    if (overridesStr) {
-      try {
-        const overrides = JSON.parse(overridesStr) as Student[];
-        const found = overrides.find((s) => s.slug === slug);
-        if (found) {
-          return found;
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
   return await serverGetStudentBySlugFn(args);
 };
 
@@ -139,38 +83,7 @@ const serverSaveStudentFn = createServerFn({ method: "POST" })
   });
 
 export const saveStudentFn = async (args: { data: Student }) => {
-  if (typeof window !== "undefined") {
-    const student = args.data;
-    const overridesStr = localStorage.getItem("reva_students_overrides") || "[]";
-    try {
-      const overrides = JSON.parse(overridesStr) as Student[];
-      const idx = overrides.findIndex((s) => s.slug === student.slug);
-      if (idx >= 0) {
-        overrides[idx] = student;
-      } else {
-        overrides.push(student);
-      }
-      localStorage.setItem("reva_students_overrides", JSON.stringify(overrides));
-    } catch (e) {
-      console.error(e);
-    }
-    
-    const deletedStr = localStorage.getItem("reva_students_deleted") || "[]";
-    try {
-      const deleted = JSON.parse(deletedStr) as string[];
-      const filteredDeleted = deleted.filter((slug) => slug !== student.slug);
-      localStorage.setItem("reva_students_deleted", JSON.stringify(filteredDeleted));
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  try {
-    return await serverSaveStudentFn(args);
-  } catch (e) {
-    console.warn("Server save failed, using local persistence:", e);
-    return { success: true };
-  }
+  return await serverSaveStudentFn(args);
 };
 
 // Delete student
@@ -183,35 +96,7 @@ const serverDeleteStudentFn = createServerFn({ method: "POST" })
   });
 
 export const deleteStudentFn = async (args: { data: string }) => {
-  if (typeof window !== "undefined") {
-    const slug = args.data;
-    const overridesStr = localStorage.getItem("reva_students_overrides") || "[]";
-    try {
-      const overrides = JSON.parse(overridesStr) as Student[];
-      const filteredOverrides = overrides.filter((s) => s.slug !== slug);
-      localStorage.setItem("reva_students_overrides", JSON.stringify(filteredOverrides));
-    } catch (e) {
-      console.error(e);
-    }
-
-    const deletedStr = localStorage.getItem("reva_students_deleted") || "[]";
-    try {
-      const deleted = JSON.parse(deletedStr) as string[];
-      if (!deleted.includes(slug)) {
-        deleted.push(slug);
-      }
-      localStorage.setItem("reva_students_deleted", JSON.stringify(deleted));
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  try {
-    return await serverDeleteStudentFn(args);
-  } catch (e) {
-    console.warn("Server delete failed, using local persistence:", e);
-    return { success: true };
-  }
+  return await serverDeleteStudentFn(args);
 };
 
 // Resume parser logic
@@ -465,16 +350,6 @@ const serverGetJourneyStatsFn = createServerFn({ method: "GET" }).handler(async 
 });
 
 export const getJourneyStatsFn = async (args?: any) => {
-  if (typeof window !== "undefined") {
-    const val = localStorage.getItem("reva_setting_journey_stats");
-    if (val) {
-      try {
-        return JSON.parse(val);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
   return await serverGetJourneyStatsFn(args);
 };
 
@@ -488,15 +363,7 @@ const serverSaveJourneyStatsFn = createServerFn({ method: "POST" })
   });
 
 export const saveJourneyStatsFn = async (args: { data: any[] }) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("reva_setting_journey_stats", JSON.stringify(args.data));
-  }
-  try {
-    return await serverSaveJourneyStatsFn(args);
-  } catch (e) {
-    console.warn("Server save failed, using local persistence:", e);
-    return { success: true };
-  }
+  return await serverSaveJourneyStatsFn(args);
 };
 
 export interface Partner {
@@ -798,16 +665,6 @@ const serverGetHiringPartnersFn = createServerFn({ method: "GET" }).handler(asyn
 });
 
 export const getHiringPartnersFn = async (args?: any) => {
-  if (typeof window !== "undefined") {
-    const val = localStorage.getItem("reva_setting_hiring_partners");
-    if (val) {
-      try {
-        return JSON.parse(val);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
   return await serverGetHiringPartnersFn(args);
 };
 
@@ -821,15 +678,7 @@ const serverSaveHiringPartnersFn = createServerFn({ method: "POST" })
   });
 
 export const saveHiringPartnersFn = async (args: { data: Partner[] }) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("reva_setting_hiring_partners", JSON.stringify(args.data));
-  }
-  try {
-    return await serverSaveHiringPartnersFn(args);
-  } catch (e) {
-    console.warn("Server save failed, using local persistence:", e);
-    return { success: true };
-  }
+  return await serverSaveHiringPartnersFn(args);
 };
 
 export interface PlacementStatRow {
@@ -902,16 +751,6 @@ const serverGetPlacementStatsFn = createServerFn({ method: "GET" }).handler(asyn
 });
 
 export const getPlacementStatsFn = async (args?: any) => {
-  if (typeof window !== "undefined") {
-    const val = localStorage.getItem("reva_setting_placement_stats");
-    if (val) {
-      try {
-        return JSON.parse(val);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
   return await serverGetPlacementStatsFn(args);
 };
 
@@ -925,15 +764,7 @@ const serverSavePlacementStatsFn = createServerFn({ method: "POST" })
   });
 
 export const savePlacementStatsFn = async (args: { data: PlacementStatRow[] }) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("reva_setting_placement_stats", JSON.stringify(args.data));
-  }
-  try {
-    return await serverSavePlacementStatsFn(args);
-  } catch (e) {
-    console.warn("Server save failed, using local persistence:", e);
-    return { success: true };
-  }
+  return await serverSavePlacementStatsFn(args);
 };
 
 export interface BatchPlacementRecord {
@@ -967,16 +798,6 @@ const serverGetBatchPlacementRecordsFn = createServerFn({ method: "GET" }).handl
 });
 
 export const getBatchPlacementRecordsFn = async (args?: any) => {
-  if (typeof window !== "undefined") {
-    const val = localStorage.getItem("reva_setting_batch_placement_records");
-    if (val) {
-      try {
-        return JSON.parse(val);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
   return await serverGetBatchPlacementRecordsFn(args);
 };
 
@@ -989,15 +810,7 @@ const serverSaveBatchPlacementRecordsFn = createServerFn({ method: "POST" })
   });
 
 export const saveBatchPlacementRecordsFn = async (args: { data: BatchPlacementRecord[] }) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("reva_setting_batch_placement_records", JSON.stringify(args.data));
-  }
-  try {
-    return await serverSaveBatchPlacementRecordsFn(args);
-  } catch (e) {
-    console.warn("Server save failed, using local persistence:", e);
-    return { success: true };
-  }
+  return await serverSaveBatchPlacementRecordsFn(args);
 };
 
 // Upload partner logo image
@@ -1116,16 +929,6 @@ const serverGetDashboardChartsFn = createServerFn({ method: "GET" }).handler(asy
 });
 
 export const getDashboardChartsFn = async (args?: any) => {
-  if (typeof window !== "undefined") {
-    const val = localStorage.getItem("reva_setting_placement_charts");
-    if (val) {
-      try {
-        return JSON.parse(val);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
   return await serverGetDashboardChartsFn(args);
 };
 
@@ -1139,15 +942,7 @@ const serverSaveDashboardChartsFn = createServerFn({ method: "POST" })
   });
 
 export const saveDashboardChartsFn = async (args: { data: DashboardChart[] }) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("reva_setting_placement_charts", JSON.stringify(args.data));
-  }
-  try {
-    return await serverSaveDashboardChartsFn(args);
-  } catch (e) {
-    console.warn("Server save failed, using local persistence:", e);
-    return { success: true };
-  }
+  return await serverSaveDashboardChartsFn(args);
 };
 
 // Sync database settings and candidates to static source files for Git push
@@ -1213,16 +1008,6 @@ const serverGetPlacementBannersFn = createServerFn({ method: "GET" }).handler(as
 });
 
 export const getPlacementBannersFn = async (args?: any) => {
-  if (typeof window !== "undefined") {
-    const val = localStorage.getItem("reva_setting_placement_banners");
-    if (val) {
-      try {
-        return JSON.parse(val);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
   return await serverGetPlacementBannersFn(args);
 };
 
@@ -1236,15 +1021,7 @@ const serverSavePlacementBannersFn = createServerFn({ method: "POST" })
   });
 
 export const savePlacementBannersFn = async (args: { data: PlacementBanner[] }) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("reva_setting_placement_banners", JSON.stringify(args.data));
-  }
-  try {
-    return await serverSavePlacementBannersFn(args);
-  } catch (e) {
-    console.warn("Server save failed, using local persistence:", e);
-    return { success: true };
-  }
+  return await serverSavePlacementBannersFn(args);
 };
 
 // Upload Placement Banner Image

@@ -52,20 +52,7 @@ function ProfilePage() {
   const [student, setStudent] = useState<Student>(serverStudent);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const overridesStr = localStorage.getItem("reva_students_overrides");
-      if (overridesStr) {
-        try {
-          const overrides = JSON.parse(overridesStr) as Student[];
-          const over = overrides.find((s) => s.slug === serverStudent.slug);
-          if (over) {
-            setStudent(over);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
+    setStudent(serverStudent);
   }, [serverStudent]);
 
   const isPlaced = !!student.placement;

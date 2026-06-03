@@ -69,16 +69,7 @@ function HiringPartnersPage() {
   const [partners, setPartners] = useState<Partner[]>(serverPartners);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const overridesStr = localStorage.getItem("reva_setting_hiring_partners");
-      if (overridesStr) {
-        try {
-          setPartners(JSON.parse(overridesStr));
-        } catch (e) {
-          console.error("Failed to parse local hiring partners", e);
-        }
-      }
-    }
+    setPartners(serverPartners);
   }, [serverPartners]);
 
   const [searchQuery, setSearchQuery] = useState("");
