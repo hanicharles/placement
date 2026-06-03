@@ -187,11 +187,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2024 – Nov 2026",
-    "placement": {
-      "company": "Deevia Software",
-      "role": "AI Engineer"
-    }
+    "programDates": "Nov 2024 – Nov 2026"
   },
   {
     "slug": "alina-shibu",
@@ -295,11 +291,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Visiminds",
-      "role": "Computer Vision Intern"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "ambika-yallal",
@@ -427,11 +419,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027",
-    "placement": {
-      "company": "IISc (Indian Institute of Science)",
-      "role": "Research Intern"
-    }
+    "programDates": "Nov 2025 – Nov 2027"
   },
   {
     "slug": "avish-t-s",
@@ -577,11 +565,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Cyberium Labs",
-      "role": "Associate Cybersecurity Engineer"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "ayesha",
@@ -686,11 +670,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Cyberium Labs",
-      "role": "Cybersecurity Analyst"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "jothika-b",
@@ -795,7 +775,7 @@ export const students: Student[] = [
     "programDates": "Nov 2024 – Nov 2026",
     "placement": {
       "company": "Trmeric",
-      "role": "Full Time"
+      "role": "UI Engineer"
     }
   },
   {
@@ -928,11 +908,7 @@ export const students: Student[] = [
       "Identification of Different Medicinal Plants/Raw Materials through Image Processing Using Machine Learning Algorithms",
       "A Cyber Defensive Model for Diabetic Retinopathy Using Bit-Plane Methods"
     ],
-    "programDates": "Nov 2024 – Nov 2026",
-    "placement": {
-      "company": "Merck - Sigma Aldrich Chemicals",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2024 – Nov 2026"
   },
   {
     "slug": "bhagyashree-patil",
@@ -1038,11 +1014,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Terralogic",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "chalukya-nayaka-bk",
@@ -1162,11 +1134,7 @@ export const students: Student[] = [
     "publications": [
       "Person Tracking System (Advanced Face Recognition, Anti-Spoofing & Secure Authentication Real-Time Monitoring)"
     ],
-    "programDates": "Nov 2025 – Nov 2027",
-    "placement": {
-      "company": "Enhancesys Innovation",
-      "role": "Cybersecurity Intern"
-    }
+    "programDates": "Nov 2025 – Nov 2027"
   },
   {
     "slug": "dattaguru-chettiar",
@@ -1418,11 +1386,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Visiminds",
-      "role": "Computer Vision Intern"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "janhvi-jeevan-revankar",
@@ -1547,7 +1511,7 @@ export const students: Student[] = [
     "publications": [],
     "programDates": "Nov 2025 – Nov 2027",
     "placement": {
-      "company": "Ecolab",
+      "company": "IISc Bangalore",
       "role": "Intern"
     }
   },
@@ -1586,7 +1550,7 @@ export const students: Student[] = [
     "programDates": "Nov 2024 – Nov 2026",
     "placement": {
       "company": "AngelOne",
-      "role": "GRC Analyst"
+      "role": "GRC"
     }
   },
   {
@@ -1717,11 +1681,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2024 – Nov 2026",
-    "placement": {
-      "company": "EY (Ernst & Young)",
-      "role": "Associate Consultant"
-    }
+    "programDates": "Nov 2024 – Nov 2026"
   },
   {
     "slug": "mevada-vinit",
@@ -1994,11 +1954,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027",
-    "placement": {
-      "company": "Cyberium Labs",
-      "role": "Cybersecurity Intern"
-    }
+    "programDates": "Nov 2025 – Nov 2027"
   },
   {
     "slug": "rajendra-rathod",
@@ -2120,11 +2076,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2025 – Nov 2027",
-    "placement": {
-      "company": "Terralogic",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2025 – Nov 2027"
   },
   {
     "slug": "sai-krishna-km",
@@ -2240,11 +2192,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Cyberium Labs",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "sewana-m",
@@ -2356,11 +2304,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Cyberium Labs",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "shaan-abraham",
@@ -2608,8 +2552,8 @@ export const students: Student[] = [
     "publications": [],
     "programDates": "Nov 2025 – Nov 2027",
     "placement": {
-      "company": "Terralogic",
-      "role": "Software Engineering Intern"
+      "company": "Skyworks Solutions",
+      "role": "Intern"
     }
   },
   {
@@ -2713,11 +2657,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Skyworks Solutions",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "sneha-s",
@@ -2750,11 +2690,7 @@ export const students: Student[] = [
     "workExperience": [],
     "projects": [],
     "publications": [],
-    "programDates": "Nov 2024 – Nov 2026",
-    "placement": {
-      "company": "BGS",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2024 – Nov 2026"
   },
   {
     "slug": "sreediya-s",
@@ -2875,11 +2811,7 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2023 – Nov 2025",
-    "placement": {
-      "company": "Cyberium Labs",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2023 – Nov 2025"
   },
   {
     "slug": "veda-shivayogi",
@@ -2986,10 +2918,6 @@ export const students: Student[] = [
       }
     ],
     "publications": [],
-    "programDates": "Nov 2024 – Nov 2026",
-    "placement": {
-      "company": "Terraign",
-      "role": "Associate Software Engineer"
-    }
+    "programDates": "Nov 2024 – Nov 2026"
   }
 ];
