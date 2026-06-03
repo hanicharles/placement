@@ -344,7 +344,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "A",
     themeColor: "from-amber-500 to-orange-600",
     placementCount: 0,
-    logoUrl: "https://logo.clearbit.com/amazon.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=amazon.com"
   },
   {
     name: "Microsoft Azure",
@@ -353,7 +353,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "M",
     themeColor: "from-blue-600 to-sky-600",
     placementCount: 0,
-    logoUrl: "https://logo.clearbit.com/microsoft.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=microsoft.com"
   },
   {
     name: "EC-Council",
@@ -362,7 +362,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "E",
     themeColor: "from-red-600 to-rose-700",
     placementCount: 0,
-    logoUrl: "https://logo.clearbit.com/eccouncil.org"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=eccouncil.org"
   },
   {
     name: "PurpleSynapz",
@@ -380,7 +380,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "C",
     themeColor: "from-sky-500 to-blue-600",
     placementCount: 0,
-    logoUrl: "https://logo.clearbit.com/cloudxlabs.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=cloudxlabs.com"
   },
   {
     name: "Deevia Software",
@@ -398,7 +398,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "M",
     themeColor: "from-emerald-500 to-teal-600",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/merckgroup.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=merckgroup.com"
   },
   {
     name: "IISc (Indian Institute of Science)",
@@ -416,7 +416,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "C",
     themeColor: "from-slate-600 to-slate-800",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/continental.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=continental.com"
   },
   {
     name: "Enhancesys Innovation",
@@ -443,7 +443,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "G",
     themeColor: "from-purple-600 to-violet-700",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/grantthornton.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=grantthornton.com"
   },
   {
     name: "Senseops Tech Solutions",
@@ -461,7 +461,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "6",
     themeColor: "from-sky-500 to-indigo-500",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/66degrees.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=66degrees.com"
   },
   {
     name: "Virtually Testing Foundation",
@@ -470,7 +470,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "T",
     themeColor: "from-emerald-600 to-teal-700",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/virtuallytesting.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=virtuallytesting.com"
   },
   {
     name: "Terralogic",
@@ -479,7 +479,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "T",
     themeColor: "from-indigo-500 to-blue-700",
     placementCount: 13,
-    logoUrl: "https://logo.clearbit.com/terralogic.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=terralogic.com"
   },
   {
     name: "Cytrusst",
@@ -497,7 +497,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "E",
     themeColor: "from-blue-600 to-sky-600",
     placementCount: 4,
-    logoUrl: "https://logo.clearbit.com/ecolab.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=ecolab.com"
   },
   {
     name: "Saint Gobain",
@@ -506,7 +506,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "S",
     themeColor: "from-stone-500 to-stone-700",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/saint-gobain.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=saint-gobain.com"
   },
   {
     name: "Cybrisk",
@@ -533,7 +533,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "T",
     themeColor: "from-orange-500 to-amber-600",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/tsaaro.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=tsaaro.com"
   },
   {
     name: "LKQ India Private Limited",
@@ -542,7 +542,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "L",
     themeColor: "from-slate-500 to-slate-700",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/lkqcorp.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=lkqcorp.com"
   },
   {
     name: "Swiss Re",
@@ -551,7 +551,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "S",
     themeColor: "from-cyan-600 to-blue-700",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/swissre.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=swissre.com"
   },
   {
     name: "Endpoint E Clinical India Private Limited",
@@ -560,7 +560,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "E",
     themeColor: "from-emerald-500 to-green-600",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/endpointclinical.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=endpointclinical.com"
   },
   {
     name: "Cyberium Labs",
@@ -578,7 +578,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "I",
     themeColor: "from-amber-600 to-yellow-600",
     placementCount: 1,
-    logoUrl: "https://logo.clearbit.com/icompaas.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=icompaas.com"
   },
   {
     name: "EY (Ernst & Young)",
@@ -587,7 +587,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "E",
     themeColor: "from-yellow-500 to-amber-500",
     placementCount: 3,
-    logoUrl: "https://logo.clearbit.com/ey.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=ey.com"
   },
   {
     name: "AngelOne",
@@ -596,7 +596,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "A",
     themeColor: "from-indigo-600 to-violet-600",
     placementCount: 5,
-    logoUrl: "https://logo.clearbit.com/ey.com" // fallback to clearbit or Google favicon
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=angelone.in"
   },
   {
     name: "Skyworks Solutions",
@@ -605,7 +605,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "S",
     themeColor: "from-sky-600 to-blue-800",
     placementCount: 10,
-    logoUrl: "https://logo.clearbit.com/skyworksinc.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=skyworksinc.com"
   },
   {
     name: "Zillion Technologies",
@@ -614,7 +614,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "Z",
     themeColor: "from-pink-500 to-purple-600",
     placementCount: 0,
-    logoUrl: "https://logo.clearbit.com/zilliontechnologies.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=zilliontechnologies.com"
   },
   {
     name: "Siemens Healthcare",
@@ -623,7 +623,7 @@ const DEFAULT_PARTNERS: Partner[] = [
     logoLetter: "S",
     themeColor: "from-teal-600 to-cyan-700",
     placementCount: 0,
-    logoUrl: "https://logo.clearbit.com/siemens-healthineers.com"
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=siemens-healthineers.com"
   },
   {
     name: "Alxplora Technologies",

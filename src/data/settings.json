@@ -32,196 +32,224 @@
       "category": "Technology & Software",
       "description": "Specializes in AI-driven image processing, computer vision applications, and enterprise software engineering.",
       "logoLetter": "D",
-      "themeColor": "from-blue-500 to-indigo-600"
+      "themeColor": "from-blue-500 to-indigo-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=deevia.com"
     },
     {
       "name": "Merck - Sigma Aldrich Chemicals",
       "category": "Healthcare & Biotech",
       "description": "A leading global life science and technology company providing chemicals, lab materials, and bio-pharmaceutical solutions.",
       "logoLetter": "M",
-      "themeColor": "from-emerald-500 to-teal-600"
+      "themeColor": "from-emerald-500 to-teal-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=sigmaaldrich.com"
     },
     {
       "name": "IISc (Indian Institute of Science)",
       "category": "Research & Academics",
       "description": "India's premier research institution renowned globally for advanced scientific and technological research and education.",
       "logoLetter": "I",
-      "themeColor": "from-amber-500 to-orange-600"
+      "themeColor": "from-amber-500 to-orange-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=iisc.ac.in"
     },
     {
       "name": "Continental",
       "category": "Engineering & Logistics",
       "description": "A pioneer in automotive technology, smart mobility infrastructure, and advanced embedded systems engineering.",
       "logoLetter": "C",
-      "themeColor": "from-slate-600 to-slate-800"
+      "themeColor": "from-slate-600 to-slate-800",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=continental.com"
     },
     {
       "name": "Enhancesys Innovation",
       "category": "Technology & Software",
       "description": "Develops advanced IoT automation systems, cloud security telemetry, and network operations solutions.",
       "logoLetter": "E",
-      "themeColor": "from-cyan-500 to-blue-600"
+      "themeColor": "from-cyan-500 to-blue-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=enhancesys.com"
     },
     {
       "name": "Vconnex Pvt. Ltd",
       "category": "Technology & Software",
       "description": "Delivers end-to-end IT consulting, custom software architectures, and digital transformation solutions.",
       "logoLetter": "V",
-      "themeColor": "from-rose-500 to-pink-600"
+      "themeColor": "from-rose-500 to-pink-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=vconnex.com"
     },
     {
       "name": "Grant Thornton",
       "category": "Consulting & Finance",
       "description": "A leading global professional services network providing audit, tax, advisory, and corporate compliance services.",
       "logoLetter": "G",
-      "themeColor": "from-purple-600 to-violet-700"
+      "themeColor": "from-purple-600 to-violet-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=grantthornton.com"
     },
     {
       "name": "Senseops Tech Solutions",
       "category": "Cybersecurity & Ops",
       "description": "Specializes in intelligent log analysis, threat intelligence modeling, and SOC automation solutions.",
       "logoLetter": "S",
-      "themeColor": "from-red-500 to-rose-600"
+      "themeColor": "from-red-500 to-rose-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=senseops.com"
     },
     {
       "name": "66degrees",
       "category": "Technology & Software",
       "description": "An elite Google Cloud Premier Partner focused on AI integration, big data analytics, and cloud modernization.",
       "logoLetter": "6",
-      "themeColor": "from-sky-500 to-indigo-500"
+      "themeColor": "from-sky-500 to-indigo-500",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=66degrees.com"
     },
     {
       "name": "Virtually Testing Foundation",
       "category": "Cybersecurity & Ops",
       "description": "A premier non-profit organization offering cybersecurity internships, lab testing, and vulnerability assessments.",
       "logoLetter": "T",
-      "themeColor": "from-emerald-600 to-teal-700"
+      "themeColor": "from-emerald-600 to-teal-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=virtuallytesting.com"
     },
     {
       "name": "Terralogic",
       "category": "Technology & Software",
       "description": "Provides full-stack engineering, comprehensive cybersecurity operations, and digital infrastructure support.",
       "logoLetter": "T",
-      "themeColor": "from-indigo-500 to-blue-700"
+      "themeColor": "from-indigo-500 to-blue-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=terralogic.com"
     },
     {
       "name": "Cytrusst",
       "category": "Cybersecurity & Ops",
       "description": "Specializes in governance, risk assessment, corporate information security auditing, and compliance.",
       "logoLetter": "C",
-      "themeColor": "from-purple-500 to-indigo-600"
+      "themeColor": "from-purple-500 to-indigo-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cytrusst.com"
     },
     {
       "name": "Ecolab",
       "category": "Healthcare & Biotech",
       "description": "The global leader in water, hygiene, and infection prevention solutions and services.",
       "logoLetter": "E",
-      "themeColor": "from-blue-600 to-sky-600"
+      "themeColor": "from-blue-600 to-sky-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=ecolab.com"
     },
     {
       "name": "Saint Gobain",
       "category": "Engineering & Logistics",
       "description": "Designs, manufactures, and distributes high-performance materials and solutions for industrial applications.",
       "logoLetter": "S",
-      "themeColor": "from-stone-500 to-stone-700"
+      "themeColor": "from-stone-500 to-stone-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=saint-gobain.com"
     },
     {
       "name": "Cybrisk",
       "category": "Cybersecurity & Ops",
       "description": "Focuses on active threat mitigation, incident response pipelines, and cybersecurity threat profiling.",
       "logoLetter": "C",
-      "themeColor": "from-red-600 to-orange-600"
+      "themeColor": "from-red-600 to-orange-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cybrisk.com"
     },
     {
       "name": "Visiminds",
       "category": "Engineering & Logistics",
       "description": "Develops advanced computer vision models and monocular lane hazard anticipation systems.",
       "logoLetter": "V",
-      "themeColor": "from-violet-500 to-purple-600"
+      "themeColor": "from-violet-500 to-purple-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=visiminds.com"
     },
     {
       "name": "Tsaaro",
       "category": "Cybersecurity & Ops",
       "description": "A leading data privacy consulting firm specializing in GDPR, HIPAA, and custom compliance audits.",
       "logoLetter": "T",
-      "themeColor": "from-orange-500 to-amber-600"
+      "themeColor": "from-orange-500 to-amber-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=tsaaro.com"
     },
     {
       "name": "LKQ India Private Limited",
       "category": "Engineering & Logistics",
       "description": "A leading distributor of alternative and specialty automotive parts and diagnostic components.",
       "logoLetter": "L",
-      "themeColor": "from-slate-500 to-slate-700"
+      "themeColor": "from-slate-500 to-slate-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=lkqcorp.com"
     },
     {
       "name": "Swiss Re",
       "category": "Consulting & Finance",
       "description": "One of the world's leading providers of reinsurance, insurance-based risk transfer, and actuarial modeling.",
       "logoLetter": "S",
-      "themeColor": "from-cyan-600 to-blue-700"
+      "themeColor": "from-cyan-600 to-blue-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=swissre.com"
     },
     {
       "name": "Endpoint E Clinical India Private Limited",
       "category": "Healthcare & Biotech",
       "description": "Develops interactive clinical trial software and secure data management pipelines for healthcare providers.",
       "logoLetter": "E",
-      "themeColor": "from-emerald-500 to-green-600"
+      "themeColor": "from-emerald-500 to-green-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=endpointclinical.com"
     },
     {
       "name": "Cyberium Labs",
       "category": "Cybersecurity & Ops",
       "description": "Specializes in secure ledger technologies, advanced cryptography, and decentralized identity proofing.",
       "logoLetter": "C",
-      "themeColor": "from-rose-600 to-red-700"
+      "themeColor": "from-rose-600 to-red-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=cyberiumlabs.com"
     },
     {
       "name": "iCompaas",
       "category": "Cybersecurity & Ops",
       "description": "An automated cloud security and compliance platform optimizing configurations for multi-cloud environments.",
       "logoLetter": "I",
-      "themeColor": "from-amber-600 to-yellow-600"
+      "themeColor": "from-amber-600 to-yellow-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=icompaas.com"
     },
     {
       "name": "EY (Ernst & Young)",
       "category": "Consulting & Finance",
       "description": "A global leader in assurance, consulting, strategy, transactions, and corporate advisory services.",
       "logoLetter": "E",
-      "themeColor": "from-yellow-500 to-amber-500"
+      "themeColor": "from-yellow-500 to-amber-500",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=ey.com"
     },
     {
       "name": "AngelOne",
       "category": "Consulting & Finance",
       "description": "A prominent technology-led financial services brokerage and digital investment platform.",
       "logoLetter": "A",
-      "themeColor": "from-indigo-600 to-violet-600"
+      "themeColor": "from-indigo-600 to-violet-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=angelone.in"
     },
     {
       "name": "Skyworks Solutions",
       "category": "Engineering & Logistics",
       "description": "An innovator of high-performance analog semiconductors connecting wireless infrastructure and devices.",
       "logoLetter": "S",
-      "themeColor": "from-sky-600 to-blue-800"
+      "themeColor": "from-sky-600 to-blue-800",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=skyworksinc.com"
     },
     {
       "name": "Zillion Technologies",
       "category": "Technology & Software",
       "description": "Offers global digital transformation consultation, systems integration, and software engineering services.",
       "logoLetter": "Z",
-      "themeColor": "from-pink-500 to-purple-600"
+      "themeColor": "from-pink-500 to-purple-600",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=zilliontechnologies.com"
     },
     {
       "name": "Siemens Healthcare",
       "category": "Healthcare & Biotech",
       "description": "A global medical technology pioneer delivering state-of-the-art diagnostic imaging and clinical software.",
       "logoLetter": "S",
-      "themeColor": "from-teal-600 to-cyan-700"
+      "themeColor": "from-teal-600 to-cyan-700",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=siemens-healthineers.com"
     },
     {
       "name": "Alxplora Technologies",
       "category": "Technology & Software",
       "description": "Delivers data-driven product analytics, machine learning prototypes, and custom business intelligence dashboards.",
       "logoLetter": "A",
-      "themeColor": "from-stone-600 to-stone-800"
+      "themeColor": "from-stone-600 to-stone-800",
+      "logoUrl": "https://www.google.com/s2/favicons?sz=128&domain=alxplora.com"
     }
   ],
   "placement_stats": [
