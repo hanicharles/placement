@@ -12,18 +12,19 @@ import {
   LabelList,
   CartesianGrid,
 } from "recharts";
-import { getJourneyStatsFn, getHiringPartnersFn, getPlacementStatsFn, getDashboardChartsFn, getBatchPlacementRecordsFn } from "../actions";
+import { getJourneyStatsFn, getHiringPartnersFn, getPlacementStatsFn, getDashboardChartsFn, getBatchPlacementRecordsFn, getPlacedBannersFn, type PlacedBanner } from "../actions";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [stats, partners, placementStats, dashboardCharts, batchRecords] = await Promise.all([
+    const [stats, partners, placementStats, dashboardCharts, batchRecords, placedBanners] = await Promise.all([
       getJourneyStatsFn(),
       getHiringPartnersFn(),
       getPlacementStatsFn(),
       getDashboardChartsFn(),
       getBatchPlacementRecordsFn(),
+      getPlacedBannersFn(),
     ]);
-    return { stats, partners, placementStats, dashboardCharts, batchRecords };
+    return { stats, partners, placementStats, dashboardCharts, batchRecords, placedBanners };
   },
   head: () => ({
     meta: [
@@ -180,6 +181,7 @@ function HomePage() {
     placementStats: any[];
     dashboardCharts: any[];
     batchRecords: any[];
+    placedBanners: PlacedBanner[];
   };
 
   const [stats, setStats] = useState(loaderData.stats);
@@ -187,6 +189,7 @@ function HomePage() {
   const [placementStats, setPlacementStats] = useState(loaderData.placementStats);
   const [dashboardCharts, setDashboardCharts] = useState(loaderData.dashboardCharts);
   const [batchRecords, setBatchRecords] = useState(loaderData.batchRecords);
+  const [placedBanners, setPlacedBanners] = useState(loaderData.placedBanners);
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -211,6 +214,10 @@ function HomePage() {
       const batchRecordsStr = localStorage.getItem("reva_setting_batch_placement_records");
       if (batchRecordsStr) {
         try { setBatchRecords(JSON.parse(batchRecordsStr)); } catch (e) { console.error(e); }
+      }
+      const placedBannersStr = localStorage.getItem("reva_setting_placed_banners");
+      if (placedBannersStr) {
+        try { setPlacedBanners(JSON.parse(placedBannersStr)); } catch (e) { console.error(e); }
       }
     }
   }, [loaderData]);
@@ -821,6 +828,126 @@ function HomePage() {
             </Link>
           </div>
         </section>
+
+        {/* Section 8: Placed Students Banners */}
+        {placedBanners && placedBanners.length > 0 && (
+          <section className="mt-20 pt-8 border-t border-black/5">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-600 border border-amber-500/15">
+                🏆 Celebrating Placement Achievements
+              </span>
+              <h2 className="text-3xl font-black text-neutral-900 tracking-tight mt-3">
+                Our Placed Cohorts
+              </h2>
+              <p className="text-sm text-neutral-500 mt-2 font-medium">
+                Celebrating outstanding placement success. Meet some of our candidates securing roles in premium enterprises.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {placedBanners.map((banner) => (
+                <div
+                  key={banner.id}
+                  className="relative overflow-hidden rounded-2xl border border-[#D4AF37]/30 bg-[#0c1829] shadow-xl p-6 flex flex-col justify-between text-white group hover:scale-[1.01] transition-transform duration-300"
+                  style={{
+                    backgroundImage: "radial-gradient(circle at top right, rgba(212, 175, 55, 0.15), transparent 45%), radial-gradient(circle at bottom left, rgba(212, 175, 55, 0.05), transparent 35%)",
+                    boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)"
+                  }}
+                >
+                  {/* Subtle golden particle noise overlay */}
+                  <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
+
+                  {/* Header logos and tag */}
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+                    <div className="flex items-center gap-2">
+                      <div className="text-[8px] font-black tracking-widest text-[#D4AF37] uppercase leading-none">
+                        NAAC A+<br/>GRADE
+                      </div>
+                      <span className="h-5 w-px bg-white/20" />
+                      <div className="text-[7px] font-bold text-white/70 leading-none">
+                        RACE<br/>ACADEMY
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-extrabold text-[#D4AF37] uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded">
+                      {banner.bannerTag || "#RACEPL2026"}
+                    </span>
+                    <div className="h-6 flex items-center shrink-0">
+                      <img src="/image/reva_logi.png" alt="REVA" className="h-full w-auto object-contain brightness-0 invert" />
+                    </div>
+                  </div>
+
+                  {/* Company Logo / Name */}
+                  <div className="flex flex-col items-center justify-center mb-6">
+                    {banner.logoUrl ? (
+                      <div className="h-10 flex items-center justify-center bg-white/95 rounded-xl px-4 py-1.5 shadow-md mb-2">
+                        <img
+                          src={banner.logoUrl}
+                          alt={banner.companyName}
+                          className="h-full w-auto object-contain max-h-7"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    ) : null}
+                    <h3 className="text-xl font-black text-white tracking-tight text-center uppercase">
+                      {banner.companyName}
+                    </h3>
+                  </div>
+
+                  {/* Candidates Grid */}
+                  <div className={`grid gap-4 mb-6 ${
+                    banner.candidates.length === 1 ? 'grid-cols-1 max-w-[150px] mx-auto' : 
+                    banner.candidates.length === 2 ? 'grid-cols-2' : 'grid-cols-3'
+                  }`}>
+                    {banner.candidates.map((c, i) => (
+                      <div key={i} className="flex flex-col items-center text-center">
+                        <div className="relative aspect-[3/4] w-full rounded-lg overflow-hidden border border-[#D4AF37]/50 shadow-md bg-neutral-900 group-hover:border-[#D4AF37] transition-colors duration-300">
+                          {c.photoUrl ? (
+                            <img src={c.photoUrl} alt={c.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center bg-neutral-800 text-white/50 text-[10px] font-bold">
+                              No Photo
+                            </div>
+                          )}
+                        </div>
+                        <span className="text-[10px] font-black text-[#D4AF37] tracking-tight mt-2 uppercase truncate w-full">
+                          {c.name}
+                        </span>
+                        <span className="text-[8px] font-bold text-neutral-400 uppercase tracking-wider mt-0.5 truncate w-full">
+                          {c.role}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Congratulations Text & Stipend */}
+                  <div className="text-center pt-4 border-t border-white/10 mt-auto">
+                    <h4 className="text-xs font-black text-[#D4AF37] tracking-widest uppercase mb-1">
+                      {banner.title || "CONGRATULATIONS"}
+                    </h4>
+                    <p className="text-[10px] text-white/80 font-medium leading-relaxed px-2">
+                      {banner.subtitle}
+                    </p>
+                    {banner.stipend && (
+                      <p className="text-xs font-extrabold text-[#D4AF37] mt-1 tracking-wide">
+                        with a stipend of <span className="text-white bg-amber-500/20 px-1.5 py-0.5 rounded font-black">{banner.stipend}</span>
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Footer note */}
+                  <div className="flex items-center justify-between text-[8px] text-white/50 font-bold border-t border-white/5 pt-3 mt-4">
+                    <span>{banner.footerLeft || "High-performing interns will be considered for full-time roles."}</span>
+                    <span className="flex items-center gap-0.5">
+                      🌐 race.reva.edu.in
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       <footer className="border-t border-black/5 bg-white mt-20">

@@ -1177,3 +1177,118 @@ export const syncToGitFilesFn = createServerFn({ method: "POST" }).handler(async
   await db.syncToSourceFiles();
   return { success: true };
 });
+
+export interface PlacedStudent {
+  name: string;
+  role: string;
+  photoUrl: string;
+}
+
+export interface PlacedBanner {
+  id: string;
+  companyName: string;
+  logoUrl?: string;
+  bannerTag: string; // e.g. "#RACEPL2026"
+  title: string; // e.g. "CONGRATULATIONS" or custom
+  subtitle: string; // e.g. "on securing a role as..."
+  stipend: string; // e.g. "₹25,000"
+  footerLeft?: string; // e.g. "High-performing interns will be considered for full-time roles."
+  candidates: PlacedStudent[];
+}
+
+const DEFAULT_PLACED_BANNERS: PlacedBanner[] = [
+  {
+    id: "banner-justdial",
+    companyName: "Justdial",
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=justdial.com",
+    bannerTag: "#RACEPL2026",
+    title: "CONGRATULATIONS",
+    subtitle: "on securing a role as Security Testing at Justdial",
+    stipend: "₹25,000",
+    footerLeft: "High-performing interns will be considered for full-time roles.",
+    candidates: [
+      { name: "SHAAN ABRAHAM", role: "SECURITY TESTING", photoUrl: "/image/shaan-abraham.jpeg" },
+      { name: "DATTAGURU", role: "SECURITY TESTING", photoUrl: "/image/dattaguru-chettiar.jpeg" }
+    ]
+  },
+  {
+    id: "banner-iisc",
+    companyName: "IISc",
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=iisc.ac.in",
+    bannerTag: "#RACEPL2026",
+    title: "CONGRATULATIONS",
+    subtitle: "on securing a role as Project Assistant at Indian Institute of Science Bengaluru (IISc)",
+    stipend: "₹30,000",
+    footerLeft: "High-performing interns will be considered for full-time roles.",
+    candidates: [
+      { name: "JANHVI J REVANKAR", role: "PROJECT ASSISTANT", photoUrl: "/image/janhvi-jeevan-revankar.png" }
+    ]
+  },
+  {
+    id: "banner-angelone",
+    companyName: "AngelOne",
+    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=angelone.in",
+    bannerTag: "#RACEPL2026",
+    title: "FIVE STARS. ONE DESTINATION. INFINITE PRIDE!",
+    subtitle: "Congratulations to our Masters in Cybersecurity students at RACE, REVA University for being chosen by Angel One",
+    stipend: "₹20,000",
+    footerLeft: "High-performing interns will be considered for full-time roles.",
+    candidates: [
+      { name: "MEVADA VINIT", role: "SECURITY ASSURANCE", photoUrl: "/image/mevada-vinit.png" },
+      { name: "KAARTHIKEYEN G", role: "GRC", photoUrl: "/image/kaarthikeyen-g.png" },
+      { name: "LIKITHA S ANAND", role: "GRC", photoUrl: "/image/likitha-s-anand.png" },
+      { name: "YOGESH P", role: "SECURITY ENGINEER", photoUrl: "/image/yogesh-p.png" },
+      { name: "ANKUSH KUMAR RANJAN", role: "SECURITY ASSURANCE", photoUrl: "/image/ankush-kumar-ranjan.png" }
+    ]
+  }
+];
+
+// Fetch Placed Banners
+const serverGetPlacedBannersFn = createServerFn({ method: "GET" }).handler(async () => {
+  const statsStr = await db.getSetting("placed_banners");
+  if (!statsStr) {
+    await db.saveSetting("placed_banners", JSON.stringify(DEFAULT_PLACED_BANNERS));
+    return DEFAULT_PLACED_BANNERS;
+  }
+  try {
+    return JSON.parse(statsStr) as PlacedBanner[];
+  } catch (e) {
+    console.error("Failed to parse placed banners setting:", e);
+    return DEFAULT_PLACED_BANNERS;
+  }
+});
+
+export const getPlacedBannersFn = async (args?: any) => {
+  if (typeof window !== "undefined") {
+    const val = localStorage.getItem("reva_setting_placed_banners");
+    if (val) {
+      try {
+        return JSON.parse(val);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  return await serverGetPlacedBannersFn(args);
+};
+
+// Save Placed Banners
+const serverSavePlacedBannersFn = createServerFn({ method: "POST" })
+  .inputValidator((stats: PlacedBanner[]) => stats)
+  .handler(async ({ data: stats }) => {
+    verifyAuth();
+    await db.saveSetting("placed_banners", JSON.stringify(stats));
+    return { success: true };
+  });
+
+export const savePlacedBannersFn = async (args: { data: PlacedBanner[] }) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("reva_setting_placed_banners", JSON.stringify(args.data));
+  }
+  try {
+    return await serverSavePlacedBannersFn(args);
+  } catch (e) {
+    console.warn("Server save failed, using local persistence:", e);
+    return { success: true };
+  }
+};

@@ -20,11 +20,15 @@ import {
   getBatchPlacementRecordsFn,
   saveBatchPlacementRecordsFn,
   syncToGitFilesFn,
+  getPlacedBannersFn,
+  savePlacedBannersFn,
   type Partner,
   type PlacementStatRow,
   type DashboardChart,
   type ChartDataPoint,
   type BatchPlacementRecord,
+  type PlacedBanner,
+  type PlacedStudent,
 } from "../actions";
 import { type Student, type Specialization, type Gender, type EducationItem, type WorkItem, type ProjectItem, type SkillGroup } from "@/data/students";
 import {
@@ -118,7 +122,7 @@ function AdminDashboardPage() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loadingSession, setLoadingSession] = useState(true);
-  const [currentSection, setCurrentSection] = useState<"dashboard" | "candidates" | "placement-stats" | "partners" | "journey-stats" | "placement-charts">("dashboard");
+  const [currentSection, setCurrentSection] = useState<"dashboard" | "candidates" | "placement-stats" | "partners" | "journey-stats" | "placement-charts" | "placed-banners">("dashboard");
 
   // Data States
   const [students, setStudents] = useState<Student[]>([]);
@@ -156,6 +160,14 @@ function AdminDashboardPage() {
   const [loadingDashboardCharts, setLoadingDashboardCharts] = useState(true);
   const [selectedChartIdx, setSelectedChartIdx] = useState<number>(0);
 
+  // Placed Banners CRUD States
+  const [placedBanners, setPlacedBanners] = useState<PlacedBanner[]>([]);
+  const [loadingPlacedBanners, setLoadingPlacedBanners] = useState(true);
+  const [editingPlacedBanner, setEditingPlacedBanner] = useState<PlacedBanner | null>(null);
+  const [placedBannerIndex, setPlacedBannerIndex] = useState<number | null>(null);
+  const [isPlacedBannerFormOpen, setIsPlacedBannerFormOpen] = useState(false);
+  const [uploadingPlacedLogo, setUploadingPlacedLogo] = useState(false);
+
   // CRUD States
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [formStudent, setFormStudent] = useState<Omit<Student, "slug"> & { slug?: string }>(DEFAULT_STUDENT_FORM());
@@ -187,6 +199,7 @@ function AdminDashboardPage() {
           fetchPlacementStats();
           fetchBatchRecords();
           fetchDashboardCharts();
+          fetchPlacedBanners();
         }
       })
       .catch((err) => {
@@ -201,6 +214,19 @@ function AdminDashboardPage() {
   const showNotification = (type: "success" | "error", text: string) => {
     setNotification({ type, text });
     setTimeout(() => setNotification(null), 5000);
+  };
+
+  const fetchPlacedBanners = async () => {
+    setLoadingPlacedBanners(true);
+    try {
+      const data = await getPlacedBannersFn();
+      setPlacedBanners(data);
+    } catch (err) {
+      console.error("Failed to load placed banners:", err);
+      showNotification("error", "Failed to load placed student banners.");
+    } finally {
+      setLoadingPlacedBanners(false);
+    }
   };
 
   const fetchStudents = async () => {
@@ -484,6 +510,172 @@ function AdminDashboardPage() {
       setTimeout(() => {
         window.location.reload();
       }, 1000);
+    }
+  };
+
+  const handleOpenPlacedBannerEdit = (banner: PlacedBanner, idx: number) => {
+    setEditingPlacedBanner(JSON.parse(JSON.stringify(banner)));
+    setPlacedBannerIndex(idx);
+    setIsPlacedBannerFormOpen(true);
+  };
+
+  const handleOpenPlacedBannerCreate = () => {
+    setEditingPlacedBanner({
+      id: "banner-" + Date.now(),
+      companyName: "",
+      bannerTag: "#RACEPL2026",
+      title: "CONGRATULATIONS",
+      subtitle: "",
+      stipend: "",
+      footerLeft: "High-performing interns will be considered for full-time roles.",
+      candidates: []
+    });
+    setPlacedBannerIndex(null);
+    setIsPlacedBannerFormOpen(true);
+  };
+
+  const handleSavePlacedBanner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPlacedBanner) return;
+
+    if (!editingPlacedBanner.companyName || !editingPlacedBanner.subtitle) {
+      showNotification("error", "Company name and congratulatory subtitle are required.");
+      return;
+    }
+
+    let updatedBanners = [...placedBanners];
+    if (placedBannerIndex !== null) {
+      updatedBanners[placedBannerIndex] = editingPlacedBanner;
+    } else {
+      updatedBanners.push(editingPlacedBanner);
+    }
+
+    try {
+      const res = await savePlacedBannersFn({ data: updatedBanners });
+      if (res.success) {
+        showNotification("success", "Placed students banner saved successfully.");
+        setIsPlacedBannerFormOpen(false);
+        setEditingPlacedBanner(null);
+        fetchPlacedBanners();
+      } else {
+        showNotification("error", "Failed to save banner.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      showNotification("error", err.message || "Error occurred while saving banner.");
+    }
+  };
+
+  const handleDeletePlacedBanner = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this placement banner?")) return;
+    const updated = placedBanners.filter((b) => b.id !== id);
+    try {
+      const res = await savePlacedBannersFn({ data: updated });
+      if (res.success) {
+        showNotification("success", "Placed students banner deleted.");
+        fetchPlacedBanners();
+      } else {
+        showNotification("error", "Failed to delete banner.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      showNotification("error", err.message || "Error occurred during deletion.");
+    }
+  };
+
+  const handleAddStudentToBanner = () => {
+    if (!editingPlacedBanner) return;
+    setEditingPlacedBanner({
+      ...editingPlacedBanner,
+      candidates: [
+        ...editingPlacedBanner.candidates,
+        { name: "", role: "", photoUrl: "" }
+      ]
+    });
+  };
+
+  const handleRemoveStudentFromBanner = (idx: number) => {
+    if (!editingPlacedBanner) return;
+    const updated = editingPlacedBanner.candidates.filter((_, i) => i !== idx);
+    setEditingPlacedBanner({
+      ...editingPlacedBanner,
+      candidates: updated
+    });
+  };
+
+  const handlePlacedBannerStudentChange = (idx: number, field: keyof PlacedStudent, val: string) => {
+    if (!editingPlacedBanner) return;
+    const updated = [...editingPlacedBanner.candidates];
+    updated[idx] = { ...updated[idx], [field]: val };
+    setEditingPlacedBanner({
+      ...editingPlacedBanner,
+      candidates: updated
+    });
+  };
+
+  const handlePlacedBannerPhotoChange = async (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingPlacedBanner) return;
+
+    if (!file.type.startsWith("image/")) {
+      showNotification("error", "Only image files are supported.");
+      return;
+    }
+
+    try {
+      const base64 = await compressImage(file);
+      const res = await uploadPhotoFn({
+        data: {
+          slug: `placed-banner-${editingPlacedBanner.companyName.toLowerCase().replace(/\s+/g, "-")}-${idx}`,
+          base64,
+          filename: file.name
+        }
+      });
+      if (res.success && res.filePath) {
+        handlePlacedBannerStudentChange(idx, "photoUrl", res.filePath);
+        showNotification("success", "Student photo uploaded.");
+      } else {
+        showNotification("error", "Failed to save photo.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      showNotification("error", err.message || "Failed to upload photo.");
+    }
+  };
+
+  const handlePlacedBannerLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingPlacedBanner) return;
+
+    if (!file.type.startsWith("image/")) {
+      showNotification("error", "Only image files are supported.");
+      return;
+    }
+
+    setUploadingPlacedLogo(true);
+    try {
+      const base64 = await compressImage(file);
+      const res = await uploadPartnerLogoFn({
+        data: {
+          slug: `placed-banner-logo-${editingPlacedBanner.companyName.toLowerCase().replace(/\s+/g, "-")}`,
+          base64,
+          filename: file.name
+        }
+      });
+      if (res.success && res.filePath) {
+        setEditingPlacedBanner({
+          ...editingPlacedBanner,
+          logoUrl: res.filePath
+        });
+        showNotification("success", "Company logo uploaded.");
+      } else {
+        showNotification("error", "Failed to save logo.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      showNotification("error", err.message || "Failed to upload logo.");
+    } finally {
+      setUploadingPlacedLogo(false);
     }
   };
 
@@ -1012,6 +1204,12 @@ function AdminDashboardPage() {
             onClick={() => setCurrentSection("placement-charts")}
             label="Placement Trends Charts"
             icon={<BarChart className="h-3.5 w-3.5" />}
+          />
+          <TabButton
+            active={currentSection === "placed-banners"}
+            onClick={() => setCurrentSection("placed-banners")}
+            label="Placed Banners"
+            icon={<GraduationCap className="h-3.5 w-3.5" />}
           />
         </div>
 
@@ -2499,6 +2697,377 @@ function AdminDashboardPage() {
                   <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-neutral-400 select-none">
                     <BarChart className="h-10 w-10 text-neutral-300 mb-2.5" />
                     <p className="text-xs font-bold uppercase tracking-wider">No Chart Selected</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Section: Placed Banners */}
+        {currentSection === "placed-banners" && (
+          <div className="bg-white border border-black/5 rounded-2xl shadow-sm overflow-hidden flex flex-col animate-fade-in">
+            <div className="bg-[#12223A] text-white px-6 py-4 flex items-center justify-between border-b border-[#F9BF29]">
+              <div>
+                <h3 className="text-base font-black uppercase tracking-wider">Manage Placed Candidates Banners</h3>
+                <p className="text-[10px] text-[#F9BF29] font-bold mt-0.5">Customize the premium placed candidate banners showing below the Hiring Partners section</p>
+              </div>
+            </div>
+
+            <div className="p-6 flex flex-col lg:flex-row gap-6 min-h-[500px]">
+              {/* Left Column: Banners List */}
+              <div className="w-full lg:w-1/3 flex flex-col gap-4 border-b lg:border-b-0 lg:border-r border-black/5 pb-6 lg:pb-0 lg:pr-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-neutral-500">Banners List</span>
+                  <button
+                    type="button"
+                    onClick={handleOpenPlacedBannerCreate}
+                    className="inline-flex items-center gap-1 bg-[#1E3E62] hover:bg-[#12223A] text-white font-extrabold text-[10px] px-3 py-2.5 rounded-xl transition shadow-sm uppercase tracking-wider cursor-pointer whitespace-nowrap"
+                  >
+                    <Plus className="h-3.5 w-3.5 stroke-[3]" /> Add Banner
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto max-h-[55vh] space-y-2 pr-1">
+                  {loadingPlacedBanners ? (
+                    <div className="py-10 text-center space-y-2">
+                      <Loader2 className="h-5 w-5 animate-spin text-[#1E3E62] mx-auto" />
+                      <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">Loading Banners...</p>
+                    </div>
+                  ) : placedBanners.length === 0 ? (
+                    <p className="text-xs text-neutral-400 text-center py-6">No placement banners in database.</p>
+                  ) : (
+                    placedBanners.map((banner, idx) => (
+                      <div
+                        key={banner.id}
+                        className={`bg-white border p-3.5 rounded-xl shadow-sm flex items-center justify-between gap-4 transition-all duration-200 cursor-pointer ${
+                          editingPlacedBanner?.id === banner.id
+                            ? "border-[#1E3E62] bg-[#1E3E62]/5"
+                            : "border-black/5 hover:border-neutral-300"
+                        }`}
+                        onClick={() => {
+                          setEditingPlacedBanner({ ...banner });
+                          setPlacedBannerIndex(idx);
+                          setIsPlacedBannerFormOpen(true);
+                        }}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="h-9 w-9 rounded-lg bg-neutral-50 p-1 flex items-center justify-center border border-neutral-100 shrink-0 select-none">
+                            {banner.logoUrl ? (
+                              <img src={banner.logoUrl} alt={banner.companyName} className="h-full w-full object-contain" />
+                            ) : (
+                              <Building className="h-4 w-4 text-neutral-400" />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <h4 className="text-xs font-black text-neutral-800 truncate">{banner.companyName}</h4>
+                            <div className="flex flex-wrap gap-1.5 mt-0.5">
+                              <span className="text-[8px] font-bold bg-[#1E3E62]/10 text-[#1E3E62] px-1.5 py-0.5 rounded uppercase tracking-wider">
+                                {banner.bannerTag}
+                              </span>
+                              <span className="text-[8px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded uppercase tracking-wider">
+                                {banner.candidates.length} Candidate{banner.candidates.length !== 1 ? 's' : ''}
+                              </span>
+                              {banner.stipend && (
+                                <span className="text-[8px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded uppercase tracking-wider">
+                                  Stipend: {banner.stipend}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={() => {
+                              setEditingPlacedBanner({ ...banner });
+                              setPlacedBannerIndex(idx);
+                              setIsPlacedBannerFormOpen(true);
+                            }}
+                            className="p-1.5 rounded bg-neutral-100 hover:bg-[#1E3E62]/10 text-[#1E3E62] transition cursor-pointer"
+                            title="Edit Banner"
+                          >
+                            <Edit2 className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeletePlacedBanner(banner.id)}
+                            className="p-1.5 rounded bg-neutral-100 hover:bg-rose-50 text-rose-600 transition cursor-pointer"
+                            title="Delete Banner"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Right Column: Edit Form */}
+              <div className="flex-1 flex flex-col min-w-0">
+                {isPlacedBannerFormOpen && editingPlacedBanner ? (
+                  <form onSubmit={handleSavePlacedBanner} className="flex-1 flex flex-col justify-between space-y-4">
+                    <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                      <h4 className="text-xs font-black text-neutral-800 uppercase tracking-wider pb-2 border-b border-black/5">
+                        {placedBannerIndex !== null ? `Edit Banner: ${editingPlacedBanner.companyName}` : "Add New Placement Banner"}
+                      </h4>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Company Name */}
+                        <div>
+                          <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Company Name</label>
+                          <input
+                            type="text"
+                            required
+                            value={editingPlacedBanner.companyName}
+                            onChange={(e) => setEditingPlacedBanner({ ...editingPlacedBanner, companyName: e.target.value })}
+                            className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                            placeholder="e.g. Justdial"
+                          />
+                        </div>
+
+                        {/* Banner Tag */}
+                        <div>
+                          <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Banner Tag</label>
+                          <input
+                            type="text"
+                            required
+                            value={editingPlacedBanner.bannerTag}
+                            onChange={(e) => setEditingPlacedBanner({ ...editingPlacedBanner, bannerTag: e.target.value })}
+                            className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                            placeholder="e.g. #RACEPL2026"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Banner Title */}
+                        <div>
+                          <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Banner Title</label>
+                          <input
+                            type="text"
+                            required
+                            value={editingPlacedBanner.title}
+                            onChange={(e) => setEditingPlacedBanner({ ...editingPlacedBanner, title: e.target.value })}
+                            className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                            placeholder="e.g. CONGRATULATIONS"
+                          />
+                        </div>
+
+                        {/* Stipend */}
+                        <div>
+                          <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Monthly Stipend</label>
+                          <input
+                            type="text"
+                            value={editingPlacedBanner.stipend}
+                            onChange={(e) => setEditingPlacedBanner({ ...editingPlacedBanner, stipend: e.target.value })}
+                            className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                            placeholder="e.g. ₹25,000"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Subtitle */}
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Congratulatory Subtitle</label>
+                        <input
+                          type="text"
+                          required
+                          value={editingPlacedBanner.subtitle}
+                          onChange={(e) => setEditingPlacedBanner({ ...editingPlacedBanner, subtitle: e.target.value })}
+                          className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                          placeholder="e.g. on securing a role as Security Testing at Justdial"
+                        />
+                      </div>
+
+                      {/* Footer Left */}
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Footer Left Text</label>
+                        <input
+                          type="text"
+                          value={editingPlacedBanner.footerLeft || ""}
+                          onChange={(e) => setEditingPlacedBanner({ ...editingPlacedBanner, footerLeft: e.target.value })}
+                          className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                          placeholder="e.g. High-performing interns will be considered for full-time roles."
+                        />
+                      </div>
+
+                      {/* Company Logo Upload */}
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Company Logo (Favicon/Image)</label>
+                        <div className="mt-1 flex items-center gap-4">
+                          {editingPlacedBanner.logoUrl ? (
+                            <div className="relative h-16 w-24 border border-black/10 rounded-xl bg-neutral-50 p-2 flex items-center justify-center group/logo select-none shrink-0 animate-fade-in">
+                              <img src={editingPlacedBanner.logoUrl} alt="Company Logo" className="h-full w-auto object-contain" />
+                              <button
+                                type="button"
+                                onClick={() => setEditingPlacedBanner({ ...editingPlacedBanner, logoUrl: undefined })}
+                                className="absolute -top-1.5 -right-1.5 p-1 bg-red-600 text-white rounded-full hover:bg-red-700 transition shadow-md cursor-pointer"
+                                title="Remove Logo"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="h-16 w-24 border-2 border-dashed border-black/10 rounded-xl bg-neutral-50/50 flex flex-col items-center justify-center shrink-0 text-neutral-400 select-none text-[9px] font-bold uppercase tracking-wider">
+                              No Logo
+                            </div>
+                          )}
+
+                          <div className="flex-1">
+                            <label className="relative flex items-center justify-center gap-2 border border-[#1E3E62]/20 hover:border-[#1E3E62]/40 rounded-xl px-4 py-2.5 bg-[#1E3E62]/5 hover:bg-[#1E3E62]/10 text-[#1E3E62] font-black text-xs transition cursor-pointer select-none">
+                              {uploadingPlacedLogo ? (
+                                <>
+                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                  Uploading...
+                                </>
+                              ) : (
+                                <>
+                                  <Upload className="h-3.5 w-3.5" />
+                                  {editingPlacedBanner.logoUrl ? "Change Logo" : "Upload Logo"}
+                                </>
+                              )}
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handlePlacedBannerLogoChange}
+                                disabled={uploadingPlacedLogo}
+                                className="sr-only"
+                              />
+                            </label>
+                            <p className="text-[9px] text-neutral-400 font-bold uppercase tracking-wider mt-1.5">
+                              PNG with transparent background or high-res favicon.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Candidates Section */}
+                      <div className="pt-4 border-t border-black/5 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-black uppercase text-neutral-800 tracking-wider">
+                            Candidates Grid ({editingPlacedBanner.candidates.length})
+                          </span>
+                          <button
+                            type="button"
+                            onClick={handleAddStudentToBanner}
+                            className="inline-flex items-center gap-1 bg-[#1E3E62]/10 hover:bg-[#1E3E62]/20 text-[#1E3E62] font-black text-[9px] px-2.5 py-1.5 rounded-lg transition uppercase tracking-wider cursor-pointer"
+                          >
+                            <Plus className="h-3.5 w-3.5 stroke-[3]" /> Add Candidate
+                          </button>
+                        </div>
+
+                        {editingPlacedBanner.candidates.length === 0 ? (
+                          <div className="text-center py-6 border border-dashed border-black/10 rounded-xl bg-neutral-50/50">
+                            <p className="text-xs text-neutral-400 font-bold uppercase tracking-wider">No candidates added yet.</p>
+                            <p className="text-[10px] text-neutral-400 mt-1">Banners must have at least one candidate to display properly on the homepage.</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            {editingPlacedBanner.candidates.map((candidate, cIdx) => (
+                              <div key={cIdx} className="bg-neutral-50/70 border border-black/5 p-4 rounded-xl space-y-3 relative animate-fade-in">
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveStudentFromBanner(cIdx)}
+                                  className="absolute top-3 right-3 p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                                  title="Remove Candidate"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                  {/* Candidate Name */}
+                                  <div>
+                                    <label className="block text-[9px] font-bold text-neutral-400 uppercase tracking-wider mb-1">Candidate Name</label>
+                                    <input
+                                      type="text"
+                                      required
+                                      value={candidate.name}
+                                      onChange={(e) => handlePlacedBannerStudentChange(cIdx, "name", e.target.value)}
+                                      className="w-full rounded-lg border border-black/10 bg-white px-3 py-1.5 text-xs outline-none focus:border-[#1E3E62]"
+                                      placeholder="e.g. SHAAN ABRAHAM"
+                                    />
+                                  </div>
+
+                                  {/* Candidate Role */}
+                                  <div>
+                                    <label className="block text-[9px] font-bold text-neutral-400 uppercase tracking-wider mb-1">Candidate Role / Specialization</label>
+                                    <input
+                                      type="text"
+                                      required
+                                      value={candidate.role}
+                                      onChange={(e) => handlePlacedBannerStudentChange(cIdx, "role", e.target.value)}
+                                      className="w-full rounded-lg border border-black/10 bg-white px-3 py-1.5 text-xs outline-none focus:border-[#1E3E62]"
+                                      placeholder="e.g. SECURITY TESTING"
+                                    />
+                                  </div>
+                                </div>
+
+                                {/* Candidate Photo Upload */}
+                                <div>
+                                  <label className="block text-[9px] font-bold text-neutral-400 uppercase tracking-wider mb-1">Candidate Photo</label>
+                                  <div className="flex items-center gap-3">
+                                    <div className="h-12 w-12 border border-black/10 rounded-lg bg-neutral-100 overflow-hidden flex items-center justify-center shrink-0">
+                                      {candidate.photoUrl ? (
+                                        <img src={candidate.photoUrl} alt={candidate.name || "Candidate"} className="h-full w-full object-cover" />
+                                      ) : (
+                                        <User className="h-5 w-5 text-neutral-400" />
+                                      )}
+                                    </div>
+                                    <div className="flex-1 flex gap-2">
+                                      <label className="relative flex items-center justify-center gap-1.5 border border-[#1E3E62]/20 hover:border-[#1E3E62]/40 rounded-lg px-3 py-1.5 bg-[#1E3E62]/5 hover:bg-[#1E3E62]/10 text-[#1E3E62] font-extrabold text-[10px] transition cursor-pointer select-none">
+                                        <Upload className="h-3 w-3" />
+                                        Upload Image
+                                        <input
+                                          type="file"
+                                          accept="image/*"
+                                          onChange={(e) => handlePlacedBannerPhotoChange(cIdx, e)}
+                                          className="sr-only"
+                                        />
+                                      </label>
+                                      {candidate.photoUrl && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handlePlacedBannerStudentChange(cIdx, "photoUrl", "")}
+                                          className="px-2.5 py-1.5 border border-black/10 text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 rounded-lg text-[10px] font-bold transition"
+                                        >
+                                          Clear
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Form Controls */}
+                    <div className="pt-4 border-t border-black/5 flex items-center justify-end gap-2.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsPlacedBannerFormOpen(false);
+                          setEditingPlacedBanner(null);
+                          setPlacedBannerIndex(null);
+                        }}
+                        className="text-[10px] font-bold text-neutral-500 hover:text-neutral-700 px-3.5 py-2 bg-neutral-100 rounded-xl transition"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="text-[10px] font-black bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl shadow-sm transition uppercase tracking-wider"
+                      >
+                        Save Banner
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-neutral-400 select-none border-2 border-dashed border-black/5 rounded-2xl bg-neutral-50/30">
+                    <GraduationCap className="h-10 w-10 text-neutral-300 mb-2.5" />
+                    <p className="text-xs font-bold uppercase tracking-wider">Select a banner to edit or create a new one</p>
                   </div>
                 )}
               </div>
