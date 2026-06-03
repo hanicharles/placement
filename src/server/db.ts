@@ -247,19 +247,16 @@ async function getSqliteDb() {
       console.log(`Seeded ${initialStudents.length} candidates into SQLite.`);
     }
 
-    // Seed settings table if empty
-    const countSettings = db.prepare("SELECT COUNT(*) as count FROM settings").get() as { count: number };
-    if (countSettings.count === 0) {
-      console.log("SQLite Settings empty. Seeding from settings.json...");
-      const insertSetting = db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)");
-      const transaction = db.transaction((settingsObj: Record<string, any>) => {
-        for (const [k, v] of Object.entries(settingsObj)) {
-          insertSetting.run(k, typeof v === "string" ? v : JSON.stringify(v));
-        }
-      });
-      transaction(initialSettings);
-      console.log("Seeded settings into SQLite.");
-    }
+    // Seed any missing settings keys from settings.json
+    console.log("Synchronizing SQLite Settings from settings.json...");
+    const insertSetting = db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)");
+    const transaction = db.transaction((settingsObj: Record<string, any>) => {
+      for (const [k, v] of Object.entries(settingsObj)) {
+        insertSetting.run(k, typeof v === "string" ? v : JSON.stringify(v));
+      }
+    });
+    transaction(initialSettings);
+    console.log("Seeded missing settings into SQLite.");
     
     return dbInstance;
   } catch (error) {

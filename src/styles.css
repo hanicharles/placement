@@ -167,3 +167,14 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+.animate-marquee-banners {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee-banners:hover {
+  animation-play-state: paused;
+}
+

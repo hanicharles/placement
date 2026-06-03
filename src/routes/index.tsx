@@ -847,28 +847,38 @@ function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-6">
-              {placementBanners.map((banner) => (
-                <div
-                  key={banner.id}
-                  onClick={() => setLightboxImage(banner.imageUrl)}
-                  className="group relative cursor-pointer overflow-hidden rounded-2xl border border-black/5 bg-neutral-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md aspect-[3/4]"
-                >
-                  <img
-                    src={banner.imageUrl}
-                    alt={banner.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                    <span className="text-[10px] font-bold text-[#FF5900] uppercase tracking-wider">
-                      {banner.companyName}
-                    </span>
-                    <h4 className="text-xs font-extrabold text-white tracking-tight mt-1 leading-snug">
-                      {banner.title}
-                    </h4>
+            <div className="relative w-full overflow-hidden py-4 select-none mt-6">
+              {/* Left and Right blur shadows for premium look */}
+              <div className="absolute inset-y-0 left-0 w-16 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-16 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+              
+              <div className="flex animate-marquee-banners whitespace-nowrap">
+                {(placementBanners.length < 5
+                  ? [...placementBanners, ...placementBanners, ...placementBanners]
+                  : [...placementBanners, ...placementBanners]
+                ).map((banner, idx) => (
+                  <div
+                    key={`${banner.id}-${idx}`}
+                    onClick={() => setLightboxImage(banner.imageUrl)}
+                    className="inline-flex flex-col relative cursor-pointer overflow-hidden rounded-2xl border border-black/5 bg-neutral-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md h-[360px] aspect-[3/4] mx-4 shrink-0 group"
+                  >
+                    <img
+                      src={banner.imageUrl}
+                      alt={banner.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-left whitespace-normal">
+                      <span className="text-[10px] font-bold text-[#FF5900] uppercase tracking-wider">
+                        {banner.companyName}
+                      </span>
+                      <h4 className="text-xs font-extrabold text-white tracking-tight mt-1 leading-snug">
+                        {banner.title}
+                      </h4>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </section>
         )}

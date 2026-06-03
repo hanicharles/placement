@@ -487,5 +487,37 @@
         }
       ]
     }
+  ],
+  "placement_banners": [
+    {
+      "id": "banner-1",
+      "title": "Justdial Placement Spotlights",
+      "companyName": "Justdial",
+      "imageUrl": "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460657287.jpg"
+    },
+    {
+      "id": "banner-2",
+      "title": "IISc Research Placements",
+      "companyName": "IISc (Indian Institute of Science)",
+      "imageUrl": "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460667117.jpg"
+    },
+    {
+      "id": "banner-3",
+      "title": "AngelOne Placement Spotlights",
+      "companyName": "AngelOne",
+      "imageUrl": "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460675254.jpg"
+    },
+    {
+      "id": "banner-4",
+      "title": "Masters Placements congratulations",
+      "companyName": "Reva Placement Cohorts",
+      "imageUrl": "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460682876.jpg"
+    },
+    {
+      "id": "banner-5",
+      "title": "Masters Placements congratulations",
+      "companyName": "Reva Placement Cohorts",
+      "imageUrl": "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460695796.jpg"
+    }
   ]
 }
