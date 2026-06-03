@@ -197,7 +197,7 @@ function HomePage() {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
-    setStats(loaderData.journeyStats);
+    setStats(loaderData.stats);
     setPartners(loaderData.partners);
     setPlacementStats(loaderData.placementStats);
     setDashboardCharts(loaderData.dashboardCharts);
