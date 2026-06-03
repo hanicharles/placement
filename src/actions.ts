@@ -1178,89 +1178,64 @@ export const syncToGitFilesFn = createServerFn({ method: "POST" }).handler(async
   return { success: true };
 });
 
-export interface PlacedStudent {
-  name: string;
-  role: string;
-  photoUrl: string;
-}
-
-export interface PlacedBanner {
+export interface PlacementBanner {
   id: string;
+  title: string;
   companyName: string;
-  logoUrl?: string;
-  bannerTag: string; // e.g. "#RACEPL2026"
-  title: string; // e.g. "CONGRATULATIONS" or custom
-  subtitle: string; // e.g. "on securing a role as..."
-  stipend: string; // e.g. "₹25,000"
-  footerLeft?: string; // e.g. "High-performing interns will be considered for full-time roles."
-  candidates: PlacedStudent[];
+  imageUrl: string;
 }
 
-const DEFAULT_PLACED_BANNERS: PlacedBanner[] = [
+const DEFAULT_BANNERS: PlacementBanner[] = [
   {
-    id: "banner-justdial",
+    id: "banner-1",
+    title: "Justdial Placement Spotlights",
     companyName: "Justdial",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=justdial.com",
-    bannerTag: "#RACEPL2026",
-    title: "CONGRATULATIONS",
-    subtitle: "on securing a role as Security Testing at Justdial",
-    stipend: "₹25,000",
-    footerLeft: "High-performing interns will be considered for full-time roles.",
-    candidates: [
-      { name: "SHAAN ABRAHAM", role: "SECURITY TESTING", photoUrl: "/image/shaan-abraham.jpeg" },
-      { name: "DATTAGURU", role: "SECURITY TESTING", photoUrl: "/image/dattaguru-chettiar.jpeg" }
-    ]
+    imageUrl: "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460657287.jpg"
   },
   {
-    id: "banner-iisc",
-    companyName: "IISc",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=iisc.ac.in",
-    bannerTag: "#RACEPL2026",
-    title: "CONGRATULATIONS",
-    subtitle: "on securing a role as Project Assistant at Indian Institute of Science Bengaluru (IISc)",
-    stipend: "₹30,000",
-    footerLeft: "High-performing interns will be considered for full-time roles.",
-    candidates: [
-      { name: "JANHVI J REVANKAR", role: "PROJECT ASSISTANT", photoUrl: "/image/janhvi-jeevan-revankar.png" }
-    ]
+    id: "banner-2",
+    title: "IISc Research Placements",
+    companyName: "IISc (Indian Institute of Science)",
+    imageUrl: "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460667117.jpg"
   },
   {
-    id: "banner-angelone",
+    id: "banner-3",
+    title: "AngelOne Placement Spotlights",
     companyName: "AngelOne",
-    logoUrl: "https://www.google.com/s2/favicons?sz=128&domain=angelone.in",
-    bannerTag: "#RACEPL2026",
-    title: "FIVE STARS. ONE DESTINATION. INFINITE PRIDE!",
-    subtitle: "Congratulations to our Masters in Cybersecurity students at RACE, REVA University for being chosen by Angel One",
-    stipend: "₹20,000",
-    footerLeft: "High-performing interns will be considered for full-time roles.",
-    candidates: [
-      { name: "MEVADA VINIT", role: "SECURITY ASSURANCE", photoUrl: "/image/mevada-vinit.png" },
-      { name: "KAARTHIKEYEN G", role: "GRC", photoUrl: "/image/kaarthikeyen-g.png" },
-      { name: "LIKITHA S ANAND", role: "GRC", photoUrl: "/image/likitha-s-anand.png" },
-      { name: "YOGESH P", role: "SECURITY ENGINEER", photoUrl: "/image/yogesh-p.png" },
-      { name: "ANKUSH KUMAR RANJAN", role: "SECURITY ASSURANCE", photoUrl: "/image/ankush-kumar-ranjan.png" }
-    ]
+    imageUrl: "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460675254.jpg"
+  },
+  {
+    id: "banner-4",
+    title: "Masters Placements congratulations",
+    companyName: "Reva Placement Cohorts",
+    imageUrl: "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460682876.jpg"
+  },
+  {
+    id: "banner-5",
+    title: "Masters Placements congratulations",
+    companyName: "Reva Placement Cohorts",
+    imageUrl: "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460695796.jpg"
   }
 ];
 
-// Fetch Placed Banners
-const serverGetPlacedBannersFn = createServerFn({ method: "GET" }).handler(async () => {
-  const statsStr = await db.getSetting("placed_banners");
-  if (!statsStr) {
-    await db.saveSetting("placed_banners", JSON.stringify(DEFAULT_PLACED_BANNERS));
-    return DEFAULT_PLACED_BANNERS;
+// Fetch Placement Banners
+const serverGetPlacementBannersFn = createServerFn({ method: "GET" }).handler(async () => {
+  const bannersStr = await db.getSetting("placement_banners");
+  if (!bannersStr) {
+    await db.saveSetting("placement_banners", JSON.stringify(DEFAULT_BANNERS));
+    return DEFAULT_BANNERS;
   }
   try {
-    return JSON.parse(statsStr) as PlacedBanner[];
+    return JSON.parse(bannersStr) as PlacementBanner[];
   } catch (e) {
-    console.error("Failed to parse placed banners setting:", e);
-    return DEFAULT_PLACED_BANNERS;
+    console.error("Failed to parse placement banners:", e);
+    return DEFAULT_BANNERS;
   }
 });
 
-export const getPlacedBannersFn = async (args?: any) => {
+export const getPlacementBannersFn = async (args?: any) => {
   if (typeof window !== "undefined") {
-    const val = localStorage.getItem("reva_setting_placed_banners");
+    const val = localStorage.getItem("reva_setting_placement_banners");
     if (val) {
       try {
         return JSON.parse(val);
@@ -1269,26 +1244,47 @@ export const getPlacedBannersFn = async (args?: any) => {
       }
     }
   }
-  return await serverGetPlacedBannersFn(args);
+  return await serverGetPlacementBannersFn(args);
 };
 
-// Save Placed Banners
-const serverSavePlacedBannersFn = createServerFn({ method: "POST" })
-  .inputValidator((stats: PlacedBanner[]) => stats)
-  .handler(async ({ data: stats }) => {
+// Save Placement Banners
+const serverSavePlacementBannersFn = createServerFn({ method: "POST" })
+  .inputValidator((banners: PlacementBanner[]) => banners)
+  .handler(async ({ data: banners }) => {
     verifyAuth();
-    await db.saveSetting("placed_banners", JSON.stringify(stats));
+    await db.saveSetting("placement_banners", JSON.stringify(banners));
     return { success: true };
   });
 
-export const savePlacedBannersFn = async (args: { data: PlacedBanner[] }) => {
+export const savePlacementBannersFn = async (args: { data: PlacementBanner[] }) => {
   if (typeof window !== "undefined") {
-    localStorage.setItem("reva_setting_placed_banners", JSON.stringify(args.data));
+    localStorage.setItem("reva_setting_placement_banners", JSON.stringify(args.data));
   }
   try {
-    return await serverSavePlacedBannersFn(args);
+    return await serverSavePlacementBannersFn(args);
   } catch (e) {
     console.warn("Server save failed, using local persistence:", e);
     return { success: true };
   }
 };
+
+// Upload Placement Banner Image
+export const uploadPlacementBannerFn = createServerFn({ method: "POST" })
+  .inputValidator((d: { slug: string; base64: string; filename: string }) => d)
+  .handler(async ({ data }) => {
+    verifyAuth();
+    const { slug, base64 } = data;
+    try {
+      const buffer = Buffer.from(base64.split(",")[1], "base64");
+      const uploadDir = path.resolve(process.cwd(), "public/uploads/banners");
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      const destPath = path.join(uploadDir, `${slug}.jpg`);
+      fs.writeFileSync(destPath, buffer);
+      return { success: true, filePath: `/uploads/banners/${slug}.jpg` };
+    } catch (error) {
+      console.warn("Write filesystem failed for banner, falling back to base64 inline storage:", error);
+      return { success: true, filePath: base64 };
+    }
+  });
