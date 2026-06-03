@@ -1,4 +1,5 @@
 import { students as initialStudents, type Student } from "../data/students";
+import initialSettings from "../data/settings.json";
 import path from "path";
 import fs from "fs";
 
@@ -12,6 +13,16 @@ let isReadOnlyFileSystem = false;
 // Global in-memory fallback cache for read-only environments (like Cloudflare Workers)
 let memoryStudents: Student[] = [...initialStudents];
 let memorySettings = new Map<string, string>();
+
+try {
+  if (initialSettings) {
+    Object.entries(initialSettings).forEach(([k, v]) => {
+      memorySettings.set(k, typeof v === "string" ? v : JSON.stringify(v));
+    });
+  }
+} catch (e) {
+  console.warn("Failed to initialize memorySettings from settings.json", e);
+}
 
 try {
   if (fs && typeof fs.existsSync === "function") {
@@ -28,6 +39,116 @@ try {
 
 let dbInstance: any = null;
 let useJsonFallback = false;
+
+// Write helpers to synchronize data to static files for local Git push
+function writeToSourceStudents(studentsList: Student[]) {
+  if (isReadOnlyFileSystem) return;
+  try {
+    const filePath = path.resolve(process.cwd(), "src/data/students.ts");
+    const content = `export type Specialization = "Cybersecurity" | "Artificial Intelligence";
+export type Gender = "Male" | "Female";
+
+export interface EducationItem {
+  institute: string;
+  degree: string;
+  period: string;
+  cgpa?: string;
+}
+
+export interface WorkItem {
+  role: string;
+  company: string;
+  period?: string;
+  bullets: string[];
+}
+
+export interface ProjectItem {
+  title: string;
+  tag?: string;
+  bullets: string[];
+}
+
+export interface SkillGroup {
+  category: string;
+  items: string[];
+}
+
+export interface Student {
+  slug: string;
+  name: string;
+  headline: string;
+  specialization: Specialization;
+  gender: Gender;
+  location?: string;
+  phone?: string;
+  email?: string;
+  collegeEmail?: string;
+  linkedin?: string;
+  github?: string;
+  photo?: string;
+  resume?: string;
+  about: string;
+  education: EducationItem[];
+  certifications: string[];
+  skills: SkillGroup[];
+  workExperience?: WorkItem[];
+  projects: ProjectItem[];
+  publications?: string[];
+  programDates?: string;
+  placement?: {
+    company: string;
+    role: string;
+  };
+}
+
+export const students: Student[] = ${JSON.stringify(studentsList, null, 2)};
+`;
+    fs.writeFileSync(filePath, content, "utf-8");
+    console.log("Successfully synchronized src/data/students.ts with latest candidate data.");
+  } catch (error) {
+    console.warn("Failed to synchronize src/data/students.ts:", error);
+  }
+}
+
+function writeToSourceSettings() {
+  if (isReadOnlyFileSystem) return;
+  try {
+    const filePath = path.resolve(process.cwd(), "src/data/settings.json");
+    const settingsObj: Record<string, any> = {};
+    
+    let loaded = false;
+    if (dbInstance && !useJsonFallback) {
+      try {
+        const rows = dbInstance.prepare("SELECT * FROM settings").all() as any[];
+        for (const r of rows) {
+          try {
+            settingsObj[r.key] = JSON.parse(r.value);
+          } catch {
+            settingsObj[r.key] = r.value;
+          }
+        }
+        loaded = true;
+      } catch (e) {
+        console.warn("Failed to read settings from SQLite for sync:", e);
+      }
+    }
+    
+    if (!loaded) {
+      memorySettings.forEach((v, k) => {
+        try {
+          settingsObj[k] = JSON.parse(v);
+        } catch {
+          settingsObj[k] = v;
+        }
+      });
+    }
+    
+    fs.writeFileSync(filePath, JSON.stringify(settingsObj, null, 2), "utf-8");
+    console.log("Successfully synchronized src/data/settings.json with latest settings.");
+  } catch (error) {
+    console.warn("Failed to synchronize src/data/settings.json:", error);
+  }
+}
 
 // Dynamic load of better-sqlite3 to prevent build-time crashes in serverless bundlers
 async function getSqliteDb() {
@@ -124,6 +245,20 @@ async function getSqliteDb() {
       });
       transaction(initialStudents);
       console.log(`Seeded ${initialStudents.length} candidates into SQLite.`);
+    }
+
+    // Seed settings table if empty
+    const countSettings = db.prepare("SELECT COUNT(*) as count FROM settings").get() as { count: number };
+    if (countSettings.count === 0) {
+      console.log("SQLite Settings empty. Seeding from settings.json...");
+      const insertSetting = db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)");
+      const transaction = db.transaction((settingsObj: Record<string, any>) => {
+        for (const [k, v] of Object.entries(settingsObj)) {
+          insertSetting.run(k, typeof v === "string" ? v : JSON.stringify(v));
+        }
+      });
+      transaction(initialSettings);
+      console.log("Seeded settings into SQLite.");
     }
     
     return dbInstance;
@@ -308,6 +443,7 @@ export const db = {
     }
 
     const sqlite = await getSqliteDb();
+    let saved = false;
     if (sqlite && !useJsonFallback) {
       try {
         sqlite.prepare(`
@@ -364,38 +500,51 @@ export const db = {
           s.programDates || null,
           s.placement ? JSON.stringify(s.placement) : null
         );
-        return;
+        saved = true;
       } catch (error) {
         console.error("SQLite save failed, falling back to JSON", error);
       }
     }
 
-    // JSON Fallback
-    const list = readJsonDb();
-    const idx = list.findIndex((item) => item.slug === s.slug);
-    if (idx >= 0) {
-      list[idx] = s;
-    } else {
-      list.push(s);
+    if (!saved) {
+      // JSON Fallback
+      const list = readJsonDb();
+      const idx = list.findIndex((item) => item.slug === s.slug);
+      if (idx >= 0) {
+        list[idx] = s;
+      } else {
+        list.push(s);
+      }
+      writeJsonDb(list);
     }
-    writeJsonDb(list);
+
+    // Synchronize changes to static file
+    const allStudents = await this.getStudents();
+    writeToSourceStudents(allStudents);
   },
 
   async deleteStudent(slug: string): Promise<void> {
     const sqlite = await getSqliteDb();
+    let deleted = false;
     if (sqlite && !useJsonFallback) {
       try {
         sqlite.prepare("DELETE FROM students WHERE slug = ?").run(slug);
-        return;
+        deleted = true;
       } catch (error) {
         console.error("SQLite delete failed, falling back to JSON", error);
       }
     }
 
-    // JSON Fallback
-    const list = readJsonDb();
-    const filtered = list.filter((s) => s.slug !== slug);
-    writeJsonDb(filtered);
+    if (!deleted) {
+      // JSON Fallback
+      const list = readJsonDb();
+      const filtered = list.filter((s) => s.slug !== slug);
+      writeJsonDb(filtered);
+    }
+
+    // Synchronize changes to static file
+    const allStudents = await this.getStudents();
+    writeToSourceStudents(allStudents);
   },
 
   async getSetting(key: string, defaultValue: string = ""): Promise<string> {
@@ -414,19 +563,29 @@ export const db = {
 
   async saveSetting(key: string, value: string): Promise<void> {
     const sqlite = await getSqliteDb();
+    let saved = false;
     if (sqlite && !useJsonFallback) {
       try {
         sqlite.prepare(`
           INSERT INTO settings (key, value) VALUES (?, ?)
           ON CONFLICT(key) DO UPDATE SET value=excluded.value
         `).run(key, value);
-        return;
+        saved = true;
       } catch (error) {
         console.error("SQLite saveSetting failed, falling back to JSON", error);
       }
     }
-    const settings = readSettingsJson();
-    settings[key] = value;
-    writeSettingsJson(settings);
+
+    // Update in-memory map
+    memorySettings.set(key, value);
+
+    if (!saved) {
+      const settings = readSettingsJson();
+      settings[key] = value;
+      writeSettingsJson(settings);
+    }
+
+    // Synchronize changes to static file
+    writeToSourceSettings();
   }
 };

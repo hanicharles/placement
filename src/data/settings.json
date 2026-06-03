@@ -1,0 +1,271 @@
+{
+  "journey_stats": [
+    {
+      "value": "4",
+      "label": "FT Years in Tech Education",
+      "iconName": "GraduationCap"
+    },
+    {
+      "value": "44",
+      "label": "FT Placement",
+      "iconName": "Users"
+    },
+    {
+      "value": "70",
+      "label": "Internship",
+      "iconName": "Award"
+    },
+    {
+      "value": "30+",
+      "label": "Corporate Hiring Partners",
+      "iconName": "Building"
+    },
+    {
+      "value": "96+",
+      "label": "Career Transitions",
+      "iconName": "Briefcase"
+    }
+  ],
+  "hiring_partners": [
+    {
+      "name": "Deevia Software",
+      "category": "Technology & Software",
+      "description": "Specializes in AI-driven image processing, computer vision applications, and enterprise software engineering.",
+      "logoLetter": "D",
+      "themeColor": "from-blue-500 to-indigo-600"
+    },
+    {
+      "name": "Merck - Sigma Aldrich Chemicals",
+      "category": "Healthcare & Biotech",
+      "description": "A leading global life science and technology company providing chemicals, lab materials, and bio-pharmaceutical solutions.",
+      "logoLetter": "M",
+      "themeColor": "from-emerald-500 to-teal-600"
+    },
+    {
+      "name": "IISc (Indian Institute of Science)",
+      "category": "Research & Academics",
+      "description": "India's premier research institution renowned globally for advanced scientific and technological research and education.",
+      "logoLetter": "I",
+      "themeColor": "from-amber-500 to-orange-600"
+    },
+    {
+      "name": "Continental",
+      "category": "Engineering & Logistics",
+      "description": "A pioneer in automotive technology, smart mobility infrastructure, and advanced embedded systems engineering.",
+      "logoLetter": "C",
+      "themeColor": "from-slate-600 to-slate-800"
+    },
+    {
+      "name": "Enhancesys Innovation",
+      "category": "Technology & Software",
+      "description": "Develops advanced IoT automation systems, cloud security telemetry, and network operations solutions.",
+      "logoLetter": "E",
+      "themeColor": "from-cyan-500 to-blue-600"
+    },
+    {
+      "name": "Vconnex Pvt. Ltd",
+      "category": "Technology & Software",
+      "description": "Delivers end-to-end IT consulting, custom software architectures, and digital transformation solutions.",
+      "logoLetter": "V",
+      "themeColor": "from-rose-500 to-pink-600"
+    },
+    {
+      "name": "Grant Thornton",
+      "category": "Consulting & Finance",
+      "description": "A leading global professional services network providing audit, tax, advisory, and corporate compliance services.",
+      "logoLetter": "G",
+      "themeColor": "from-purple-600 to-violet-700"
+    },
+    {
+      "name": "Senseops Tech Solutions",
+      "category": "Cybersecurity & Ops",
+      "description": "Specializes in intelligent log analysis, threat intelligence modeling, and SOC automation solutions.",
+      "logoLetter": "S",
+      "themeColor": "from-red-500 to-rose-600"
+    },
+    {
+      "name": "66degrees",
+      "category": "Technology & Software",
+      "description": "An elite Google Cloud Premier Partner focused on AI integration, big data analytics, and cloud modernization.",
+      "logoLetter": "6",
+      "themeColor": "from-sky-500 to-indigo-500"
+    },
+    {
+      "name": "Virtually Testing Foundation",
+      "category": "Cybersecurity & Ops",
+      "description": "A premier non-profit organization offering cybersecurity internships, lab testing, and vulnerability assessments.",
+      "logoLetter": "T",
+      "themeColor": "from-emerald-600 to-teal-700"
+    },
+    {
+      "name": "Terralogic",
+      "category": "Technology & Software",
+      "description": "Provides full-stack engineering, comprehensive cybersecurity operations, and digital infrastructure support.",
+      "logoLetter": "T",
+      "themeColor": "from-indigo-500 to-blue-700"
+    },
+    {
+      "name": "Cytrusst",
+      "category": "Cybersecurity & Ops",
+      "description": "Specializes in governance, risk assessment, corporate information security auditing, and compliance.",
+      "logoLetter": "C",
+      "themeColor": "from-purple-500 to-indigo-600"
+    },
+    {
+      "name": "Ecolab",
+      "category": "Healthcare & Biotech",
+      "description": "The global leader in water, hygiene, and infection prevention solutions and services.",
+      "logoLetter": "E",
+      "themeColor": "from-blue-600 to-sky-600"
+    },
+    {
+      "name": "Saint Gobain",
+      "category": "Engineering & Logistics",
+      "description": "Designs, manufactures, and distributes high-performance materials and solutions for industrial applications.",
+      "logoLetter": "S",
+      "themeColor": "from-stone-500 to-stone-700"
+    },
+    {
+      "name": "Cybrisk",
+      "category": "Cybersecurity & Ops",
+      "description": "Focuses on active threat mitigation, incident response pipelines, and cybersecurity threat profiling.",
+      "logoLetter": "C",
+      "themeColor": "from-red-600 to-orange-600"
+    },
+    {
+      "name": "Visiminds",
+      "category": "Engineering & Logistics",
+      "description": "Develops advanced computer vision models and monocular lane hazard anticipation systems.",
+      "logoLetter": "V",
+      "themeColor": "from-violet-500 to-purple-600"
+    },
+    {
+      "name": "Tsaaro",
+      "category": "Cybersecurity & Ops",
+      "description": "A leading data privacy consulting firm specializing in GDPR, HIPAA, and custom compliance audits.",
+      "logoLetter": "T",
+      "themeColor": "from-orange-500 to-amber-600"
+    },
+    {
+      "name": "LKQ India Private Limited",
+      "category": "Engineering & Logistics",
+      "description": "A leading distributor of alternative and specialty automotive parts and diagnostic components.",
+      "logoLetter": "L",
+      "themeColor": "from-slate-500 to-slate-700"
+    },
+    {
+      "name": "Swiss Re",
+      "category": "Consulting & Finance",
+      "description": "One of the world's leading providers of reinsurance, insurance-based risk transfer, and actuarial modeling.",
+      "logoLetter": "S",
+      "themeColor": "from-cyan-600 to-blue-700"
+    },
+    {
+      "name": "Endpoint E Clinical India Private Limited",
+      "category": "Healthcare & Biotech",
+      "description": "Develops interactive clinical trial software and secure data management pipelines for healthcare providers.",
+      "logoLetter": "E",
+      "themeColor": "from-emerald-500 to-green-600"
+    },
+    {
+      "name": "Cyberium Labs",
+      "category": "Cybersecurity & Ops",
+      "description": "Specializes in secure ledger technologies, advanced cryptography, and decentralized identity proofing.",
+      "logoLetter": "C",
+      "themeColor": "from-rose-600 to-red-700"
+    },
+    {
+      "name": "iCompaas",
+      "category": "Cybersecurity & Ops",
+      "description": "An automated cloud security and compliance platform optimizing configurations for multi-cloud environments.",
+      "logoLetter": "I",
+      "themeColor": "from-amber-600 to-yellow-600"
+    },
+    {
+      "name": "EY (Ernst & Young)",
+      "category": "Consulting & Finance",
+      "description": "A global leader in assurance, consulting, strategy, transactions, and corporate advisory services.",
+      "logoLetter": "E",
+      "themeColor": "from-yellow-500 to-amber-500"
+    },
+    {
+      "name": "AngelOne",
+      "category": "Consulting & Finance",
+      "description": "A prominent technology-led financial services brokerage and digital investment platform.",
+      "logoLetter": "A",
+      "themeColor": "from-indigo-600 to-violet-600"
+    },
+    {
+      "name": "Skyworks Solutions",
+      "category": "Engineering & Logistics",
+      "description": "An innovator of high-performance analog semiconductors connecting wireless infrastructure and devices.",
+      "logoLetter": "S",
+      "themeColor": "from-sky-600 to-blue-800"
+    },
+    {
+      "name": "Zillion Technologies",
+      "category": "Technology & Software",
+      "description": "Offers global digital transformation consultation, systems integration, and software engineering services.",
+      "logoLetter": "Z",
+      "themeColor": "from-pink-500 to-purple-600"
+    },
+    {
+      "name": "Siemens Healthcare",
+      "category": "Healthcare & Biotech",
+      "description": "A global medical technology pioneer delivering state-of-the-art diagnostic imaging and clinical software.",
+      "logoLetter": "S",
+      "themeColor": "from-teal-600 to-cyan-700"
+    },
+    {
+      "name": "Alxplora Technologies",
+      "category": "Technology & Software",
+      "description": "Delivers data-driven product analytics, machine learning prototypes, and custom business intelligence dashboards.",
+      "logoLetter": "A",
+      "themeColor": "from-stone-600 to-stone-800"
+    }
+  ],
+  "placement_stats": [
+    {
+      "academicYear": "AY22–24",
+      "batch": "FT Batch 1",
+      "avgStipend": "₹ 25,000.00",
+      "medianStipend": "₹ 27,500.00",
+      "highestStipend": "₹ 35,000.00",
+      "avgCtc": "₹ 6.20 LPA",
+      "medianCtc": "₹ 6.00 LPA",
+      "highestCtc": "₹ 10.00 LPA"
+    },
+    {
+      "academicYear": "AY23–25",
+      "batch": "FT Batch 2",
+      "avgStipend": "₹ 28,000.00",
+      "medianStipend": "₹ 30,000.00",
+      "highestStipend": "₹ 42,000.00",
+      "avgCtc": "₹ 9.13 LPA",
+      "medianCtc": "₹ 7.00 LPA",
+      "highestCtc": "₹ 39.76 LPA"
+    },
+    {
+      "academicYear": "AY24–26",
+      "batch": "FT Batch 3",
+      "avgStipend": "₹ 23,000.00",
+      "medianStipend": "₹ 25,000.00",
+      "highestStipend": "₹ 35,000.00",
+      "avgCtc": "₹ 6.00 LPA",
+      "medianCtc": "₹ 6.00 LPA",
+      "highestCtc": "₹ 15.00 LPA"
+    },
+    {
+      "academicYear": "Overall",
+      "batch": "All Batches",
+      "avgStipend": "₹ 25,333.33",
+      "medianStipend": "₹ 27,500.00",
+      "highestStipend": "₹ 42,000.00",
+      "avgCtc": "₹ 8.00 LPA",
+      "medianCtc": "₹ 6.00 LPA",
+      "highestCtc": "₹ 39.76 LPA"
+    }
+  ],
+  "batch_placement_records": [],
+  "placement_charts": []
+}

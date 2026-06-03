@@ -13,6 +13,16 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
+    server: {
+      watch: {
+        ignored: [
+          "**/data/**",
+          "**/src/data/settings.json",
+          "**/src/data/students.ts",
+          "**/public/uploads/**"
+        ]
+      }
+    },
     build: {
       emptyOutDir: false,
     },
