@@ -342,9 +342,7 @@ function HomePage() {
                 </span>
               </div>
               <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
-                REVA Academy for
-                <br />
-                <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence</span>
+                REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence</span>
               </h1>
               <p className="mt-4 text-sm sm:text-base leading-relaxed text-neutral-600 font-medium max-w-xl">
                 Progressive and integrated learning capabilities for working professionals. Specialized techno-functional and interdisciplinary programs designed to suit the needs of working professionals.
