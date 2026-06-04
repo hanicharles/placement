@@ -141,8 +141,12 @@ function ProgramCard({ title, icon: Icon, tag, description, duration, mode, link
       <div className="mt-6 pt-4 border-t border-black/5 flex items-center justify-between">
         <div className="text-[11px] text-neutral-500 font-semibold">
           <span>🕒 {duration}</span>
-          <span className="mx-2">•</span>
-          <span>💻 {mode}</span>
+          {mode && (
+            <>
+              <span className="mx-2">•</span>
+              <span>💻 {mode}</span>
+            </>
+          )}
         </div>
         {link.startsWith("http") ? (
           <a
@@ -412,7 +416,7 @@ function HomePage() {
               tag="AI Engineering"
               description="Master advanced neural networks, deep learning perception pipelines, neural-fuzzy control navigation systems, and large language models (LLMs) with LangGraph frameworks."
               duration="2 Years"
-              mode="Blended / Weekend Labs"
+              mode=""
               link="https://race.reva.edu.in/pg-diploma-m-tech-in-artificial-intelligence"
             />
             <ProgramCard
@@ -421,7 +425,7 @@ function HomePage() {
               tag="Security Operations"
               description="Learn defensive operations, threat identification, network access control (NAC), brute force mitigation, memory forensics, SIEM correlation dashboards, and GRC policies."
               duration="2 Years"
-              mode="Blended / Weekend Labs"
+              mode=""
               link="https://race.reva.edu.in/m-tech-in-cybersecurity/"
             />
           </div>
