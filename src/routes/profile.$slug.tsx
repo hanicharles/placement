@@ -578,7 +578,7 @@ function ProfilePage() {
       
       {/* Footer */}
       <footer className="mx-auto mt-8 max-w-[900px] text-center text-[10px] text-neutral-400 font-bold no-print">
-        © REVA University · RACE Department · race.reva.edu.in
+        © REVA University · RACE · race.reva.edu.in
       </footer>
     </div>
   );

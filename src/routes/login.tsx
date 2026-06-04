@@ -189,7 +189,7 @@ function LoginPage() {
 
       {/* Footer */}
       <footer className="border-t border-black/5 bg-white py-4 text-center text-xs text-neutral-400 font-bold">
-        © REVA University · RACE Department
+        © REVA University · RACE
       </footer>
     </div>
   );

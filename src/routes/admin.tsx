@@ -3755,7 +3755,7 @@ function AdminDashboardPage() {
 
       {/* Admin Footer */}
       <footer className="border-t border-black/5 bg-white py-6 text-center text-xs text-neutral-500 font-bold mt-12">
-        © REVA University · RACE Department · Placement Admin Portal
+        © REVA University · RACE · Placement Admin Portal
       </footer>
     </div>
   );

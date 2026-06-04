@@ -388,7 +388,7 @@ function ContactUsPage() {
               <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
                 Connect with the
                 <br />
-                <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">RACE Department</span>
+                <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">RACE</span>
               </h1>
               <p className="mt-4 text-sm sm:text-base leading-relaxed text-neutral-600 font-medium max-w-xl">
                 Empowering professionals through world-class training and development programs. Connect with our expert team for programs, research opportunities, and corporate training solutions.
@@ -686,7 +686,7 @@ function ContactUsPage() {
       </main>
 
       <footer className="border-t border-black/5 bg-white mt-12 py-6 text-center text-xs text-neutral-500 font-bold">
-        © REVA University · RACE Department · race.reva.edu.in
+        © REVA University · RACE · race.reva.edu.in
       </footer>
     </div>
   );

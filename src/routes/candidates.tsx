@@ -1282,7 +1282,7 @@ function BrochurePage() {
 
       {/* Footer */}
       <footer className="border-t border-black/5 bg-white mt-12 py-6 text-center text-xs text-neutral-500 font-bold">
-        © REVA University · RACE Department · race.reva.edu.in
+        © REVA University · RACE · race.reva.edu.in
       </footer>
     </div>
   );

@@ -866,7 +866,7 @@ function HomePage() {
 
       <footer className="border-t border-black/5 bg-white mt-20">
         <div className="mx-auto max-w-6xl px-6 py-8 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 font-bold">
-          <div>© REVA University · RACE Department · race.reva.edu.in</div>
+          <div>© REVA University · RACE · race.reva.edu.in</div>
           <div className="flex gap-4 mt-4 sm:mt-0">
             <Link to="/candidates" className="hover:text-[#FF5900] transition-colors">Placement Candidates</Link>
             <Link to="/contact-us" className="hover:text-[#FF5900] transition-colors">Contact Admissions</Link>
