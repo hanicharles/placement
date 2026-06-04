@@ -333,62 +333,67 @@ function HomePage() {
           {/* Subtle mesh background effect */}
           <div className="absolute inset-0 opacity-40 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(255,211,165,0.4),transparent_50%),radial-gradient(circle_at_bottom_left,rgba(255,240,220,0.5),transparent_50%)]" />
           
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-center max-w-6xl mx-auto relative z-10">
-            {/* Left content column */}
-            <div className="md:col-span-7 lg:col-span-8 text-left flex flex-col justify-center">
-              <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5900]/10 px-3 py-1 text-xs font-bold text-[#FF5900] border border-[#FF5900]/15">
-                  🎓 Developing Visionary Enterprise Leaders
-                </span>
-              </div>
-              <h1 className="mt-6 text-3xl sm:text-4xl md:text-4xl lg:text-[40px] xl:text-[44px] font-black text-neutral-900 tracking-tight leading-tight lg:whitespace-nowrap">
+          <div className="max-w-6xl mx-auto relative z-10 text-left">
+            {/* Header / Badge (Full Width) */}
+            <div className="mb-8 border-b border-black/5 pb-6">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5900]/10 px-3 py-1 text-xs font-bold text-[#FF5900] border border-[#FF5900]/15">
+                🎓 Developing Visionary Enterprise Leaders
+              </span>
+              <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black text-neutral-900 tracking-tight leading-tight">
                 REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence</span>
               </h1>
-              <p className="mt-4 text-sm sm:text-base leading-relaxed text-neutral-600 font-medium max-w-xl">
-                Progressive and integrated learning capabilities for working professionals. Specialized techno-functional and interdisciplinary programs designed to suit the needs of working professionals.
-              </p>
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <Link
-                  to="/candidates"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E3E62] px-6 py-3.5 text-xs font-bold text-white shadow-md hover:bg-[#12223A] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 cursor-pointer w-fit font-sans tracking-wider uppercase"
-                >
-                  Explore Cohort Candidates <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  to="/contact-us"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-6 py-3.5 text-xs font-bold text-neutral-700 shadow-sm hover:bg-neutral-50 hover:border-black/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer w-fit font-sans tracking-wider uppercase"
-                >
-                  <Phone className="h-3.5 w-3.5 text-[#FF5900]" /> Contact
-                </Link>
-              </div>
-              <div className="mt-8 flex flex-col sm:flex-row gap-y-2 sm:gap-x-6 text-xs text-neutral-700 font-bold border-t border-black/5 pt-6">
-                <span className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-[#2ecc71]" />
-                  Industry Expert Mentors
-                </span>
-                <span className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-[#2ecc71]" />
-                  Globally Recognized Certifications
-                </span>
-              </div>
             </div>
 
-            {/* Right tilted card column */}
-            <div className="md:col-span-5 lg:col-span-4 flex justify-center md:justify-end">
-              <div className="relative w-full max-w-[420px] aspect-[1024/768] rounded-2xl p-2 bg-gradient-to-br from-[#FFFBDC] to-[#FFD3A5] shadow-lg border border-[#FFAA6E]/30">
-                <div className="w-full h-full bg-[#f2f2f2] rounded-xl flex items-center justify-center overflow-hidden relative shadow-inner">
-                  <img
-                    src="/image/cohort_group.jpg"
-                    alt="RACE Cohort Group"
-                    className="w-full h-full object-cover rounded-xl"
-                  />
-                  {/* Glassmorphism badge overlay */}
-                  <div className="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg p-3 text-white flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] uppercase tracking-widest text-[#FFD3A5] font-black">Executive Cohort</p>
-                      <p className="text-xs font-bold">M.Tech / M.Sc AI & Cybersecurity</p>
+            {/* Grid for Description, Actions & Image */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Left content column */}
+              <div className="md:col-span-7 flex flex-col justify-center text-left">
+                <p className="text-sm sm:text-base leading-relaxed text-neutral-600 font-medium max-w-xl">
+                  Progressive and integrated learning capabilities for working professionals. Specialized techno-functional and interdisciplinary programs designed to suit the needs of working professionals.
+                </p>
+                <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                  <Link
+                    to="/candidates"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E3E62] px-6 py-3.5 text-xs font-bold text-white shadow-md hover:bg-[#12223A] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 cursor-pointer w-fit font-sans tracking-wider uppercase"
+                  >
+                    Explore Cohort Candidates <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    to="/contact-us"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-6 py-3.5 text-xs font-bold text-neutral-700 shadow-sm hover:bg-neutral-50 hover:border-black/20 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer w-fit font-sans tracking-wider uppercase"
+                  >
+                    <Phone className="h-3.5 w-3.5 text-[#FF5900]" /> Contact
+                  </Link>
+                </div>
+                <div className="mt-8 flex flex-col sm:flex-row gap-y-2 sm:gap-x-6 text-xs text-neutral-700 font-bold border-t border-black/5 pt-6">
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-[#2ecc71]" />
+                    Industry Expert Mentors
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-[#2ecc71]" />
+                    Globally Recognized Certifications
+                  </span>
+                </div>
+              </div>
+
+              {/* Right tilted card column */}
+              <div className="md:col-span-5 flex justify-center md:justify-end">
+                <div className="relative w-full max-w-[480px] aspect-[1024/768] rounded-2xl p-2 bg-gradient-to-br from-[#FFFBDC] to-[#FFD3A5] shadow-lg border border-[#FFAA6E]/30 transition-transform duration-300 hover:scale-[1.02]">
+                  <div className="w-full h-full bg-[#f2f2f2] rounded-xl flex items-center justify-center overflow-hidden relative shadow-inner">
+                    <img
+                      src="/image/cohort_group.jpg"
+                      alt="RACE Cohort Group"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                    {/* Glassmorphism badge overlay */}
+                    <div className="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg p-3 text-white flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-widest text-[#FFD3A5] font-black">Executive Cohort</p>
+                        <p className="text-xs font-bold">M.Tech / M.Sc AI & Cybersecurity</p>
+                      </div>
+                      <span className="rounded bg-[#FF5900] px-2 py-0.5 text-[9px] font-black uppercase">2026</span>
                     </div>
-                    <span className="rounded bg-[#FF5900] px-2 py-0.5 text-[9px] font-black uppercase">2026</span>
                   </div>
                 </div>
               </div>
