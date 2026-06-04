@@ -335,13 +335,13 @@ function HomePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-center max-w-6xl mx-auto relative z-10">
             {/* Left content column */}
-            <div className="md:col-span-7 text-left flex flex-col justify-center">
+            <div className="md:col-span-7 lg:col-span-8 text-left flex flex-col justify-center">
               <div>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5900]/10 px-3 py-1 text-xs font-bold text-[#FF5900] border border-[#FF5900]/15">
                   🎓 Developing Visionary Enterprise Leaders
                 </span>
               </div>
-              <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
+              <h1 className="mt-6 text-3xl sm:text-4xl md:text-4xl lg:text-[40px] xl:text-[44px] font-black text-neutral-900 tracking-tight leading-tight lg:whitespace-nowrap">
                 REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence</span>
               </h1>
               <p className="mt-4 text-sm sm:text-base leading-relaxed text-neutral-600 font-medium max-w-xl">
@@ -374,7 +374,7 @@ function HomePage() {
             </div>
 
             {/* Right tilted card column */}
-            <div className="md:col-span-5 flex justify-center md:justify-end">
+            <div className="md:col-span-5 lg:col-span-4 flex justify-center md:justify-end">
               <div className="relative w-full max-w-[420px] aspect-[1024/768] rounded-2xl p-2 bg-gradient-to-br from-[#FFFBDC] to-[#FFD3A5] shadow-lg border border-[#FFAA6E]/30">
                 <div className="w-full h-full bg-[#f2f2f2] rounded-xl flex items-center justify-center overflow-hidden relative shadow-inner">
                   <img
