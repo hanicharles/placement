@@ -129,7 +129,7 @@ function ContactBusinessCard({
   return (
     <div className={`relative w-full max-w-[560px] bg-[#F8F9FA] border border-black/5 rounded-[24px] shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden px-6 py-8 sm:px-10 sm:py-10 flex ${
       isPhotoLeft ? "flex-col md:flex-row" : "flex-col-reverse md:flex-row"
-    } gap-8 items-center justify-between min-h-[300px]`}>
+    } gap-6 md:gap-8 items-center justify-start md:justify-between min-h-[250px] md:min-h-[300px]`}>
       
       {/* Background Zig-Zag Wave Decoration */}
       <svg

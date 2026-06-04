@@ -528,9 +528,9 @@ function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Chart Area */}
-            <div className="lg:col-span-7 bg-white border border-black/5 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-white border border-black/5 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-start gap-4">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-black text-neutral-900 tracking-tight uppercase">
@@ -873,7 +873,7 @@ function HomePage() {
         {/* Section 4: Detailed About & Infographics */}
         <section className="mt-20 grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
           {/* Left Column: About Copy & Key Features */}
-          <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
+          <div className="lg:col-span-7 flex flex-col justify-start space-y-6">
             <div>
               <h3 className="text-2xl font-black text-neutral-900 tracking-tight">
                 About RACE
