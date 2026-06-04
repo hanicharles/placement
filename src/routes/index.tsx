@@ -845,30 +845,13 @@ function HomePage() {
                           </p>
                         </div>
 
-                        <div>
-                          <h4 className="text-[10px] font-black text-neutral-800 uppercase tracking-wider mb-2.5">
-                            Key Highlights
-                          </h4>
-                          <ul className="space-y-2">
-                            {details.highlights.map((h, i) => (
-                              <li key={i} className="flex items-start gap-2">
-                                <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                                <span className="text-xs font-semibold text-neutral-700 leading-tight">
-                                  {h}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+
                       </div>
                     );
                   })()}
                 </div>
 
-                <div className="mt-8 pt-4 border-t border-black/5 flex flex-col gap-1 text-[9px] text-neutral-450 font-bold italic text-left">
-                  <p>* LPA = Lakhs Per Annum (INR)</p>
-                  <p>* Projections or ongoing cycles marked with an asterisk (*)</p>
-                </div>
+
               </div>
             </div>
           </div>
