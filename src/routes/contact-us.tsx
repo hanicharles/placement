@@ -154,7 +154,7 @@ function ContactBusinessCard({
         <>
           {/* Photo container (Left on Desktop, Top on Mobile) */}
           <div className="w-full md:w-[32%] shrink-0 flex items-center justify-center relative z-10">
-            <div className="w-40 h-52 sm:w-44 sm:h-56 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white">
+            <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white">
               <img
                 src={photoUrl}
                 alt={name}
@@ -283,7 +283,7 @@ function ContactBusinessCard({
 
           {/* Photo container (Right on Desktop, Bottom on Mobile) */}
           <div className="w-full md:w-[32%] shrink-0 flex items-center justify-center relative z-10">
-            <div className="w-40 h-52 sm:w-44 sm:h-56 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white">
+            <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white">
               <img
                 src={photoUrl}
                 alt={name}
