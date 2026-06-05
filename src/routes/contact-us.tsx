@@ -59,24 +59,64 @@ type FAQItem = {
 
 const FAQS: FAQItem[] = [
   {
-    question: "What are the eligibility criteria for the M.Tech programs at RACE?",
-    answer: "Candidates should possess a B.E/B.Tech or equivalent degree in engineering, or an MCA/M.Sc in computer science/mathematics, with a minimum aggregate of 50%. A minimum of 1-2 years of working experience in technology, software, or analytical roles is preferred, but motivated freshers with strong profiles are also considered.",
+    question: "What is the RACE Placement Portal?",
+    answer: "The RACE Placement Portal is a centralized platform that connects students with internship, placement, and industry opportunities.",
   },
   {
-    question: "How does the blended learning format work for working professionals?",
-    answer: "The program is designed to suit working schedules. It combines self-paced online modules, 24/7 virtual lab access for programming/experiments, and live interactive classes/hands-on labs held over weekends. This allows professionals to balance their studies with active corporate careers.",
+    question: "Who can use the placement portal?",
+    answer: "The portal is exclusively designed for full-time M.Tech and M.Sc students of RACE, REVA University.",
   },
   {
-    question: "Does RACE provide lateral placement assistance?",
-    answer: "Yes. RACE has a dedicated career services cell that assists students with career counseling, resume building, interview preparation, and lateral transitions. We partner with over 100 top-tier organizations (including L&T, HAL, Infosys, Capgemini, and others) for direct hiring pipelines.",
+    question: "What types of opportunities are available?",
+    answer: "Students can access paid internships, full-time jobs, industry projects, research opportunities, and startup openings.",
   },
   {
-    question: "Are the programs certified by REVA University?",
-    answer: "Yes, all M.Tech and PG Diploma programs are officially awarded by REVA University, Bangalore. They are UGC recognized and aligned with the corporate techno-functional requirements of the current tech industry.",
+    question: "Are internships paid?",
+    answer: "Most opportunities shared through RACE are paid internships, with stipends varying based on company requirements.",
   },
   {
-    question: "How can corporate organizations partner with RACE?",
-    answer: "Corporates can collaborate with us in multiple ways: custom corporate training programs, research consultancy contracts, guest lecture sponsorships, and direct hiring drives from our pre-screened talent cohorts. Please contact Paramesh G at paramesh.g@reva.edu.in for business engagements.",
+    question: "How do I apply for an internship or placement opportunity?",
+    answer: "Students can submit their profiles through the portal and apply to relevant opportunities based on their skills and interests.",
+  },
+  {
+    question: "What domains are covered under placements?",
+    answer: "AI/ML, Generative AI, Data Science, Cybersecurity, Cloud Computing, Software Development, and Analytics.",
+  },
+  {
+    question: "Does RACE provide placement assistance?",
+    answer: "Yes. RACE provides resume reviews, mock interviews, technical mentoring, and industry preparation sessions.",
+  },
+  {
+    question: "How are students shortlisted by companies?",
+    answer: "Shortlisting is based on skills, project experience, academic performance, resume quality, and company requirements.",
+  },
+  {
+    question: "How can I improve my chances of getting selected?",
+    answer: "Build strong projects, maintain an updated resume, improve LinkedIn presence, and actively participate in preparation activities.",
+  },
+  {
+    question: "Can internships lead to full-time job offers?",
+    answer: "Yes. Many companies offer internship-to-FTE conversion based on performance during the internship period.",
+  },
+  {
+    question: "What is the highest internship stipend secured by RACE students?",
+    answer: "Recent students have secured internship opportunities with stipends up to ₹75,000 per month.",
+  },
+  {
+    question: "How do companies hire students through RACE?",
+    answer: "Recruiters can share their requirements with the Placement Team, and relevant student profiles will be provided for screening.",
+  },
+  {
+    question: "What programs are offered under RACE?",
+    answer: "M.Tech in Artificial Intelligence, M.Sc in Artificial Intelligence, M.Sc in Cybersecurity, and M.Sc in Cloud Architecture & Security.",
+  },
+  {
+    question: "Why should I choose RACE for my higher education journey?",
+    answer: "RACE offers industry-focused learning, hands-on projects, mentorship, internship opportunities, and placement support.",
+  },
+  {
+    question: "How can I contact the Placement Team?",
+    answer: "Students and recruiters can reach out through the Placement Portal or contact the Placement Team for any assistance regarding internships, placements, and industry collaborations.",
   },
 ];
 
