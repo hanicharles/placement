@@ -111,6 +111,7 @@ async function getSourceSettingsContent(): Promise<string> {
     try {
       const rows = dbInstance.prepare("SELECT * FROM settings").all() as any[];
       for (const r of rows) {
+        if (r.key.startsWith("banner_image:")) continue;
         try {
           settingsObj[r.key] = JSON.parse(r.value);
         } catch {
@@ -125,6 +126,7 @@ async function getSourceSettingsContent(): Promise<string> {
   
   if (!loaded) {
     memorySettings.forEach((v, k) => {
+      if (k.startsWith("banner_image:")) return;
       try {
         settingsObj[k] = JSON.parse(v);
       } catch {
@@ -134,6 +136,7 @@ async function getSourceSettingsContent(): Promise<string> {
   }
   return JSON.stringify(settingsObj, null, 2);
 }
+
 
 function writeToSourceStudents(studentsList: Student[]) {
   if (isReadOnlyFileSystem) return;
@@ -863,9 +866,39 @@ export const db = {
     // Update in-memory map
     memorySettings.set(key, value);
 
-    if (!saved) {
+  },
+
+  async deleteSetting(key: string): Promise<void> {
+    let deleted = false;
+
+    const d1 = getD1Db();
+    if (d1) {
+      try {
+        await initializeD1(d1);
+        await d1.prepare("DELETE FROM settings WHERE key = ?").bind(key).run();
+        deleted = true;
+      } catch (error) {
+        console.error("Cloudflare D1 deleteSetting failed, falling back to SQLite/JSON", error);
+      }
+    }
+
+    if (!deleted) {
+      const sqlite = await getSqliteDb();
+      if (sqlite && !useJsonFallback) {
+        try {
+          sqlite.prepare("DELETE FROM settings WHERE key = ?").run(key);
+          deleted = true;
+        } catch (error) {
+          console.error("SQLite deleteSetting failed, falling back to JSON", error);
+        }
+      }
+    }
+
+    memorySettings.delete(key);
+
+    if (!deleted) {
       const settings = readSettingsJson();
-      settings[key] = value;
+      delete settings[key];
       writeSettingsJson(settings);
     }
   },

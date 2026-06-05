@@ -559,6 +559,7 @@ function AdminDashboardPage() {
       title: "",
       companyName: "",
       imageUrl: "",
+      linkUrl: "",
     });
     setBannerIndex(null);
     setIsBannerFormOpen(true);
@@ -2787,6 +2788,18 @@ function AdminDashboardPage() {
                           onChange={(e) => setEditingBanner({ ...editingBanner, companyName: e.target.value })}
                           className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
                           placeholder="e.g. Turmeric"
+                        />
+                      </div>
+
+                      {/* Redirect URL / LinkedIn Post Link */}
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Redirect URL / LinkedIn Post Link (Optional)</label>
+                        <input
+                          type="url"
+                          value={editingBanner.linkUrl || ""}
+                          onChange={(e) => setEditingBanner({ ...editingBanner, linkUrl: e.target.value })}
+                          className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-xs outline-none focus:border-[#1E3E62]"
+                          placeholder="e.g. https://linkedin.com/posts/..."
                         />
                       </div>
 

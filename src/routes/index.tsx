@@ -1170,15 +1170,32 @@ function HomePage() {
               {/* Left and Right blur shadows for premium look */}
               <div className="absolute inset-y-0 left-0 w-16 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
               <div className="absolute inset-y-0 right-0 w-16 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
-              
               <div className="flex animate-marquee-banners whitespace-nowrap">
-                {(placementBanners.length < 5
-                  ? [...placementBanners, ...placementBanners, ...placementBanners]
-                  : [...placementBanners, ...placementBanners]
-                ).map((banner, idx) => (
+                {(() => {
+                  // Duplicate the banners so they fill the screen and loop seamlessly.
+                  // The marquee animation uses transform: translateX(-50%), which requires the repeated
+                  // array to consist of an even number of copies of the original array (e.g. 2, 4, 6 copies).
+                  let repeatFactor = 2;
+                  if (placementBanners.length < 4) {
+                    repeatFactor = 6;
+                  } else if (placementBanners.length < 8) {
+                    repeatFactor = 4;
+                  }
+                  const repeated: typeof placementBanners = [];
+                  for (let i = 0; i < repeatFactor; i++) {
+                    repeated.push(...placementBanners);
+                  }
+                  return repeated;
+                })().map((banner, idx) => (
                   <div
                     key={`${banner.id}-${idx}`}
-                    onClick={() => setLightboxImage(banner.imageUrl)}
+                    onClick={() => {
+                      if (banner.linkUrl) {
+                        window.open(banner.linkUrl, "_blank", "noopener,noreferrer");
+                      } else {
+                        setLightboxImage(banner.imageUrl);
+                      }
+                    }}
                     className="inline-flex flex-col relative cursor-pointer overflow-hidden rounded-2xl border border-black/5 bg-neutral-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md h-[360px] aspect-[3/4] mx-4 shrink-0 group"
                   >
                     <img
@@ -1194,6 +1211,11 @@ function HomePage() {
                       <h4 className="text-xs font-extrabold text-white tracking-tight mt-1 leading-snug">
                         {banner.title}
                       </h4>
+                      {banner.linkUrl && (
+                        <span className="text-[9px] font-bold text-amber-400 mt-1.5 flex items-center gap-1">
+                          Click to view details ↗
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))}

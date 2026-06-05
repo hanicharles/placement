@@ -957,6 +957,7 @@ export interface PlacementBanner {
   title: string;
   companyName: string;
   imageUrl: string;
+  linkUrl?: string;
 }
 
 const DEFAULT_BANNERS: PlacementBanner[] = [
@@ -1016,6 +1017,25 @@ const serverSavePlacementBannersFn = createServerFn({ method: "POST" })
   .inputValidator((banners: PlacementBanner[]) => banners)
   .handler(async ({ data: banners }) => {
     verifyAuth();
+    
+    // Cleanup deleted banner images from settings
+    try {
+      const oldBannersStr = await db.getSetting("placement_banners");
+      if (oldBannersStr) {
+        const oldBanners = JSON.parse(oldBannersStr) as PlacementBanner[];
+        const currentUrls = new Set(banners.map(b => b.imageUrl));
+        for (const oldB of oldBanners) {
+          if (oldB.imageUrl.startsWith("/api/banners/") && !currentUrls.has(oldB.imageUrl)) {
+            const slug = oldB.imageUrl.substring("/api/banners/".length);
+            await db.deleteSetting(`banner_image:${slug}`);
+            console.log(`Successfully deleted orphaned banner image setting for slug: ${slug}`);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to clean up deleted banner settings:", e);
+    }
+
     await db.saveSetting("placement_banners", JSON.stringify(banners));
     return { success: true };
   });
@@ -1031,10 +1051,13 @@ export const uploadPlacementBannerFn = createServerFn({ method: "POST" })
     verifyAuth();
     const { slug, base64 } = data;
     
+    // Always store in database settings to support D1 / SQLite environments
+    await db.saveSetting(`banner_image:${slug}`, base64);
+    
     const isCloudflare = typeof globalThis !== "undefined" && (globalThis as any).cloudflareEnv !== undefined;
     if (isCloudflare) {
       console.log("Cloudflare environment: Bypassing local filesystem write for banner.");
-      return { success: true, filePath: base64 };
+      return { success: true, filePath: `/api/banners/${slug}` };
     }
 
     try {
@@ -1047,9 +1070,9 @@ export const uploadPlacementBannerFn = createServerFn({ method: "POST" })
       }
       const destPath = path.join(uploadDir, `${slug}.jpg`);
       fs.writeFileSync(destPath, buffer);
-      return { success: true, filePath: `/uploads/banners/${slug}.jpg` };
+      return { success: true, filePath: `/api/banners/${slug}` };
     } catch (error) {
-      console.warn("Write filesystem failed for banner, falling back to base64 inline storage:", error);
-      return { success: true, filePath: base64 };
+      console.warn("Write filesystem failed for banner, falling back to database settings endpoint:", error);
+      return { success: true, filePath: `/api/banners/${slug}` };
     }
   });

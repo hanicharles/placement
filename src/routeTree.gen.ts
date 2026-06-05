@@ -17,6 +17,7 @@ import { Route as CandidatesRouteImport } from './routes/candidates'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProfileSlugRouteImport } from './routes/profile.$slug'
+import { Route as ApiBannersSlugRouteImport } from './routes/api.banners.$slug'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -58,6 +59,11 @@ const ProfileSlugRoute = ProfileSlugRouteImport.update({
   path: '/profile/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiBannersSlugRoute = ApiBannersSlugRouteImport.update({
+  id: '/api/banners/$slug',
+  path: '/api/banners/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/hiring-partners': typeof HiringPartnersRoute
   '/login': typeof LoginRoute
   '/profile/$slug': typeof ProfileSlugRoute
+  '/api/banners/$slug': typeof ApiBannersSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/hiring-partners': typeof HiringPartnersRoute
   '/login': typeof LoginRoute
   '/profile/$slug': typeof ProfileSlugRoute
+  '/api/banners/$slug': typeof ApiBannersSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/hiring-partners': typeof HiringPartnersRoute
   '/login': typeof LoginRoute
   '/profile/$slug': typeof ProfileSlugRoute
+  '/api/banners/$slug': typeof ApiBannersSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/hiring-partners'
     | '/login'
     | '/profile/$slug'
+    | '/api/banners/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/hiring-partners'
     | '/login'
     | '/profile/$slug'
+    | '/api/banners/$slug'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/hiring-partners'
     | '/login'
     | '/profile/$slug'
+    | '/api/banners/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   HiringPartnersRoute: typeof HiringPartnersRoute
   LoginRoute: typeof LoginRoute
   ProfileSlugRoute: typeof ProfileSlugRoute
+  ApiBannersSlugRoute: typeof ApiBannersSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/banners/$slug': {
+      id: '/api/banners/$slug'
+      path: '/api/banners/$slug'
+      fullPath: '/api/banners/$slug'
+      preLoaderRoute: typeof ApiBannersSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   HiringPartnersRoute: HiringPartnersRoute,
   LoginRoute: LoginRoute,
   ProfileSlugRoute: ProfileSlugRoute,
+  ApiBannersSlugRoute: ApiBannersSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
