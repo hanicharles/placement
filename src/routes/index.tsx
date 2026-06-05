@@ -260,19 +260,19 @@ function HomePage() {
       highlights: [
         "100% Internship Commencement",
         "8 out of 9 students placed in full-time lateral roles",
-        "Peak package of 10.00 LPA offered in corporate roles",
+        "Peak package of 10 LPA offered in corporate roles",
         "Initial partners include Terralogic, L&T, and HAL"
       ],
       admitted: "9 Students",
       internships: "9 Offers",
       placements: "8 Placements",
-      highestCtc: "10.00 LPA"
+      highestCtc: "10 LPA"
     },
     "AY23-25": {
       title: "Academic Year 2023 – 2025 (FT Batch 2)",
       description: "A highly successful executive batch characterized by significant career upskilling and transition statistics. 29 professionals were admitted, resulting in 26 corporate internships and 25 full-time career transitions. This batch holds our historical peak placement package.",
       highlights: [
-        "Historical peak compensation package of 39.76 LPA",
+        "Historical peak compensation package of 40 LPA",
         "26 students commenced paid internships in global tech labs",
         "25 students successfully placed in top tier MNC roles",
         "Strong recruitment footprint from AngelOne, EY, and Cyberium"
@@ -280,7 +280,7 @@ function HomePage() {
       admitted: "29 Students",
       internships: "26 Offers",
       placements: "25 Placements",
-      highestCtc: "39.76 LPA"
+      highestCtc: "40 LPA"
     },
     "AY24-26": {
       title: "Academic Year 2024 – 2026 (FT Batch 3) — Ongoing",
@@ -288,13 +288,13 @@ function HomePage() {
       highlights: [
         "28 internships secured during ongoing coursework",
         "15 successful full-time lateral placements to date",
-        "Highest package offered so far is 15.00 LPA",
+        "Highest package offered so far is 15 LPA",
         "Admissions and placement cycles are currently active"
       ],
       admitted: "32 Students",
       internships: "28 Offers",
       placements: "15 Placements*",
-      highestCtc: "15.00 LPA*"
+      highestCtc: "15 LPA*"
     },
     "AY25-27": {
       title: "Academic Year 2025 – 2027 (FT Batch 4) — Ongoing",
@@ -480,12 +480,12 @@ function HomePage() {
             const overall = placementStats.find(
               (r) => r.academicYear.toLowerCase() === "overall"
             ) || {
-              avgStipend: "₹ 25,333.33",
-              medianStipend: "₹ 27,500.00",
-              highestStipend: "₹ 42,000.00",
-              avgCtc: "₹ 8.00 LPA",
-              medianCtc: "₹ 6.00 LPA",
-              highestCtc: "₹ 39.76 LPA",
+              avgStipend: "25k",
+              medianStipend: "28k",
+              highestStipend: "75k",
+              avgCtc: "8 LPA",
+              medianCtc: "6 LPA",
+              highestCtc: "40 LPA",
             };
 
             return (

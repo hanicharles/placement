@@ -320,42 +320,42 @@
     {
       "academicYear": "AY22–24",
       "batch": "FT Batch 1",
-      "avgStipend": "₹ 25,000.00",
-      "medianStipend": "₹ 27,500.00",
-      "highestStipend": "₹ 35,000.00",
-      "avgCtc": "₹ 6.20 LPA",
-      "medianCtc": "₹ 6.00 LPA",
-      "highestCtc": "₹ 10.00 LPA"
+      "avgStipend": "25k",
+      "medianStipend": "28k",
+      "highestStipend": "35k",
+      "avgCtc": "6 LPA",
+      "medianCtc": "6 LPA",
+      "highestCtc": "10 LPA"
     },
     {
       "academicYear": "AY23–25",
       "batch": "FT Batch 2",
-      "avgStipend": "₹ 26,000.00",
-      "medianStipend": "₹ 30,000.00",
-      "highestStipend": "₹ 42,000.00",
-      "avgCtc": "₹ 9.15 LPA",
-      "medianCtc": "₹ 7.00 LPA",
-      "highestCtc": "₹ 39.76 LPA"
+      "avgStipend": "26k",
+      "medianStipend": "30k",
+      "highestStipend": "42k",
+      "avgCtc": "9 LPA",
+      "medianCtc": "7 LPA",
+      "highestCtc": "40 LPA"
     },
     {
       "academicYear": "AY24–26",
       "batch": "FT Batch 3",
-      "avgStipend": "₹ 25,000.00",
-      "medianStipend": "₹ 25,000.00",
-      "highestStipend": "₹ 35,000.00",
-      "avgCtc": "₹ 6.00 LPA",
-      "medianCtc": "₹ 6.00 LPA",
-      "highestCtc": "₹ 15.00 LPA"
+      "avgStipend": "25k",
+      "medianStipend": "25k",
+      "highestStipend": "75k",
+      "avgCtc": "6 LPA",
+      "medianCtc": "6 LPA",
+      "highestCtc": "15 LPA"
     },
     {
       "academicYear": "Overall",
       "batch": "All Batches",
-      "avgStipend": "₹ 25,333.33",
-      "medianStipend": "₹ 27,500.00",
-      "highestStipend": "₹ 42,000.00",
-      "avgCtc": "₹ 8.00 LPA",
-      "medianCtc": "₹ 6.00 LPA",
-      "highestCtc": "₹ 39.76 LPA"
+      "avgStipend": "25k",
+      "medianStipend": "28k",
+      "highestStipend": "75k",
+      "avgCtc": "8 LPA",
+      "medianCtc": "6 LPA",
+      "highestCtc": "40 LPA"
     }
   ],
   "batch_placement_records": [
@@ -483,7 +483,7 @@
         },
         {
           "year": "AY23-25",
-          "value": 39.76
+          "value": 40
         },
         {
           "year": "AY24-26",

@@ -696,49 +696,49 @@ const DEFAULT_PLACEMENT_STATS: PlacementStatRow[] = [
   {
     academicYear: "AY22–24",
     batch: "FT Batch 1",
-    avgStipend: "₹ 25,000.00",
-    medianStipend: "₹ 27,500.00",
-    highestStipend: "₹ 35,000.00",
-    avgCtc: "₹ 6.20 LPA",
-    medianCtc: "₹ 6.00 LPA",
-    highestCtc: "₹ 10.00 LPA"
+    avgStipend: "25k",
+    medianStipend: "28k",
+    highestStipend: "35k",
+    avgCtc: "6 LPA",
+    medianCtc: "6 LPA",
+    highestCtc: "10 LPA"
   },
   {
     academicYear: "AY23–25",
     batch: "FT Batch 2",
-    avgStipend: "₹ 28,000.00",
-    medianStipend: "₹ 30,000.00",
-    highestStipend: "₹ 42,000.00",
-    avgCtc: "₹ 9.13 LPA",
-    medianCtc: "₹ 7.00 LPA",
-    highestCtc: "₹ 39.76 LPA"
+    avgStipend: "26k",
+    medianStipend: "30k",
+    highestStipend: "42k",
+    avgCtc: "9 LPA",
+    medianCtc: "7 LPA",
+    highestCtc: "40 LPA"
   },
   {
     academicYear: "AY24–26",
     batch: "FT Batch 3",
-    avgStipend: "₹ 23,000.00",
-    medianStipend: "₹ 25,000.00",
-    highestStipend: "₹ 35,000.00",
-    avgCtc: "₹ 6.00 LPA",
-    medianCtc: "₹ 6.00 LPA",
-    highestCtc: "₹ 15.00 LPA"
+    avgStipend: "25k",
+    medianStipend: "25k",
+    highestStipend: "75k",
+    avgCtc: "6 LPA",
+    medianCtc: "6 LPA",
+    highestCtc: "15 LPA"
   },
   {
     academicYear: "Overall",
     batch: "All Batches",
-    avgStipend: "₹ 25,333.33",
-    medianStipend: "₹ 27,500.00",
-    highestStipend: "₹ 42,000.00",
-    avgCtc: "₹ 8.00 LPA",
-    medianCtc: "₹ 6.00 LPA",
-    highestCtc: "₹ 39.76 LPA"
+    avgStipend: "25k",
+    medianStipend: "28k",
+    highestStipend: "75k",
+    avgCtc: "8 LPA",
+    medianCtc: "6 LPA",
+    highestCtc: "40 LPA"
   }
 ];
 
 // Fetch Placement Stats
 const serverGetPlacementStatsFn = createServerFn({ method: "GET" }).handler(async () => {
   const statsStr = await db.getSetting("placement_stats");
-  if (!statsStr) {
+  if (!statsStr || statsStr.includes("₹") || statsStr.includes(".00")) {
     await db.saveSetting("placement_stats", JSON.stringify(DEFAULT_PLACEMENT_STATS));
     return DEFAULT_PLACEMENT_STATS;
   }
@@ -905,9 +905,9 @@ const DEFAULT_DASHBOARD_CHARTS: DashboardChart[] = [
     footnote1: "*In Lakhs Per Annum (INR)",
     footnote2: "*Highest compensation package recorded per batch",
     data: [
-      { year: "AY22-24", value: 10.00 },
-      { year: "AY23-25", value: 39.76 },
-      { year: "AY24-26", value: 15.00, hasAsterisk: true },
+      { year: "AY22-24", value: 10 },
+      { year: "AY23-25", value: 40 },
+      { year: "AY24-26", value: 15, hasAsterisk: true },
       { year: "AY25-27", value: 0 }
     ]
   }
@@ -916,7 +916,7 @@ const DEFAULT_DASHBOARD_CHARTS: DashboardChart[] = [
 // Fetch Dashboard Charts
 const serverGetDashboardChartsFn = createServerFn({ method: "GET" }).handler(async () => {
   const statsStr = await db.getSetting("placement_charts");
-  if (!statsStr || statsStr.includes("11352") || statsStr.includes("8911") || statsStr.includes("companies_visited")) {
+  if (!statsStr || statsStr.includes("39.76") || statsStr.includes("15.00") || statsStr.includes("11352") || statsStr.includes("8911") || statsStr.includes("companies_visited")) {
     await db.saveSetting("placement_charts", JSON.stringify(DEFAULT_DASHBOARD_CHARTS));
     return DEFAULT_DASHBOARD_CHARTS;
   }

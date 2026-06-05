@@ -100,7 +100,7 @@ const FAQS: FAQItem[] = [
   },
   {
     question: "What is the highest internship stipend secured by RACE students?",
-    answer: "Recent students have secured internship opportunities with stipends up to ₹75,000 per month.",
+    answer: "Recent students have secured internship opportunities with stipends up to 75k per month.",
   },
   {
     question: "How do companies hire students through RACE?",
