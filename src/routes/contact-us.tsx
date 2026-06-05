@@ -206,7 +206,7 @@ function ContactBusinessCard({
           {/* Details container (Right on Desktop, Bottom on Mobile) */}
           <div className="flex-1 text-left relative z-10 w-full flex flex-col justify-center">
             {/* Name */}
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-900 leading-tight uppercase font-sans">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-900 leading-tight font-sans">
               {name}
             </h2>
             
@@ -266,7 +266,7 @@ function ContactBusinessCard({
           {/* Details container (Left on Desktop, Top on Mobile) */}
           <div className="flex-1 text-left relative z-10 w-full flex flex-col justify-center">
             {/* Name */}
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-900 leading-tight uppercase font-sans">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-900 leading-tight font-sans">
               {name}
             </h2>
             
