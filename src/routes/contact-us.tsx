@@ -471,7 +471,7 @@ function ContactUsPage() {
         <section className="mt-12 grid gap-8 grid-cols-1 lg:grid-cols-2 justify-items-center">
           <ContactBusinessCard
             layout="photo-left"
-            name="PARAMESH G"
+            name="Paramesh G"
             role="Assistant Professor & Placement Head"
             phone="+91 96556 28661"
             email="paramesh.g@reva.edu.in"
@@ -482,7 +482,7 @@ function ContactUsPage() {
 
           <ContactBusinessCard
             layout="photo-right"
-            name="SHINU ABHI, PhD"
+            name="Dr. Shinu Abhi"
             role="Director, Corporate Training"
             phone="+91 99729 16030"
             email="shinuabhi@reva.edu.in"
