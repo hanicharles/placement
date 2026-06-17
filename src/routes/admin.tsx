@@ -3402,6 +3402,13 @@ function AdminDashboardPage() {
           const uniquePlacedCount = placedUniqueSlugs.size;
           const totalCandidates = students.length || 25;
           const placementRate = totalCandidates > 0 ? Math.round((uniquePlacedCount / totalCandidates) * 100) : 0;
+
+          // Unique participating companies
+          const uniqueCompaniesCount = new Set(
+            detailedPlacements
+              .map(p => p.companyName.trim())
+              .filter(name => name.length > 0)
+          ).size;
           
           // Parse packages for average/highest
           const lpaPackages = detailedPlacements
@@ -3434,7 +3441,7 @@ function AdminDashboardPage() {
           return (
             <div className="space-y-6 animate-fade-in text-left">
               {/* Placement KPI Dashboard Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
                 {/* Total Placed Card */}
                 <div className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
                   <div className="absolute top-0 left-0 h-1.5 w-full bg-[#1E3E62]" />
@@ -3451,6 +3458,16 @@ function AdminDashboardPage() {
                   <p className="text-[10px] font-black uppercase text-neutral-400 tracking-wider">Total Offers Generated</p>
                   <p className="text-2xl font-black text-neutral-950 mt-2 tracking-tight">{totalOffers} Offers</p>
                   <p className="text-[10px] text-neutral-500 font-bold mt-1.5 uppercase">Includes duplicate double-offers</p>
+                </div>
+
+                {/* Hiring Companies Card */}
+                <div className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                  <div className="absolute top-0 left-0 h-1.5 w-full bg-blue-500" />
+                  <p className="text-[10px] font-black uppercase text-neutral-400 tracking-wider">Hiring Companies</p>
+                  <p className="text-2xl font-black text-neutral-950 mt-2 tracking-tight">
+                    {uniqueCompaniesCount} <span className="text-xs text-neutral-450 font-bold">Companies</span>
+                  </p>
+                  <p className="text-[10px] text-neutral-500 font-bold mt-1.5 uppercase">Unique recruiting partners</p>
                 </div>
 
                 {/* Average CTC Card */}
