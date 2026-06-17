@@ -23,12 +23,18 @@ import {
   getPlacementBannersFn,
   savePlacementBannersFn,
   uploadPlacementBannerFn,
+  getUpcomingCompaniesFn,
+  saveUpcomingCompaniesFn,
+  getDetailedPlacementRecordsFn,
+  saveDetailedPlacementRecordsFn,
   type Partner,
   type PlacementBanner,
   type PlacementStatRow,
   type DashboardChart,
   type ChartDataPoint,
   type BatchPlacementRecord,
+  type UpcomingCompany,
+  type DetailedPlacementRecord,
 } from "../actions";
 import { type Student, type Specialization, type Gender, type EducationItem, type WorkItem, type ProjectItem, type SkillGroup } from "@/data/students";
 import {
@@ -72,6 +78,8 @@ import {
   Database,
   RotateCcw,
   Image,
+  Calendar,
+  DollarSign,
 } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
@@ -123,7 +131,25 @@ function AdminDashboardPage() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loadingSession, setLoadingSession] = useState(true);
-  const [currentSection, setCurrentSection] = useState<"dashboard" | "candidates" | "placement-stats" | "partners" | "journey-stats" | "placement-charts" | "placement-banners">("dashboard");
+  const [currentSection, setCurrentSection] = useState<"dashboard" | "candidates" | "placement-stats" | "partners" | "journey-stats" | "placement-charts" | "placement-banners" | "upcoming-companies" | "placement-tracker">("dashboard");
+
+  // Upcoming Companies CRUD States
+  const [upcomingCompanies, setUpcomingCompanies] = useState<UpcomingCompany[]>([]);
+  const [loadingUpcomingCompanies, setLoadingUpcomingCompanies] = useState(true);
+  const [editingUpcomingCompany, setEditingUpcomingCompany] = useState<UpcomingCompany | null>(null);
+  const [upcomingCompanyIndex, setUpcomingCompanyIndex] = useState<number | null>(null);
+  const [isUpcomingCompanyFormOpen, setIsUpcomingCompanyFormOpen] = useState(false);
+
+  // Placement Tracker Detailed Records CRUD States
+  const [detailedPlacements, setDetailedPlacements] = useState<DetailedPlacementRecord[]>([]);
+  const [loadingDetailedPlacements, setLoadingDetailedPlacements] = useState(true);
+  const [editingDetailedPlacement, setEditingDetailedPlacement] = useState<DetailedPlacementRecord | null>(null);
+  const [detailedPlacementIndex, setDetailedPlacementIndex] = useState<number | null>(null);
+  const [isDetailedPlacementFormOpen, setIsDetailedPlacementFormOpen] = useState(false);
+  const [detailedPlacementSearchQuery, setDetailedPlacementSearchQuery] = useState("");
+  const [detailedPlacementFilterSpec, setDetailedPlacementFilterSpec] = useState<"All" | "Artificial Intelligence" | "Cybersecurity">("All");
+  const [detailedPlacementFilterType, setDetailedPlacementFilterType] = useState<"All" | "Internship" | "Full-Time" | "Intern-to-FTE">("All");
+  const [detailedPlacementFilterStatus, setDetailedPlacementFilterStatus] = useState<"All" | "Offered" | "Accepted" | "Joined" | "Declined">("All");
 
   // Data States
   const [students, setStudents] = useState<Student[]>([]);
@@ -201,6 +227,8 @@ function AdminDashboardPage() {
           fetchBatchRecords();
           fetchDashboardCharts();
           fetchBanners();
+          fetchUpcomingCompanies();
+          fetchDetailedPlacements();
         }
       })
       .catch((err) => {
@@ -227,6 +255,171 @@ function AdminDashboardPage() {
       showNotification("error", "Failed to load placement banners.");
     } finally {
       setLoadingBanners(false);
+    }
+  };
+
+  const fetchUpcomingCompanies = async () => {
+    setLoadingUpcomingCompanies(true);
+    try {
+      const data = await getUpcomingCompaniesFn();
+      setUpcomingCompanies(data);
+    } catch (err) {
+      console.error("Failed to load upcoming companies:", err);
+      showNotification("error", "Failed to load upcoming companies.");
+    } finally {
+      setLoadingUpcomingCompanies(false);
+    }
+  };
+
+  const handleOpenUpcomingCompanyCreate = () => {
+    setEditingUpcomingCompany({
+      id: "upcoming-" + Date.now(),
+      companyName: "",
+      visitDate: "",
+      role: "",
+      stipendOrSalary: "",
+      targetBatch: "AY24-26",
+      status: "Scheduled"
+    });
+    setUpcomingCompanyIndex(null);
+    setIsUpcomingCompanyFormOpen(true);
+  };
+
+  const handleEditUpcomingCompanyClick = (comp: UpcomingCompany, idx: number) => {
+    setEditingUpcomingCompany({ ...comp });
+    setUpcomingCompanyIndex(idx);
+    setIsUpcomingCompanyFormOpen(true);
+  };
+
+  const handleSaveUpcomingCompany = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUpcomingCompany || !editingUpcomingCompany.companyName || !editingUpcomingCompany.visitDate || !editingUpcomingCompany.role) {
+      showNotification("error", "Please fill in all required company fields.");
+      return;
+    }
+
+    let updatedList = [...upcomingCompanies];
+    if (upcomingCompanyIndex !== null) {
+      updatedList[upcomingCompanyIndex] = editingUpcomingCompany;
+    } else {
+      updatedList.push(editingUpcomingCompany);
+    }
+
+    try {
+      const result = await saveUpcomingCompaniesFn({ data: updatedList });
+      if (result.success) {
+        showNotification("success", upcomingCompanyIndex !== null ? "Upcoming company updated." : "New upcoming company added.");
+        setIsUpcomingCompanyFormOpen(false);
+        setEditingUpcomingCompany(null);
+        setUpcomingCompanyIndex(null);
+        fetchUpcomingCompanies();
+      } else {
+        showNotification("error", "Failed to save upcoming company.");
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification("error", "Error saving upcoming company.");
+    }
+  };
+
+  const handleDeleteUpcomingCompany = async (idx: number) => {
+    if (!confirm("Are you sure you want to delete this upcoming company visit?")) return;
+    const updatedList = upcomingCompanies.filter((_, i) => i !== idx);
+    try {
+      const result = await saveUpcomingCompaniesFn({ data: updatedList });
+      if (result.success) {
+        showNotification("success", "Upcoming company drive deleted.");
+        fetchUpcomingCompanies();
+      } else {
+        showNotification("error", "Failed to delete upcoming company drive.");
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification("error", "Error occurred during deletion.");
+    }
+  };
+
+  const fetchDetailedPlacements = async () => {
+    setLoadingDetailedPlacements(true);
+    try {
+      const data = await getDetailedPlacementRecordsFn();
+      setDetailedPlacements(data);
+    } catch (err) {
+      console.error("Failed to load detailed placement records:", err);
+      showNotification("error", "Failed to load detailed placement records.");
+    } finally {
+      setLoadingDetailedPlacements(false);
+    }
+  };
+
+  const handleOpenDetailedPlacementCreate = () => {
+    setEditingDetailedPlacement({
+      id: "record-" + Date.now(),
+      studentName: "",
+      studentSlug: "",
+      specialization: "Artificial Intelligence",
+      companyName: "",
+      role: "",
+      type: "Full-Time",
+      package: "",
+      offerDate: new Date().toISOString().split("T")[0],
+      status: "Offered"
+    });
+    setDetailedPlacementIndex(null);
+    setIsDetailedPlacementFormOpen(true);
+  };
+
+  const handleEditDetailedPlacementClick = (rec: DetailedPlacementRecord, idx: number) => {
+    setEditingDetailedPlacement({ ...rec });
+    setDetailedPlacementIndex(idx);
+    setIsDetailedPlacementFormOpen(true);
+  };
+
+  const handleSaveDetailedPlacement = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingDetailedPlacement || !editingDetailedPlacement.studentName || !editingDetailedPlacement.companyName || !editingDetailedPlacement.role || !editingDetailedPlacement.package) {
+      showNotification("error", "Please fill in all required placement record fields.");
+      return;
+    }
+
+    let updatedList = [...detailedPlacements];
+    if (detailedPlacementIndex !== null) {
+      updatedList[detailedPlacementIndex] = editingDetailedPlacement;
+    } else {
+      updatedList.push(editingDetailedPlacement);
+    }
+
+    try {
+      const result = await saveDetailedPlacementRecordsFn({ data: updatedList });
+      if (result.success) {
+        showNotification("success", detailedPlacementIndex !== null ? "Placement record updated." : "New placement record added.");
+        setIsDetailedPlacementFormOpen(false);
+        setEditingDetailedPlacement(null);
+        setDetailedPlacementIndex(null);
+        fetchDetailedPlacements();
+      } else {
+        showNotification("error", "Failed to save placement record.");
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification("error", "Error saving placement record.");
+    }
+  };
+
+  const handleDeleteDetailedPlacement = async (idx: number) => {
+    if (!confirm("Are you sure you want to delete this placement record?")) return;
+    const updatedList = detailedPlacements.filter((_, i) => i !== idx);
+    try {
+      const result = await saveDetailedPlacementRecordsFn({ data: updatedList });
+      if (result.success) {
+        showNotification("success", "Placement record deleted.");
+        fetchDetailedPlacements();
+      } else {
+        showNotification("error", "Failed to delete placement record.");
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification("error", "Error occurred during deletion.");
     }
   };
 
@@ -507,6 +700,8 @@ function AdminDashboardPage() {
       localStorage.removeItem("reva_setting_batch_placement_records");
       localStorage.removeItem("reva_setting_placement_charts");
       localStorage.removeItem("reva_setting_placement_banners");
+      localStorage.removeItem("reva_setting_upcoming_companies");
+      localStorage.removeItem("reva_setting_detailed_placement_records");
       
       showNotification("success", "Cleared local cache! Reverting to database defaults...");
       setTimeout(() => {
@@ -1177,6 +1372,18 @@ function AdminDashboardPage() {
             onClick={() => setCurrentSection("placement-banners")}
             label="Placement Banners"
             icon={<Database className="h-3.5 w-3.5" />}
+          />
+          <TabButton
+            active={currentSection === "upcoming-companies"}
+            onClick={() => setCurrentSection("upcoming-companies")}
+            label="Upcoming Companies"
+            icon={<Calendar className="h-3.5 w-3.5" />}
+          />
+          <TabButton
+            active={currentSection === "placement-tracker"}
+            onClick={() => setCurrentSection("placement-tracker")}
+            label="Placement Tracker"
+            icon={<Briefcase className="h-3.5 w-3.5" />}
           />
         </div>
 
@@ -2891,6 +3098,676 @@ function AdminDashboardPage() {
             </div>
           </div>
         )}
+
+        {/* Section: Upcoming Companies Drive Calendar */}
+        {currentSection === "upcoming-companies" && (
+          <div className="bg-white border border-black/5 rounded-2xl shadow-sm overflow-hidden flex flex-col animate-fade-in text-left">
+            <div className="bg-[#12223A] text-white px-6 py-4 flex items-center justify-between border-b border-[#F9BF29]">
+              <div>
+                <h3 className="text-base font-black uppercase tracking-wider">Manage Upcoming Placement Drives</h3>
+                <p className="text-[10px] text-[#F9BF29] font-bold mt-0.5">Manage upcoming corporate selection visits, dates, and roles displayed on the home page</p>
+              </div>
+            </div>
+
+            <div className="p-6 flex flex-col lg:flex-row gap-6 min-h-[500px]">
+              {/* Left Column: Visits List */}
+              <div className="w-full lg:w-1/3 flex flex-col gap-4 border-b lg:border-b-0 lg:border-r border-black/5 pb-6 lg:pb-0 lg:pr-6">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-neutral-500">Upcoming Visits</span>
+                  <button
+                    type="button"
+                    onClick={handleOpenUpcomingCompanyCreate}
+                    className="inline-flex items-center gap-1 bg-[#1E3E62] hover:bg-[#12223A] text-white font-extrabold text-[10px] px-3 py-2.5 rounded-xl transition shadow-sm uppercase tracking-wider cursor-pointer whitespace-nowrap"
+                  >
+                    <Plus className="h-3.5 w-3.5 stroke-[3]" /> Add Visit
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto max-h-[55vh] space-y-2 pr-1">
+                  {loadingUpcomingCompanies ? (
+                    <div className="py-10 text-center space-y-2">
+                      <Loader2 className="h-5 w-5 animate-spin text-[#1E3E62] mx-auto" />
+                      <p className="text-xs text-neutral-450 font-bold uppercase tracking-wider">Loading Visits...</p>
+                    </div>
+                  ) : upcomingCompanies.length === 0 ? (
+                    <p className="text-xs text-neutral-400 text-center py-6">No upcoming visits scheduled.</p>
+                  ) : (
+                    upcomingCompanies.map((comp, idx) => (
+                      <div
+                        key={comp.id || idx}
+                        className={`bg-white border p-3.5 rounded-xl shadow-sm flex items-center justify-between gap-4 transition-colors cursor-pointer ${
+                          editingUpcomingCompany && upcomingCompanyIndex === idx ? "border-[#1E3E62] ring-1 ring-[#1E3E62]" : "border-black/5 hover:border-neutral-300"
+                        }`}
+                        onClick={() => handleEditUpcomingCompanyClick(comp, idx)}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="h-9 w-9 rounded-lg bg-neutral-100 flex items-center justify-center font-black text-xs text-[#1E3E62] border border-black/5">
+                            {comp.companyName.charAt(0)}
+                          </div>
+                          <div className="text-left min-w-0">
+                            <p className="text-xs font-black text-neutral-800 truncate">{comp.companyName}</p>
+                            <p className="text-[10px] text-neutral-450 font-bold mt-0.5 truncate">{comp.role}</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteUpcomingCompany(idx);
+                          }}
+                          className="p-1.5 text-neutral-400 hover:text-red-650 rounded-lg hover:bg-red-50 transition cursor-pointer"
+                          title="Delete Visit"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Right Column: Edit Form */}
+              <div className="flex-1 bg-neutral-50/55 rounded-2xl border border-black/5 p-6 min-h-[400px] flex flex-col justify-start">
+                {isUpcomingCompanyFormOpen && editingUpcomingCompany ? (
+                  <form onSubmit={handleSaveUpcomingCompany} className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-black/5 pb-3">
+                      <h4 className="text-xs font-black uppercase tracking-wider text-[#1E3E62]">
+                        {upcomingCompanyIndex !== null ? "Edit Upcoming Visit" : "Add Upcoming Visit"}
+                      </h4>
+                      <span className="rounded bg-[#FF5900]/10 border border-[#FF5900]/15 text-[#FF5900] px-2 py-0.5 text-[9px] font-black uppercase">
+                        Drive Calendar
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Company Name */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Company Name *</label>
+                        <input
+                          type="text"
+                          required
+                          value={editingUpcomingCompany.companyName}
+                          onChange={(e) => setEditingUpcomingCompany({ ...editingUpcomingCompany, companyName: e.target.value })}
+                          className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                          placeholder="e.g. Google"
+                        />
+                      </div>
+
+                      {/* Visit Date */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Visit Date *</label>
+                        <input
+                          type="text"
+                          required
+                          value={editingUpcomingCompany.visitDate}
+                          onChange={(e) => setEditingUpcomingCompany({ ...editingUpcomingCompany, visitDate: e.target.value })}
+                          className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                          placeholder="e.g. 2026-07-20 or Mid-July 2026"
+                        />
+                      </div>
+
+                      {/* Job Role */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Target Role *</label>
+                        <input
+                          type="text"
+                          required
+                          value={editingUpcomingCompany.role}
+                          onChange={(e) => setEditingUpcomingCompany({ ...editingUpcomingCompany, role: e.target.value })}
+                          className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                          placeholder="e.g. AI Specialist"
+                        />
+                      </div>
+
+                      {/* Stipend or Salary */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Salary / Stipend</label>
+                        <input
+                          type="text"
+                          value={editingUpcomingCompany.stipendOrSalary}
+                          onChange={(e) => setEditingUpcomingCompany({ ...editingUpcomingCompany, stipendOrSalary: e.target.value })}
+                          className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                          placeholder="e.g. 45k PM or 12 LPA"
+                        />
+                      </div>
+
+                      {/* Target Batch */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Target Cohort Batch</label>
+                        <select
+                          value={editingUpcomingCompany.targetBatch}
+                          onChange={(e) => setEditingUpcomingCompany({ ...editingUpcomingCompany, targetBatch: e.target.value })}
+                          className="w-full bg-white border border-black/10 rounded-xl px-3 py-2.5 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                        >
+                          <option value="AY22-24">AY22-24 (Batch 1)</option>
+                          <option value="AY23-25">AY23-25 (Batch 2)</option>
+                          <option value="AY24-26">AY24-26 (Batch 3)</option>
+                          <option value="AY25-27">AY25-27 (Batch 4)</option>
+                        </select>
+                      </div>
+
+                      {/* Status */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Status</label>
+                        <select
+                          value={editingUpcomingCompany.status}
+                          onChange={(e) => setEditingUpcomingCompany({ ...editingUpcomingCompany, status: e.target.value as any })}
+                          className="w-full bg-white border border-black/10 rounded-xl px-3 py-2.5 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                        >
+                          <option value="Scheduled">Scheduled</option>
+                          <option value="Confirmed">Confirmed</option>
+                          <option value="Tentative">Tentative</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-black/5 flex items-center justify-end gap-3 font-sans">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingUpcomingCompany(null);
+                          setUpcomingCompanyIndex(null);
+                          setIsUpcomingCompanyFormOpen(false);
+                        }}
+                        className="text-[10px] font-bold text-neutral-500 hover:text-neutral-700 px-3.5 py-2 bg-neutral-100 rounded-xl transition cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="text-[10px] font-black bg-[#1E3E62] hover:bg-[#12223A] text-white px-4 py-2.5 rounded-xl shadow-sm transition uppercase tracking-wider cursor-pointer"
+                      >
+                        {upcomingCompanyIndex !== null ? "Save Changes" : "Create Visit"}
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 text-neutral-400 select-none">
+                    <Calendar className="h-10 w-10 text-neutral-300 mb-2.5" />
+                    <p className="text-xs font-bold uppercase tracking-wider">No Visit Selected</p>
+                    <p className="text-[10px] text-[#1E3E62] mt-1">Select a drive from the list to edit its details, or click "Add Visit" to create a new one.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Section: Placement Tracker Matrix */}
+        {currentSection === "placement-tracker" && (() => {
+          // KPI Calculations
+          const totalOffers = detailedPlacements.length;
+          
+          const placedUniqueSlugs = new Set(
+            detailedPlacements
+              .filter(p => p.status === "Accepted" || p.status === "Joined")
+              .map(p => p.studentSlug)
+          );
+          const uniquePlacedCount = placedUniqueSlugs.size;
+          const totalCandidates = students.length || 25;
+          const placementRate = totalCandidates > 0 ? Math.round((uniquePlacedCount / totalCandidates) * 100) : 0;
+          
+          // Parse packages for average/highest
+          const lpaPackages = detailedPlacements
+            .map(p => {
+              if (p.package.toLowerCase().includes("lpa")) {
+                const num = parseFloat(p.package.replace(/[^0-9.]/g, ""));
+                return isNaN(num) ? null : num;
+              }
+              return null;
+            })
+            .filter((p): p is number => p !== null);
+          
+          const highestCtcVal = lpaPackages.length > 0 ? Math.max(...lpaPackages) : 0;
+          const avgCtcVal = lpaPackages.length > 0 ? Math.round((lpaPackages.reduce((a, b) => a + b, 0) / lpaPackages.length) * 100) / 100 : 0;
+
+          // Specialization breakdown
+          const aiPlaced = detailedPlacements.filter(p => p.specialization === "Artificial Intelligence" && (p.status === "Accepted" || p.status === "Joined")).length;
+          const cyberPlaced = detailedPlacements.filter(p => p.specialization === "Cybersecurity" && (p.status === "Accepted" || p.status === "Joined")).length;
+
+          // Filtered placements list
+          const filteredPlacements = detailedPlacements.filter(rec => {
+            const query = detailedPlacementSearchQuery.toLowerCase();
+            const matchesSearch = rec.studentName.toLowerCase().includes(query) || rec.companyName.toLowerCase().includes(query) || rec.role.toLowerCase().includes(query);
+            const matchesSpec = detailedPlacementFilterSpec === "All" || rec.specialization === detailedPlacementFilterSpec;
+            const matchesType = detailedPlacementFilterType === "All" || rec.type === detailedPlacementFilterType;
+            const matchesStatus = detailedPlacementFilterStatus === "All" || rec.status === detailedPlacementFilterStatus;
+            return matchesSearch && matchesSpec && matchesType && matchesStatus;
+          });
+
+          return (
+            <div className="space-y-6 animate-fade-in text-left">
+              {/* Placement KPI Dashboard Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {/* Total Placed Card */}
+                <div className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                  <div className="absolute top-0 left-0 h-1.5 w-full bg-[#1E3E62]" />
+                  <p className="text-[10px] font-black uppercase text-neutral-400 tracking-wider">Placed Candidates</p>
+                  <p className="text-2xl font-black text-neutral-950 mt-2 tracking-tight">
+                    {uniquePlacedCount} <span className="text-xs text-neutral-400 font-bold">/ {totalCandidates} Candidates</span>
+                  </p>
+                  <p className="text-[10px] text-neutral-500 font-bold mt-1.5 uppercase">Placement Rate: {placementRate}%</p>
+                </div>
+
+                {/* Total Offers Card */}
+                <div className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                  <div className="absolute top-0 left-0 h-1.5 w-full bg-[#FF5900]" />
+                  <p className="text-[10px] font-black uppercase text-neutral-400 tracking-wider">Total Offers Generated</p>
+                  <p className="text-2xl font-black text-neutral-950 mt-2 tracking-tight">{totalOffers} Offers</p>
+                  <p className="text-[10px] text-neutral-500 font-bold mt-1.5 uppercase">Includes duplicate double-offers</p>
+                </div>
+
+                {/* Average CTC Card */}
+                <div className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                  <div className="absolute top-0 left-0 h-1.5 w-full bg-emerald-500" />
+                  <p className="text-[10px] font-black uppercase text-neutral-400 tracking-wider">Average CTC Package</p>
+                  <p className="text-2xl font-black text-neutral-950 mt-2 tracking-tight">{avgCtcVal > 0 ? `${avgCtcVal} LPA` : "N/A"}</p>
+                  <p className="text-[10px] text-neutral-500 font-bold mt-1.5 uppercase">Calculated across FTE records</p>
+                </div>
+
+                {/* Highest CTC Card */}
+                <div className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                  <div className="absolute top-0 left-0 h-1.5 w-full bg-amber-500" />
+                  <p className="text-[10px] font-black uppercase text-neutral-400 tracking-wider">Highest Package</p>
+                  <p className="text-2xl font-black text-neutral-950 mt-2 tracking-tight">{highestCtcVal > 0 ? `${highestCtcVal} LPA` : "N/A"}</p>
+                  <p className="text-[10px] text-neutral-500 font-bold mt-1.5 uppercase">Peak compensation offered</p>
+                </div>
+              </div>
+
+              {/* Specialization & Progress Breakdowns (Live admin dashboard KPIs) */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm">
+                  <h4 className="text-xs font-black uppercase text-[#1E3E62] tracking-wider mb-4">Cohort Specialization Placement</h4>
+                  <div className="space-y-4">
+                    {/* AI Track progress */}
+                    <div>
+                      <div className="flex justify-between text-xs font-bold mb-1">
+                        <span className="text-neutral-700">Artificial Intelligence</span>
+                        <span className="text-[#FF5900]">{aiPlaced} Students Placed</span>
+                      </div>
+                      <div className="w-full bg-neutral-150 h-2 rounded-full overflow-hidden">
+                        <div
+                          className="bg-[#FF5900] h-full rounded-full transition-all duration-500"
+                          style={{ width: `${Math.min(100, (aiPlaced / (totalCandidates / 2)) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                    {/* Cyber Track progress */}
+                    <div>
+                      <div className="flex justify-between text-xs font-bold mb-1">
+                        <span className="text-neutral-700">Cybersecurity</span>
+                        <span className="text-[#1E3E62]">{cyberPlaced} Students Placed</span>
+                      </div>
+                      <div className="w-full bg-neutral-150 h-2 rounded-full overflow-hidden">
+                        <div
+                          className="bg-[#1E3E62] h-full rounded-full transition-all duration-500"
+                          style={{ width: `${Math.min(100, (cyberPlaced / (totalCandidates / 2)) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white border border-black/5 p-6 rounded-2xl shadow-sm">
+                  <h4 className="text-xs font-black uppercase text-[#1E3E62] tracking-wider mb-4">Offer Status Tracking</h4>
+                  <div className="grid grid-cols-4 gap-4 text-center">
+                    {["Offered", "Accepted", "Joined", "Declined"].map((st) => {
+                      const count = detailedPlacements.filter(p => p.status === st).length;
+                      const statusColor = {
+                        Offered: "text-blue-500 bg-blue-50",
+                        Accepted: "text-emerald-600 bg-emerald-50",
+                        Joined: "text-purple-600 bg-purple-50",
+                        Declined: "text-red-500 bg-red-50"
+                      }[st] || "text-neutral-500 bg-neutral-50";
+
+                      return (
+                        <div key={st} className={`p-4 rounded-xl ${statusColor} border border-black/5 shadow-xs`}>
+                          <p className="text-lg font-black">{count}</p>
+                          <p className="text-[10px] font-black uppercase tracking-wider mt-1">{st}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Placement Records Grid/Table Panel */}
+              <div className="bg-white border border-black/5 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                <div className="bg-[#12223A] text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#F9BF29]">
+                  <div>
+                    <h3 className="text-base font-black uppercase tracking-wider">Placement Record Matrix</h3>
+                    <p className="text-[10px] text-[#F9BF29] font-bold mt-0.5">Track, audit, and log candidate internship & full-time career transitions</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleOpenDetailedPlacementCreate}
+                    className="inline-flex items-center justify-center gap-1 bg-[#FF5900] hover:bg-[#e04f00] text-white font-extrabold text-[10px] px-4 py-2.5 rounded-xl transition shadow-sm uppercase tracking-wider cursor-pointer whitespace-nowrap self-start sm:self-auto"
+                  >
+                    <Plus className="h-3.5 w-3.5 stroke-[3]" /> Add Placement Record
+                  </button>
+                </div>
+
+                {/* Filters & Search Header */}
+                <div className="p-4 border-b border-black/5 bg-neutral-50/50 flex flex-col md:flex-row gap-4 items-center">
+                  {/* Search input */}
+                  <div className="relative w-full md:w-72">
+                    <Search className="absolute left-3.5 top-3 h-3.5 w-3.5 text-neutral-400" />
+                    <input
+                      type="text"
+                      value={detailedPlacementSearchQuery}
+                      onChange={(e) => setDetailedPlacementSearchQuery(e.target.value)}
+                      placeholder="Search candidate or company..."
+                      className="w-full bg-white border border-black/10 rounded-xl pl-9 pr-4 py-2 text-xs font-bold text-neutral-800 placeholder-neutral-400 focus:outline-hidden focus:border-[#1E3E62] transition"
+                    />
+                  </div>
+
+                  {/* Filter Selects */}
+                  <div className="flex flex-wrap gap-3 w-full md:w-auto">
+                    {/* Specialization Filter */}
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-500">
+                      <span>Track:</span>
+                      <select
+                        value={detailedPlacementFilterSpec}
+                        onChange={(e) => setDetailedPlacementFilterSpec(e.target.value as any)}
+                        className="bg-white border border-black/10 rounded-lg px-2.5 py-1.5 text-neutral-800 font-bold focus:outline-hidden text-xs cursor-pointer"
+                      >
+                        <option value="All">All Tracks</option>
+                        <option value="Artificial Intelligence">AI</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                      </select>
+                    </div>
+
+                    {/* Type Filter */}
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-500">
+                      <span>Type:</span>
+                      <select
+                        value={detailedPlacementFilterType}
+                        onChange={(e) => setDetailedPlacementFilterType(e.target.value as any)}
+                        className="bg-white border border-black/10 rounded-lg px-2.5 py-1.5 text-neutral-800 font-bold focus:outline-hidden text-xs cursor-pointer"
+                      >
+                        <option value="All">All Types</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Intern-to-FTE">Intern-to-FTE</option>
+                      </select>
+                    </div>
+
+                    {/* Status Filter */}
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-500">
+                      <span>Status:</span>
+                      <select
+                        value={detailedPlacementFilterStatus}
+                        onChange={(e) => setDetailedPlacementFilterStatus(e.target.value as any)}
+                        className="bg-white border border-black/10 rounded-lg px-2.5 py-1.5 text-neutral-800 font-bold focus:outline-hidden text-xs cursor-pointer"
+                      >
+                        <option value="All">All Statuses</option>
+                        <option value="Offered">Offered</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Joined">Joined</option>
+                        <option value="Declined">Declined</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Table Data */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-neutral-700 text-left border-collapse">
+                    <thead>
+                      <tr className="bg-neutral-50 border-b border-black/5 text-[10px] font-black uppercase tracking-wider text-neutral-500">
+                        <th className="px-5 py-3">Candidate</th>
+                        <th className="px-5 py-3">Specialization</th>
+                        <th className="px-5 py-3">Employer / Role</th>
+                        <th className="px-5 py-3">Type</th>
+                        <th className="px-5 py-3 font-right">CTC / Stipend</th>
+                        <th className="px-5 py-3">Offer Date</th>
+                        <th className="px-5 py-3">Status</th>
+                        <th className="px-5 py-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-black/5 font-bold">
+                      {loadingDetailedPlacements ? (
+                        <tr>
+                          <td colSpan={8} className="py-10 text-center space-y-2">
+                            <Loader2 className="h-5 w-5 animate-spin text-[#1E3E62] mx-auto" />
+                            <p className="text-xs text-neutral-450 uppercase tracking-wider">Loading Records...</p>
+                          </td>
+                        </tr>
+                      ) : filteredPlacements.length === 0 ? (
+                        <tr>
+                          <td colSpan={8} className="py-8 text-center text-neutral-400 text-xs">
+                            No placement records found matching the criteria.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredPlacements.map((rec, idx) => {
+                          const statusBg = {
+                            Offered: "bg-blue-50 text-blue-600 border-blue-200",
+                            Accepted: "bg-emerald-50 text-emerald-600 border-emerald-200",
+                            Joined: "bg-purple-50 text-purple-600 border-purple-200",
+                            Declined: "bg-red-50 text-red-500 border-red-200"
+                          }[rec.status] || "bg-neutral-50 text-neutral-500";
+
+                          return (
+                            <tr key={rec.id} className="hover:bg-neutral-50/50 transition-colors">
+                              <td className="px-5 py-4 min-w-[140px]">
+                                <div className="text-neutral-900 font-extrabold">{rec.studentName}</div>
+                              </td>
+                              <td className="px-5 py-4 text-neutral-500">
+                                {rec.specialization === "Artificial Intelligence" ? "AI" : "Cybersecurity"}
+                              </td>
+                              <td className="px-5 py-4">
+                                <div className="text-neutral-900">{rec.companyName}</div>
+                                <div className="text-[10px] text-neutral-450 font-bold">{rec.role}</div>
+                              </td>
+                              <td className="px-5 py-4">
+                                <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${
+                                  rec.type === "Full-Time" ? "bg-[#1E3E62]/10 text-[#1E3E62]" : "bg-[#FF5900]/10 text-[#FF5900]"
+                                }`}>
+                                  {rec.type}
+                                </span>
+                              </td>
+                              <td className="px-5 py-4 text-emerald-600 font-extrabold">
+                                {rec.package}
+                              </td>
+                              <td className="px-5 py-4 text-neutral-500">
+                                {rec.offerDate}
+                              </td>
+                              <td className="px-5 py-4">
+                                <span className={`px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase border ${statusBg}`}>
+                                  {rec.status}
+                                </span>
+                              </td>
+                              <td className="px-5 py-4 text-right">
+                                <div className="flex items-center justify-end gap-1">
+                                  <button
+                                    onClick={() => handleEditDetailedPlacementClick(rec, idx)}
+                                    className="p-1.5 text-neutral-400 hover:text-neutral-600 rounded-lg hover:bg-neutral-100 transition cursor-pointer"
+                                    title="Edit Record"
+                                  >
+                                    <Edit2 className="h-3.5 w-3.5" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteDetailedPlacement(idx)}
+                                    className="p-1.5 text-neutral-400 hover:text-red-650 rounded-lg hover:bg-red-50 transition cursor-pointer"
+                                    title="Delete Record"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Edit/Add Placement Record modal drawer */}
+              {isDetailedPlacementFormOpen && editingDetailedPlacement && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                  <div className="bg-white rounded-2xl border border-black/5 shadow-2xl w-full max-w-xl overflow-hidden animate-scale-up">
+                    <div className="bg-[#12223A] text-white px-6 py-4 flex items-center justify-between border-b border-[#F9BF29]">
+                      <h3 className="text-sm font-black uppercase tracking-wider">
+                        {detailedPlacementIndex !== null ? "Edit Placement Record" : "Add Placement Record"}
+                      </h3>
+                      <button
+                        onClick={() => {
+                          setEditingDetailedPlacement(null);
+                          setDetailedPlacementIndex(null);
+                          setIsDetailedPlacementFormOpen(false);
+                        }}
+                        className="rounded-lg p-1 text-white/70 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleSaveDetailedPlacement} className="p-6 space-y-4">
+                      {/* Candidate Name & Autocomplete Selection */}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500 block">Link Candidate *</label>
+                        <select
+                          required
+                          value={editingDetailedPlacement.studentSlug || ""}
+                          onChange={(e) => {
+                            const selectedSlug = e.target.value;
+                            const matchedStudent = students.find(s => s.slug === selectedSlug);
+                            if (matchedStudent) {
+                              setEditingDetailedPlacement({
+                                ...editingDetailedPlacement,
+                                studentSlug: selectedSlug,
+                                studentName: matchedStudent.name,
+                                specialization: matchedStudent.specialization as any
+                              });
+                            } else {
+                              setEditingDetailedPlacement({
+                                ...editingDetailedPlacement,
+                                studentSlug: "",
+                                studentName: ""
+                              });
+                            }
+                          }}
+                          className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                        >
+                          <option value="">-- Select Candidate Profile --</option>
+                          {students.map(s => (
+                            <option key={s.slug} value={s.slug}>
+                              {s.name} ({s.specialization === "Artificial Intelligence" ? "AI" : "Cybersecurity"})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {/* Company Name */}
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Employer / Company Name *</label>
+                          <input
+                            type="text"
+                            required
+                            value={editingDetailedPlacement.companyName}
+                            onChange={(e) => setEditingDetailedPlacement({ ...editingDetailedPlacement, companyName: e.target.value })}
+                            className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                            placeholder="e.g. Google"
+                          />
+                        </div>
+
+                        {/* Job Role */}
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Job Role / Designation *</label>
+                          <input
+                            type="text"
+                            required
+                            value={editingDetailedPlacement.role}
+                            onChange={(e) => setEditingDetailedPlacement({ ...editingDetailedPlacement, role: e.target.value })}
+                            className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                            placeholder="e.g. AI Consultant"
+                          />
+                        </div>
+
+                        {/* Type */}
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Recruitment Type</label>
+                          <select
+                            value={editingDetailedPlacement.type}
+                            onChange={(e) => setEditingDetailedPlacement({ ...editingDetailedPlacement, type: e.target.value as any })}
+                            className="w-full bg-white border border-black/10 rounded-xl px-3 py-2.5 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                          >
+                            <option value="Internship">Internship</option>
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Intern-to-FTE">Intern-to-FTE</option>
+                          </select>
+                        </div>
+
+                        {/* Package */}
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">CTC Package / Stipend *</label>
+                          <input
+                            type="text"
+                            required
+                            value={editingDetailedPlacement.package}
+                            onChange={(e) => setEditingDetailedPlacement({ ...editingDetailedPlacement, package: e.target.value })}
+                            className="w-full bg-white border border-[#FF5900]/20 rounded-xl px-3 py-2 text-xs font-black text-emerald-600 focus:outline-hidden focus:border-[#1E3E62] transition placeholder-neutral-400 bg-emerald-50/20"
+                            placeholder="e.g. 12 LPA or 45k PM"
+                          />
+                        </div>
+
+                        {/* Offer Date */}
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Offer Letter Date</label>
+                          <input
+                            type="date"
+                            value={editingDetailedPlacement.offerDate}
+                            onChange={(e) => setEditingDetailedPlacement({ ...editingDetailedPlacement, offerDate: e.target.value })}
+                            className="w-full bg-white border border-black/10 rounded-xl px-3 py-2 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                          />
+                        </div>
+
+                        {/* Status */}
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-wider text-neutral-500">Status</label>
+                          <select
+                            value={editingDetailedPlacement.status}
+                            onChange={(e) => setEditingDetailedPlacement({ ...editingDetailedPlacement, status: e.target.value as any })}
+                            className="w-full bg-white border border-black/10 rounded-xl px-3 py-2.5 text-xs font-bold text-neutral-800 focus:outline-hidden focus:border-[#1E3E62] transition"
+                          >
+                            <option value="Offered">Offered</option>
+                            <option value="Accepted">Accepted</option>
+                            <option value="Joined">Joined</option>
+                            <option value="Declined">Declined</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-black/5 flex items-center justify-end gap-3 font-sans">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingDetailedPlacement(null);
+                            setDetailedPlacementIndex(null);
+                            setIsDetailedPlacementFormOpen(false);
+                          }}
+                          className="text-[10px] font-bold text-neutral-500 hover:text-neutral-700 px-3.5 py-2 bg-neutral-100 rounded-xl transition cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="text-[10px] font-black bg-[#1E3E62] hover:bg-[#12223A] text-white px-4 py-2.5 rounded-xl shadow-sm transition uppercase tracking-wider cursor-pointer"
+                        >
+                          {detailedPlacementIndex !== null ? "Save Changes" : "Record Offer"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </main>
 
       {/* Profile Form Editor Drawer Overlay */}

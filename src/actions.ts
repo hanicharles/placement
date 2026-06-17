@@ -1076,3 +1076,159 @@ export const uploadPlacementBannerFn = createServerFn({ method: "POST" })
       return { success: true, filePath: `/api/banners/${slug}` };
     }
   });
+
+export interface UpcomingCompany {
+  id: string;
+  companyName: string;
+  visitDate: string;
+  role: string;
+  stipendOrSalary: string;
+  targetBatch: string;
+  status: "Scheduled" | "Confirmed" | "Tentative";
+}
+
+const DEFAULT_UPCOMING_COMPANIES: UpcomingCompany[] = [
+  {
+    id: "upcoming-1",
+    companyName: "Google",
+    visitDate: "2026-07-20",
+    role: "AI Security Resident",
+    stipendOrSalary: "45k PM",
+    targetBatch: "AY24-26",
+    status: "Confirmed"
+  },
+  {
+    id: "upcoming-2",
+    companyName: "L&T Technology Services",
+    visitDate: "2026-08-10",
+    role: "Cybersecurity Analyst",
+    stipendOrSalary: "10 LPA",
+    targetBatch: "AY24-26",
+    status: "Scheduled"
+  },
+  {
+    id: "upcoming-3",
+    companyName: "CyberSec Solutions",
+    visitDate: "2026-08-18",
+    role: "Penetration Tester",
+    stipendOrSalary: "8 LPA",
+    targetBatch: "AY24-26",
+    status: "Tentative"
+  }
+];
+
+// Fetch Upcoming Companies
+const serverGetUpcomingCompaniesFn = createServerFn({ method: "GET" }).handler(async () => {
+  const companiesStr = await db.getSetting("upcoming_companies");
+  if (!companiesStr) {
+    await db.saveSetting("upcoming_companies", JSON.stringify(DEFAULT_UPCOMING_COMPANIES));
+    return DEFAULT_UPCOMING_COMPANIES;
+  }
+  try {
+    return JSON.parse(companiesStr) as UpcomingCompany[];
+  } catch (e) {
+    console.error("Failed to parse upcoming companies:", e);
+    return DEFAULT_UPCOMING_COMPANIES;
+  }
+});
+
+export const getUpcomingCompaniesFn = async (args?: any) => {
+  return await serverGetUpcomingCompaniesFn(args);
+};
+
+// Save Upcoming Companies
+const serverSaveUpcomingCompaniesFn = createServerFn({ method: "POST" })
+  .inputValidator((companies: UpcomingCompany[]) => companies)
+  .handler(async ({ data: companies }) => {
+    verifyAuth();
+    await db.saveSetting("upcoming_companies", JSON.stringify(companies));
+    return { success: true };
+  });
+
+export const saveUpcomingCompaniesFn = async (args: { data: UpcomingCompany[] }) => {
+  return await serverSaveUpcomingCompaniesFn(args);
+};
+
+export interface DetailedPlacementRecord {
+  id: string;
+  studentName: string;
+  studentSlug: string;
+  specialization: "Artificial Intelligence" | "Cybersecurity";
+  companyName: string;
+  role: string;
+  type: "Internship" | "Full-Time" | "Intern-to-FTE";
+  package: string;
+  offerDate: string;
+  status: "Offered" | "Accepted" | "Joined" | "Declined";
+}
+
+const DEFAULT_DETAILED_PLACEMENTS: DetailedPlacementRecord[] = [
+  {
+    id: "record-1",
+    studentName: "B Jothika",
+    studentSlug: "jothika-b",
+    specialization: "Artificial Intelligence",
+    companyName: "Trmeric",
+    role: "UI Engineer",
+    type: "Full-Time",
+    package: "8 LPA",
+    offerDate: "2026-04-12",
+    status: "Accepted"
+  },
+  {
+    id: "record-2",
+    studentName: "Ayesha",
+    studentSlug: "ayesha",
+    specialization: "Cybersecurity",
+    companyName: "L&T Technology Services",
+    role: "Automation Intern",
+    type: "Internship",
+    package: "35k PM",
+    offerDate: "2026-05-15",
+    status: "Joined"
+  },
+  {
+    id: "record-3",
+    studentName: "Aishwarya L Pujeri",
+    studentSlug: "aishwarya-l-pujeri",
+    specialization: "Artificial Intelligence",
+    companyName: "Dhee Coding Lab",
+    role: "Java Developer Intern",
+    type: "Internship",
+    package: "25k PM",
+    offerDate: "2026-01-20",
+    status: "Joined"
+  }
+];
+
+// Fetch Detailed Placement Records
+const serverGetDetailedPlacementRecordsFn = createServerFn({ method: "GET" }).handler(async () => {
+  const recordsStr = await db.getSetting("detailed_placement_records");
+  if (!recordsStr) {
+    await db.saveSetting("detailed_placement_records", JSON.stringify(DEFAULT_DETAILED_PLACEMENTS));
+    return DEFAULT_DETAILED_PLACEMENTS;
+  }
+  try {
+    return JSON.parse(recordsStr) as DetailedPlacementRecord[];
+  } catch (e) {
+    console.error("Failed to parse detailed placement records:", e);
+    return DEFAULT_DETAILED_PLACEMENTS;
+  }
+});
+
+export const getDetailedPlacementRecordsFn = async (args?: any) => {
+  return await serverGetDetailedPlacementRecordsFn(args);
+};
+
+// Save Detailed Placement Records
+const serverSaveDetailedPlacementRecordsFn = createServerFn({ method: "POST" })
+  .inputValidator((records: DetailedPlacementRecord[]) => records)
+  .handler(async ({ data: records }) => {
+    verifyAuth();
+    await db.saveSetting("detailed_placement_records", JSON.stringify(records));
+    return { success: true };
+  });
+
+export const saveDetailedPlacementRecordsFn = async (args: { data: DetailedPlacementRecord[] }) => {
+  return await serverSaveDetailedPlacementRecordsFn(args);
+};

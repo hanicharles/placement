@@ -12,19 +12,20 @@ import {
   LabelList,
   CartesianGrid,
 } from "recharts";
-import { getJourneyStatsFn, getHiringPartnersFn, getPlacementStatsFn, getDashboardChartsFn, getBatchPlacementRecordsFn, getPlacementBannersFn, type PlacementBanner } from "../actions";
+import { getJourneyStatsFn, getHiringPartnersFn, getPlacementStatsFn, getDashboardChartsFn, getBatchPlacementRecordsFn, getPlacementBannersFn, type PlacementBanner, getUpcomingCompaniesFn, type UpcomingCompany } from "../actions";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [stats, partners, placementStats, dashboardCharts, batchRecords, placementBanners] = await Promise.all([
+    const [stats, partners, placementStats, dashboardCharts, batchRecords, placementBanners, upcomingCompanies] = await Promise.all([
       getJourneyStatsFn(),
       getHiringPartnersFn(),
       getPlacementStatsFn(),
       getDashboardChartsFn(),
       getBatchPlacementRecordsFn(),
       getPlacementBannersFn(),
+      getUpcomingCompaniesFn(),
     ]);
-    return { stats, partners, placementStats, dashboardCharts, batchRecords, placementBanners };
+    return { stats, partners, placementStats, dashboardCharts, batchRecords, placementBanners, upcomingCompanies };
   },
   head: () => ({
     meta: [
@@ -71,7 +72,7 @@ const MandalaPattern = () => (
   </svg>
 );
 
-import { Award, Users, Briefcase, GraduationCap, Building, CheckCircle, ChevronRight, ArrowRight, Quote, Shield, Cpu, X } from "lucide-react";
+import { Award, Users, Briefcase, GraduationCap, Building, CheckCircle, ChevronRight, ArrowRight, Quote, Shield, Cpu, X, Calendar, DollarSign } from "lucide-react";
 
 function StatItem({ value, label, icon: Icon }: { value: string; label: string; icon: any }) {
   return (
@@ -186,6 +187,7 @@ function HomePage() {
     dashboardCharts: any[];
     batchRecords: any[];
     placementBanners: PlacementBanner[];
+    upcomingCompanies: UpcomingCompany[];
   };
 
   const [stats, setStats] = useState(loaderData.stats);
@@ -194,6 +196,7 @@ function HomePage() {
   const [dashboardCharts, setDashboardCharts] = useState(loaderData.dashboardCharts);
   const [batchRecords, setBatchRecords] = useState(loaderData.batchRecords);
   const [placementBanners, setPlacementBanners] = useState(loaderData.placementBanners);
+  const [upcomingCompanies, setUpcomingCompanies] = useState<UpcomingCompany[]>(loaderData.upcomingCompanies || []);
 
   // Lightbox overlay state
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
@@ -207,6 +210,7 @@ function HomePage() {
     setDashboardCharts(loaderData.dashboardCharts);
     setBatchRecords(loaderData.batchRecords);
     setPlacementBanners(loaderData.placementBanners);
+    setUpcomingCompanies(loaderData.upcomingCompanies || []);
   }, [loaderData]);
 
   const [selectedYear, setSelectedYear] = useState("AY23-25");
@@ -400,6 +404,82 @@ function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Section 1.5: Upcoming Placements drives */}
+        {upcomingCompanies && upcomingCompanies.length > 0 && (
+          <section className="mt-16 bg-gradient-to-br from-[#FFFBDC]/40 to-[#FFD3A5]/20 border border-[#FFAA6E]/15 p-8 rounded-3xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-radial-gradient from-[#FF8237]/5 to-transparent pointer-events-none rounded-bl-full" />
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-black/5">
+              <div className="text-left">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5900]/10 px-2.5 py-0.5 text-[10px] font-black text-[#FF5900] uppercase tracking-wider border border-[#FF5900]/15 mb-3">
+                  📅 Live Recruitment Calendar
+                </span>
+                <h2 className="text-2xl font-black text-neutral-900 tracking-tight">
+                  Upcoming Campus Placement Drives
+                </h2>
+                <p className="text-xs text-neutral-500 font-semibold mt-1">
+                  Upcoming corporate recruitment schedules and selection drives for M.Tech & M.Sc Cohorts
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {upcomingCompanies.map((comp) => {
+                const statusColors = {
+                  Confirmed: "bg-emerald-500/10 text-emerald-600 border-emerald-500/15",
+                  Scheduled: "bg-amber-500/10 text-amber-600 border-amber-500/15",
+                  Tentative: "bg-slate-500/10 text-slate-600 border-slate-500/15"
+                };
+
+                return (
+                  <div
+                    key={comp.id}
+                    className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between group hover:-translate-y-0.5 relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 left-0 w-1.5 h-full bg-[#1E3E62]" />
+                    <div className="space-y-4">
+                      {/* Card Header */}
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#1E3E62]/10 to-[#1E3E62]/5 text-[#1E3E62] font-black flex items-center justify-center border border-[#1E3E62]/15 text-sm uppercase">
+                            {comp.companyName.charAt(0)}
+                          </div>
+                          <div className="text-left">
+                            <h3 className="font-extrabold text-neutral-900 tracking-tight leading-snug group-hover:text-[#FF5900] transition-colors">
+                              {comp.companyName}
+                            </h3>
+                            <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider">
+                              {comp.targetBatch} Batch
+                            </span>
+                          </div>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase border ${statusColors[comp.status] || statusColors.Tentative}`}>
+                          {comp.status}
+                        </span>
+                      </div>
+
+                      {/* Card Details */}
+                      <div className="space-y-2 border-t border-black/5 pt-4 text-xs font-bold text-neutral-700 text-left">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-3.5 w-3.5 text-neutral-400" />
+                          <span>Visit Date: <span className="text-[#FF5900] font-black">{comp.visitDate}</span></span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Briefcase className="h-3.5 w-3.5 text-neutral-400" />
+                          <span>Job Role: <span className="text-neutral-900 font-extrabold">{comp.role}</span></span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="h-3.5 w-3.5 text-neutral-400" />
+                          <span>Package / Stipend: <span className="text-emerald-600 font-black">{comp.stipendOrSalary}</span></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Section 2: Core Programs Showcase */}
         <section className="mt-16">
