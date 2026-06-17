@@ -201,6 +201,10 @@ function HomePage() {
   // Lightbox overlay state
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
+  // Slideshow state for Congratulations Banners
+  const [activeBannerIdx, setActiveBannerIdx] = useState(0);
+  const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
+
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
@@ -211,7 +215,16 @@ function HomePage() {
     setBatchRecords(loaderData.batchRecords);
     setPlacementBanners(loaderData.placementBanners);
     setUpcomingCompanies(loaderData.upcomingCompanies || []);
+    setActiveBannerIdx(0);
   }, [loaderData]);
+
+  useEffect(() => {
+    if (!placementBanners || placementBanners.length <= 1 || isAutoplayPaused) return;
+    const interval = setInterval(() => {
+      setActiveBannerIdx((prev) => (prev + 1) % placementBanners.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [placementBanners, isAutoplayPaused]);
 
   const [selectedYear, setSelectedYear] = useState("AY23-25");
   const [visibleSeries, setVisibleSeries] = useState({
@@ -1246,60 +1259,121 @@ function HomePage() {
               </p>
             </div>
 
-            <div className="relative w-full overflow-hidden py-4 select-none mt-6">
-              {/* Left and Right blur shadows for premium look */}
-              <div className="absolute inset-y-0 left-0 w-16 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-              <div className="absolute inset-y-0 right-0 w-16 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
-              <div className="flex animate-marquee-banners whitespace-nowrap">
-                {(() => {
-                  // Duplicate the banners so they fill the screen and loop seamlessly.
-                  // The marquee animation uses transform: translateX(-50%), which requires the repeated
-                  // array to consist of an even number of copies of the original array (e.g. 2, 4, 6 copies).
-                  let repeatFactor = 2;
-                  if (placementBanners.length < 4) {
-                    repeatFactor = 6;
-                  } else if (placementBanners.length < 8) {
-                    repeatFactor = 4;
-                  }
-                  const repeated: typeof placementBanners = [];
-                  for (let i = 0; i < repeatFactor; i++) {
-                    repeated.push(...placementBanners);
-                  }
-                  return repeated;
-                })().map((banner, idx) => (
+            <div 
+              className="relative mx-auto max-w-4xl w-full aspect-[16/9] bg-neutral-950 rounded-3xl overflow-hidden shadow-xl border border-black/5 group mt-8 select-none"
+              onMouseEnter={() => setIsAutoplayPaused(true)}
+              onMouseLeave={() => setIsAutoplayPaused(false)}
+            >
+              {/* Slides */}
+              {placementBanners.map((banner, idx) => {
+                const isActive = idx === activeBannerIdx;
+                return (
                   <div
-                    key={`${banner.id}-${idx}`}
-                    onClick={() => {
-                      if (banner.linkUrl) {
-                        window.open(banner.linkUrl, "_blank", "noopener,noreferrer");
-                      } else {
-                        setLightboxImage(banner.imageUrl);
-                      }
-                    }}
-                    className="inline-flex flex-col relative cursor-pointer overflow-hidden rounded-2xl border border-black/5 bg-neutral-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md h-[360px] aspect-[3/4] mx-4 shrink-0 group"
+                    key={banner.id || idx}
+                    className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                      isActive ? "opacity-100 scale-100 z-10" : "opacity-0 scale-[0.98] pointer-events-none z-0"
+                    }`}
                   >
-                    <img
-                      src={banner.imageUrl}
-                      alt={banner.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-left whitespace-normal">
-                      <span className="text-[10px] font-bold text-[#FF5900] uppercase tracking-wider">
-                        {banner.companyName}
-                      </span>
-                      <h4 className="text-xs font-extrabold text-white tracking-tight mt-1 leading-snug">
-                        {banner.title}
-                      </h4>
-                      {banner.linkUrl && (
-                        <span className="text-[9px] font-bold text-amber-400 mt-1.5 flex items-center gap-1">
-                          Click to view details ↗
+                    {/* Ambient blurred backdrop for premium look */}
+                    <div className="absolute inset-0 select-none pointer-events-none overflow-hidden">
+                      <img
+                        src={banner.imageUrl}
+                        alt=""
+                        className="w-full h-full object-cover blur-2xl opacity-40 scale-110"
+                      />
+                    </div>
+
+                    {/* Contained main image */}
+                    <div
+                      onClick={() => {
+                        if (banner.linkUrl) {
+                          window.open(banner.linkUrl, "_blank", "noopener,noreferrer");
+                        } else {
+                          setLightboxImage(banner.imageUrl);
+                        }
+                      }}
+                      className="absolute inset-0 flex items-center justify-center cursor-pointer p-4 md:p-6"
+                    >
+                      <img
+                        src={banner.imageUrl}
+                        alt={banner.title}
+                        className="max-w-full max-h-full object-contain rounded-2xl shadow-lg border border-white/10 hover:scale-[1.01] transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+
+                    {/* Slide Information Glassmorphic Overlay (Visible on hover/mobile) */}
+                    <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-white flex items-center justify-between shadow-lg opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                      <div className="text-left">
+                        <span className="text-[10px] font-black uppercase text-[#FF5900] tracking-wider">
+                          {banner.companyName}
+                        </span>
+                        <h4 className="text-xs md:text-sm font-extrabold tracking-tight mt-0.5 leading-snug">
+                          {banner.title}
+                        </h4>
+                      </div>
+                      {banner.linkUrl ? (
+                        <span className="text-[9px] font-bold text-amber-400 shrink-0">
+                          View details ↗
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-bold text-neutral-300 shrink-0">
+                          Click to zoom 🔍
                         </span>
                       )}
                     </div>
                   </div>
-                ))}
-              </div>
+                );
+              })}
+
+              {/* Navigation Arrows */}
+              {placementBanners.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveBannerIdx((prev) => (prev - 1 + placementBanners.length) % placementBanners.length);
+                    }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-25 p-2 md:p-3 rounded-full bg-white/15 hover:bg-white/25 text-white hover:scale-105 border border-white/10 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer"
+                    title="Previous Slide"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveBannerIdx((prev) => (prev + 1) % placementBanners.length);
+                    }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-25 p-2 md:p-3 rounded-full bg-white/15 hover:bg-white/25 text-white hover:scale-105 border border-white/10 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer"
+                    title="Next Slide"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+
+              {/* Navigation Dots */}
+              {placementBanners.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+                  {placementBanners.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveBannerIdx(idx);
+                      }}
+                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                        idx === activeBannerIdx ? "w-6 bg-[#FF5900]" : "w-2 bg-white/50 hover:bg-white"
+                      }`}
+                      title={`Go to slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         )}

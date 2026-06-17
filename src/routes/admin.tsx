@@ -723,8 +723,8 @@ function AdminDashboardPage() {
     setUploadingBannerImage(true);
 
     try {
-      // Compress with 800px max bounds for high quality horizontal banners
-      const compressedBase64 = await compressImage(file, 800, 600, 0.7);
+      // Compress with 1200px max bounds for high quality horizontal banners
+      const compressedBase64 = await compressImage(file, 1200, 900, 0.85);
 
       const result = await uploadPlacementBannerFn({
         data: {
