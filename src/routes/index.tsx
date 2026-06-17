@@ -379,21 +379,21 @@ function HomePage() {
 
               {/* Right tilted card column */}
               <div className="md:col-span-5 flex justify-center md:justify-end">
-                <div className="relative w-full max-w-[480px] aspect-[1024/768] rounded-2xl p-2 bg-gradient-to-br from-[#FFFBDC] to-[#FFD3A5] shadow-lg border border-[#FFAA6E]/30 transition-transform duration-300 hover:scale-[1.02]">
-                  <div className="w-full h-full bg-[#f2f2f2] rounded-xl flex items-center justify-center overflow-hidden relative shadow-inner">
+                <div className="w-full max-w-[480px] rounded-2xl p-2 bg-gradient-to-br from-[#FFFBDC] to-[#FFD3A5] shadow-lg border border-[#FFAA6E]/30 transition-transform duration-300 hover:scale-[1.02] flex flex-col gap-2">
+                  <div className="w-full aspect-[16/9] bg-[#f2f2f2] rounded-xl flex items-center justify-center overflow-hidden relative shadow-inner">
                     <img
                       src="/image/cohort_group.jpg"
                       alt="RACE Cohort Group"
                       className="w-full h-full object-cover rounded-xl"
                     />
-                    {/* Glassmorphism badge overlay */}
-                    <div className="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg p-3 text-white flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-widest text-[#FFD3A5] font-black">Executive Cohort</p>
-                        <p className="text-xs font-bold">M.Tech / M.Sc AI & Cybersecurity</p>
-                      </div>
-                      <span className="rounded bg-[#FF5900] px-2 py-0.5 text-[9px] font-black uppercase">2026</span>
+                  </div>
+                  {/* Badge footer */}
+                  <div className="bg-[#1E3E62] border border-white/10 rounded-xl p-3 text-white flex items-center justify-between shadow-md">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-[#FFD3A5] font-black">Executive Cohort</p>
+                      <p className="text-xs font-bold">M.Tech / M.Sc AI & Cybersecurity</p>
                     </div>
+                    <span className="rounded bg-[#FF5900] px-2 py-0.5 text-[9px] font-black uppercase">2026</span>
                   </div>
                 </div>
               </div>
