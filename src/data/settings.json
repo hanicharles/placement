@@ -528,5 +528,75 @@
       "companyName": "Reva Placement Cohorts",
       "imageUrl": "/uploads/banners/media_471d76df-e54a-4730-ac6f-b70e90c7f97f_1780460695796.jpg"
     }
+  ],
+  "upcoming_companies": [
+    {
+      "id": "upcoming-1",
+      "companyName": "Google",
+      "visitDate": "2026-07-20",
+      "role": "AI Security Resident",
+      "stipendOrSalary": "45k PM",
+      "targetBatch": "AY24-26",
+      "status": "Confirmed",
+      "bannerUrl": ""
+    },
+    {
+      "id": "upcoming-2",
+      "companyName": "L&T Technology Services",
+      "visitDate": "2026-08-10",
+      "role": "Cybersecurity Analyst",
+      "stipendOrSalary": "10 LPA",
+      "targetBatch": "AY24-26",
+      "status": "Scheduled",
+      "bannerUrl": ""
+    },
+    {
+      "id": "upcoming-3",
+      "companyName": "CyberSec Solutions",
+      "visitDate": "2026-08-18",
+      "role": "Penetration Tester",
+      "stipendOrSalary": "8 LPA",
+      "targetBatch": "AY24-26",
+      "status": "Tentative",
+      "bannerUrl": ""
+    }
+  ],
+  "detailed_placement_records": [
+    {
+      "id": "record-1",
+      "studentName": "B Jothika",
+      "studentSlug": "jothika-b",
+      "specialization": "Artificial Intelligence",
+      "companyName": "Trmeric",
+      "role": "UI Engineer",
+      "type": "Full-Time",
+      "package": "8 LPA",
+      "offerDate": "2026-04-12",
+      "status": "Accepted"
+    },
+    {
+      "id": "record-2",
+      "studentName": "Ayesha",
+      "studentSlug": "ayesha",
+      "specialization": "Cybersecurity",
+      "companyName": "L&T Technology Services",
+      "role": "Automation Intern",
+      "type": "Internship",
+      "package": "35k PM",
+      "offerDate": "2026-05-15",
+      "status": "Joined"
+    },
+    {
+      "id": "record-3",
+      "studentName": "Aishwarya L Pujeri",
+      "studentSlug": "aishwarya-l-pujeri",
+      "specialization": "Artificial Intelligence",
+      "companyName": "Dhee Coding Lab",
+      "role": "Java Developer Intern",
+      "type": "Internship",
+      "package": "25k PM",
+      "offerDate": "2026-01-20",
+      "status": "Joined"
+    }
   ]
 }
