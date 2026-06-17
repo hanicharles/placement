@@ -201,9 +201,9 @@ function HomePage() {
   // Lightbox overlay state
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
-  // Slideshow state for Congratulations Banners
-  const [activeBannerIdx, setActiveBannerIdx] = useState(0);
-  const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
+  // Slideshow state for Upcoming Campus Placement Drives
+  const [activeUpcomingIdx, setActiveUpcomingIdx] = useState(0);
+  const [isUpcomingAutoplayPaused, setIsUpcomingAutoplayPaused] = useState(false);
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -215,16 +215,16 @@ function HomePage() {
     setBatchRecords(loaderData.batchRecords);
     setPlacementBanners(loaderData.placementBanners);
     setUpcomingCompanies(loaderData.upcomingCompanies || []);
-    setActiveBannerIdx(0);
+    setActiveUpcomingIdx(0);
   }, [loaderData]);
 
   useEffect(() => {
-    if (!placementBanners || placementBanners.length <= 1 || isAutoplayPaused) return;
+    if (!upcomingCompanies || upcomingCompanies.length <= 1 || isUpcomingAutoplayPaused) return;
     const interval = setInterval(() => {
-      setActiveBannerIdx((prev) => (prev + 1) % placementBanners.length);
+      setActiveUpcomingIdx((prev) => (prev + 1) % upcomingCompanies.length);
     }, 2000);
     return () => clearInterval(interval);
-  }, [placementBanners, isAutoplayPaused]);
+  }, [upcomingCompanies, isUpcomingAutoplayPaused]);
 
   const [selectedYear, setSelectedYear] = useState("AY23-25");
   const [visibleSeries, setVisibleSeries] = useState({
@@ -436,8 +436,16 @@ function HomePage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {upcomingCompanies.map((comp) => {
+            <div 
+              className="relative mx-auto max-w-3xl w-full min-h-[220px] bg-white border border-black/5 rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 group select-none overflow-hidden"
+              onMouseEnter={() => setIsUpcomingAutoplayPaused(true)}
+              onMouseLeave={() => setIsUpcomingAutoplayPaused(false)}
+            >
+              <div className="absolute top-0 left-0 w-2 h-full bg-[#1E3E62]" />
+
+              {/* Slides */}
+              {upcomingCompanies.map((comp, idx) => {
+                const isActive = idx === activeUpcomingIdx;
                 const statusColors = {
                   Confirmed: "bg-emerald-500/10 text-emerald-600 border-emerald-500/15",
                   Scheduled: "bg-amber-500/10 text-amber-600 border-amber-500/15",
@@ -446,50 +454,106 @@ function HomePage() {
 
                 return (
                   <div
-                    key={comp.id}
-                    className="bg-white border border-black/5 p-5 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between group hover:-translate-y-0.5 relative overflow-hidden"
+                    key={comp.id || idx}
+                    className={`transition-all duration-500 ease-in-out absolute inset-0 p-6 md:p-8 flex flex-col justify-between ${
+                      isActive ? "opacity-100 translate-x-0 z-10" : "opacity-0 translate-x-4 pointer-events-none z-0"
+                    }`}
                   >
-                    <div className="absolute top-0 left-0 w-1.5 h-full bg-[#1E3E62]" />
-                    <div className="space-y-4">
-                      {/* Card Header */}
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#1E3E62]/10 to-[#1E3E62]/5 text-[#1E3E62] font-black flex items-center justify-center border border-[#1E3E62]/15 text-sm uppercase">
-                            {comp.companyName.charAt(0)}
-                          </div>
-                          <div className="text-left">
-                            <h3 className="font-extrabold text-neutral-900 tracking-tight leading-snug group-hover:text-[#FF5900] transition-colors">
-                              {comp.companyName}
-                            </h3>
-                            <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider">
-                              {comp.targetBatch} Batch
-                            </span>
-                          </div>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      {/* Logo and Company Header */}
+                      <div className="flex items-center gap-4">
+                        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#1E3E62]/10 to-[#1E3E62]/5 text-[#1E3E62] font-black flex items-center justify-center border border-[#1E3E62]/15 text-lg uppercase shadow-inner shrink-0">
+                          {comp.companyName.charAt(0)}
                         </div>
-                        <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase border ${statusColors[comp.status] || statusColors.Tentative}`}>
-                          {comp.status}
-                        </span>
+                        <div className="text-left">
+                          <h3 className="text-xl font-black text-neutral-900 tracking-tight">
+                            {comp.companyName}
+                          </h3>
+                          <span className="text-[10px] text-neutral-450 font-bold uppercase tracking-wider block mt-0.5">
+                            Target Batch: {comp.targetBatch}
+                          </span>
+                        </div>
                       </div>
 
-                      {/* Card Details */}
-                      <div className="space-y-2 border-t border-black/5 pt-4 text-xs font-bold text-neutral-700 text-left">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-3.5 w-3.5 text-neutral-400" />
-                          <span>Visit Date: <span className="text-[#FF5900] font-black">{comp.visitDate}</span></span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Briefcase className="h-3.5 w-3.5 text-neutral-400" />
-                          <span>Job Role: <span className="text-neutral-900 font-extrabold">{comp.role}</span></span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="h-3.5 w-3.5 text-neutral-400" />
-                          <span>Package / Stipend: <span className="text-emerald-600 font-black">{comp.stipendOrSalary}</span></span>
-                        </div>
+                      {/* Status badge */}
+                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase border w-fit ${statusColors[comp.status] || statusColors.Tentative}`}>
+                        {comp.status}
+                      </span>
+                    </div>
+
+                    {/* Specifications Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-black/5 pt-6 mt-6 text-left">
+                      <div className="space-y-1">
+                        <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                          <Calendar className="h-3 w-3" /> Visit Date
+                        </span>
+                        <p className="text-sm font-black text-neutral-900">{comp.visitDate}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                          <Briefcase className="h-3 w-3" /> Target Role
+                        </span>
+                        <p className="text-sm font-extrabold text-neutral-800 truncate">{comp.role}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                          <DollarSign className="h-3 w-3" /> Compensation
+                        </span>
+                        <p className="text-sm font-black text-emerald-600">{comp.stipendOrSalary}</p>
                       </div>
                     </div>
                   </div>
                 );
               })}
+
+              {/* Navigation Arrows */}
+              {upcomingCompanies.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveUpcomingIdx((prev) => (prev - 1 + upcomingCompanies.length) % upcomingCompanies.length);
+                    }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
+                    title="Previous Visit"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveUpcomingIdx((prev) => (prev + 1) % upcomingCompanies.length);
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
+                    title="Next Visit"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+
+              {/* Navigation Dots */}
+              {upcomingCompanies.length > 1 && (
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
+                  {upcomingCompanies.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveUpcomingIdx(idx);
+                      }}
+                      className={`h-1.5 rounded-full transition-all duration-350 cursor-pointer ${
+                        idx === activeUpcomingIdx ? "w-4 bg-[#FF5900]" : "w-1.5 bg-neutral-200 hover:bg-neutral-300"
+                      }`}
+                      title={`Go to slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         )}
@@ -1259,121 +1323,57 @@ function HomePage() {
               </p>
             </div>
 
-            <div 
-              className="relative mx-auto max-w-4xl w-full aspect-[16/9] bg-neutral-950 rounded-3xl overflow-hidden shadow-xl border border-black/5 group mt-8 select-none"
-              onMouseEnter={() => setIsAutoplayPaused(true)}
-              onMouseLeave={() => setIsAutoplayPaused(false)}
-            >
-              {/* Slides */}
-              {placementBanners.map((banner, idx) => {
-                const isActive = idx === activeBannerIdx;
-                return (
+            <div className="relative w-full overflow-hidden py-4 select-none mt-6">
+              {/* Left and Right blur shadows for premium look */}
+              <div className="absolute inset-y-0 left-0 w-16 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-16 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+              <div className="flex animate-marquee-banners whitespace-nowrap">
+                {(() => {
+                  let repeatFactor = 2;
+                  if (placementBanners.length < 4) {
+                    repeatFactor = 6;
+                  } else if (placementBanners.length < 8) {
+                    repeatFactor = 4;
+                  }
+                  const repeated: typeof placementBanners = [];
+                  for (let i = 0; i < repeatFactor; i++) {
+                    repeated.push(...placementBanners);
+                  }
+                  return repeated;
+                })().map((banner, idx) => (
                   <div
-                    key={banner.id || idx}
-                    className={`absolute inset-0 transition-all duration-700 ease-in-out ${
-                      isActive ? "opacity-100 scale-100 z-10" : "opacity-0 scale-[0.98] pointer-events-none z-0"
-                    }`}
+                    key={`${banner.id}-${idx}`}
+                    onClick={() => {
+                      if (banner.linkUrl) {
+                        window.open(banner.linkUrl, "_blank", "noopener,noreferrer");
+                      } else {
+                        setLightboxImage(banner.imageUrl);
+                      }
+                    }}
+                    className="inline-flex flex-col relative cursor-pointer overflow-hidden rounded-2xl border border-black/5 bg-neutral-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md h-[360px] aspect-[3/4] mx-4 shrink-0 group"
                   >
-                    {/* Ambient blurred backdrop for premium look */}
-                    <div className="absolute inset-0 select-none pointer-events-none overflow-hidden">
-                      <img
-                        src={banner.imageUrl}
-                        alt=""
-                        className="w-full h-full object-cover blur-2xl opacity-40 scale-110"
-                      />
-                    </div>
-
-                    {/* Contained main image */}
-                    <div
-                      onClick={() => {
-                        if (banner.linkUrl) {
-                          window.open(banner.linkUrl, "_blank", "noopener,noreferrer");
-                        } else {
-                          setLightboxImage(banner.imageUrl);
-                        }
-                      }}
-                      className="absolute inset-0 flex items-center justify-center cursor-pointer p-4 md:p-6"
-                    >
-                      <img
-                        src={banner.imageUrl}
-                        alt={banner.title}
-                        className="max-w-full max-h-full object-contain rounded-2xl shadow-lg border border-white/10 hover:scale-[1.01] transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    </div>
-
-                    {/* Slide Information Glassmorphic Overlay (Visible on hover/mobile) */}
-                    <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-white flex items-center justify-between shadow-lg opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                      <div className="text-left">
-                        <span className="text-[10px] font-black uppercase text-[#FF5900] tracking-wider">
-                          {banner.companyName}
-                        </span>
-                        <h4 className="text-xs md:text-sm font-extrabold tracking-tight mt-0.5 leading-snug">
-                          {banner.title}
-                        </h4>
-                      </div>
-                      {banner.linkUrl ? (
-                        <span className="text-[9px] font-bold text-amber-400 shrink-0">
-                          View details ↗
-                        </span>
-                      ) : (
-                        <span className="text-[9px] font-bold text-neutral-300 shrink-0">
-                          Click to zoom 🔍
+                    <img
+                      src={banner.imageUrl}
+                      alt={banner.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-left whitespace-normal">
+                      <span className="text-[10px] font-bold text-[#FF5900] uppercase tracking-wider">
+                        {banner.companyName}
+                      </span>
+                      <h4 className="text-xs font-extrabold text-white tracking-tight mt-1 leading-snug">
+                        {banner.title}
+                      </h4>
+                      {banner.linkUrl && (
+                        <span className="text-[9px] font-bold text-amber-400 mt-1.5 flex items-center gap-1">
+                          Click to view details ↗
                         </span>
                       )}
                     </div>
                   </div>
-                );
-              })}
-
-              {/* Navigation Arrows */}
-              {placementBanners.length > 1 && (
-                <>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveBannerIdx((prev) => (prev - 1 + placementBanners.length) % placementBanners.length);
-                    }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 z-25 p-2 md:p-3 rounded-full bg-white/15 hover:bg-white/25 text-white hover:scale-105 border border-white/10 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer"
-                    title="Previous Slide"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveBannerIdx((prev) => (prev + 1) % placementBanners.length);
-                    }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 z-25 p-2 md:p-3 rounded-full bg-white/15 hover:bg-white/25 text-white hover:scale-105 border border-white/10 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer"
-                    title="Next Slide"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </>
-              )}
-
-              {/* Navigation Dots */}
-              {placementBanners.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-2">
-                  {placementBanners.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveBannerIdx(idx);
-                      }}
-                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                        idx === activeBannerIdx ? "w-6 bg-[#FF5900]" : "w-2 bg-white/50 hover:bg-white"
-                      }`}
-                      title={`Go to slide ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
+                ))}
+              </div>
             </div>
           </section>
         )}
