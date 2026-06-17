@@ -534,31 +534,31 @@
       "id": "upcoming-1",
       "companyName": "Google",
       "visitDate": "2026-07-20",
-      "role": "AI Security Resident",
-      "stipendOrSalary": "45k PM",
+      "role": "Software / Data Engineer",
+      "stipendOrSalary": "Competitive CTC",
       "targetBatch": "AY24-26",
       "status": "Confirmed",
-      "bannerUrl": ""
+      "bannerUrl": "/uploads/banners/google_drive_banner.png"
     },
     {
       "id": "upcoming-2",
       "companyName": "L&T Technology Services",
       "visitDate": "2026-08-10",
-      "role": "Cybersecurity Analyst",
-      "stipendOrSalary": "10 LPA",
+      "role": "Graduate Engineer Trainee",
+      "stipendOrSalary": "Attractive CTC",
       "targetBatch": "AY24-26",
       "status": "Scheduled",
-      "bannerUrl": ""
+      "bannerUrl": "/uploads/banners/lt_drive_banner.png"
     },
     {
       "id": "upcoming-3",
-      "companyName": "CyberSec Solutions",
-      "visitDate": "2026-08-18",
-      "role": "Penetration Tester",
-      "stipendOrSalary": "8 LPA",
+      "companyName": "TeraLogic",
+      "visitDate": "2026-09-05",
+      "role": "Software / Data Engineer",
+      "stipendOrSalary": "Attractive CTC",
       "targetBatch": "AY24-26",
-      "status": "Tentative",
-      "bannerUrl": ""
+      "status": "Scheduled",
+      "bannerUrl": "/uploads/banners/teralogic_drive_banner.png"
     }
   ],
   "detailed_placement_records": [
