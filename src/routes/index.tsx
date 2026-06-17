@@ -328,6 +328,9 @@ function HomePage() {
       highestCtc: "0 (Upcoming)"
     }
   };
+  const activeComp = upcomingCompanies[activeUpcomingIdx];
+  const hasBanner = !!activeComp?.bannerUrl;
+
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
       {/* Top Navigation */}
@@ -437,11 +440,15 @@ function HomePage() {
             </div>
 
             <div 
-              className="relative mx-auto max-w-3xl w-full min-h-[220px] bg-white border border-black/5 rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 group select-none overflow-hidden"
+              className={`relative mx-auto max-w-3xl w-full transition-all duration-300 group select-none rounded-3xl ${
+                hasBanner 
+                  ? "overflow-hidden" 
+                  : "bg-white border border-black/5 shadow-sm hover:shadow-md min-h-[220px] overflow-hidden"
+              }`}
               onMouseEnter={() => setIsUpcomingAutoplayPaused(true)}
               onMouseLeave={() => setIsUpcomingAutoplayPaused(false)}
             >
-              <div className="absolute top-0 left-0 w-2 h-full bg-[#1E3E62]" />
+              {!hasBanner && <div className="absolute top-0 left-0 w-2 h-full bg-[#1E3E62] z-20" />}
 
               {/* Slides */}
               {upcomingCompanies.map((comp, idx) => {
@@ -455,32 +462,24 @@ function HomePage() {
                 return (
                   <div
                     key={comp.id || idx}
-                    className={`transition-all duration-500 ease-in-out absolute inset-0 flex flex-col justify-between ${
-                      isActive ? "opacity-100 translate-x-0 z-10" : "opacity-0 translate-x-4 pointer-events-none z-0"
+                    className={`transition-all duration-500 ease-in-out ${
+                      isActive 
+                        ? "opacity-100 translate-x-0 z-10 relative w-full" 
+                        : "opacity-0 translate-x-4 pointer-events-none z-0 absolute inset-0 w-full h-full"
                     }`}
                   >
                     {comp.bannerUrl ? (
                       /* Display the banner image */
-                      <div className="absolute inset-0 flex items-center justify-center cursor-pointer bg-neutral-950">
-                        {/* Ambient blurred backdrop */}
-                        <div className="absolute inset-0 select-none pointer-events-none overflow-hidden">
-                          <img
-                            src={comp.bannerUrl}
-                            alt=""
-                            className="w-full h-full object-cover blur-xl opacity-35 scale-105"
-                          />
-                        </div>
-                        <img
-                          src={comp.bannerUrl}
-                          alt={`${comp.companyName} Recruitment Drive`}
-                          onClick={() => setLightboxImage(comp.bannerUrl!)}
-                          className="max-w-full max-h-full object-contain shadow-lg border border-white/10 hover:scale-[1.01] transition-transform duration-300"
-                          loading="lazy"
-                        />
-                      </div>
+                      <img
+                        src={comp.bannerUrl}
+                        alt={`${comp.companyName} Recruitment Drive`}
+                        onClick={() => setLightboxImage(comp.bannerUrl!)}
+                        className="w-full h-auto cursor-pointer rounded-3xl hover:scale-[1.005] hover:brightness-[1.02] transition-all duration-300 block shadow-md border border-black/5"
+                        loading="lazy"
+                      />
                     ) : (
                       /* Display the textual details layout */
-                      <div className="flex-1 p-6 md:p-8 flex flex-col justify-between h-full">
+                      <div className="w-full p-6 md:p-8 flex flex-col justify-between text-left">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                           {/* Logo and Company Header */}
                           <div className="flex items-center gap-4">
@@ -538,7 +537,7 @@ function HomePage() {
                       e.stopPropagation();
                       setActiveUpcomingIdx((prev) => (prev - 1 + upcomingCompanies.length) % upcomingCompanies.length);
                     }}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-white/85 backdrop-blur-xs hover:bg-white text-neutral-800 hover:scale-105 border border-black/10 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer shadow-sm"
                     title="Previous Visit"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
@@ -550,7 +549,7 @@ function HomePage() {
                       e.stopPropagation();
                       setActiveUpcomingIdx((prev) => (prev + 1) % upcomingCompanies.length);
                     }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-white/85 backdrop-blur-xs hover:bg-white text-neutral-800 hover:scale-105 border border-black/10 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer shadow-sm"
                     title="Next Visit"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
@@ -562,7 +561,9 @@ function HomePage() {
 
               {/* Navigation Dots */}
               {upcomingCompanies.length > 1 && (
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
+                <div className={`absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5 px-2.5 py-1.5 rounded-full backdrop-blur-md transition-all duration-300 ${
+                  hasBanner ? "bg-black/30" : "bg-black/5"
+                }`}>
                   {upcomingCompanies.map((_, idx) => (
                     <button
                       key={idx}
@@ -571,7 +572,7 @@ function HomePage() {
                         setActiveUpcomingIdx(idx);
                       }}
                       className={`h-1.5 rounded-full transition-all duration-350 cursor-pointer ${
-                        idx === activeUpcomingIdx ? "w-4 bg-[#FF5900]" : "w-1.5 bg-neutral-200 hover:bg-neutral-300"
+                        idx === activeUpcomingIdx ? "w-4 bg-[#FF5900]" : "w-1.5 bg-neutral-300 hover:bg-neutral-400"
                       }`}
                       title={`Go to slide ${idx + 1}`}
                     />
