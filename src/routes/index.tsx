@@ -455,53 +455,77 @@ function HomePage() {
                 return (
                   <div
                     key={comp.id || idx}
-                    className={`transition-all duration-500 ease-in-out absolute inset-0 p-6 md:p-8 flex flex-col justify-between ${
+                    className={`transition-all duration-500 ease-in-out absolute inset-0 flex flex-col justify-between ${
                       isActive ? "opacity-100 translate-x-0 z-10" : "opacity-0 translate-x-4 pointer-events-none z-0"
                     }`}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      {/* Logo and Company Header */}
-                      <div className="flex items-center gap-4">
-                        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#1E3E62]/10 to-[#1E3E62]/5 text-[#1E3E62] font-black flex items-center justify-center border border-[#1E3E62]/15 text-lg uppercase shadow-inner shrink-0">
-                          {comp.companyName.charAt(0)}
+                    {comp.bannerUrl ? (
+                      /* Display the banner image */
+                      <div className="absolute inset-0 flex items-center justify-center cursor-pointer bg-neutral-950">
+                        {/* Ambient blurred backdrop */}
+                        <div className="absolute inset-0 select-none pointer-events-none overflow-hidden">
+                          <img
+                            src={comp.bannerUrl}
+                            alt=""
+                            className="w-full h-full object-cover blur-xl opacity-35 scale-105"
+                          />
                         </div>
-                        <div className="text-left">
-                          <h3 className="text-xl font-black text-neutral-900 tracking-tight">
-                            {comp.companyName}
-                          </h3>
-                          <span className="text-[10px] text-neutral-450 font-bold uppercase tracking-wider block mt-0.5">
-                            Target Batch: {comp.targetBatch}
+                        <img
+                          src={comp.bannerUrl}
+                          alt={`${comp.companyName} Recruitment Drive`}
+                          onClick={() => setLightboxImage(comp.bannerUrl!)}
+                          className="max-w-full max-h-full object-contain shadow-lg border border-white/10 hover:scale-[1.01] transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      /* Display the textual details layout */
+                      <div className="flex-1 p-6 md:p-8 flex flex-col justify-between h-full">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          {/* Logo and Company Header */}
+                          <div className="flex items-center gap-4">
+                            <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#1E3E62]/10 to-[#1E3E62]/5 text-[#1E3E62] font-black flex items-center justify-center border border-[#1E3E62]/15 text-lg uppercase shadow-inner shrink-0">
+                              {comp.companyName.charAt(0)}
+                            </div>
+                            <div className="text-left">
+                              <h3 className="text-xl font-black text-neutral-900 tracking-tight">
+                                {comp.companyName}
+                              </h3>
+                              <span className="text-[10px] text-neutral-450 font-bold uppercase tracking-wider block mt-0.5">
+                                Target Batch: {comp.targetBatch}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Status badge */}
+                          <span className={`px-3 py-1 rounded-full text-xs font-black uppercase border w-fit ${statusColors[comp.status] || statusColors.Tentative}`}>
+                            {comp.status}
                           </span>
                         </div>
-                      </div>
 
-                      {/* Status badge */}
-                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase border w-fit ${statusColors[comp.status] || statusColors.Tentative}`}>
-                        {comp.status}
-                      </span>
-                    </div>
-
-                    {/* Specifications Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-black/5 pt-6 mt-6 text-left">
-                      <div className="space-y-1">
-                        <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
-                          <Calendar className="h-3 w-3" /> Visit Date
-                        </span>
-                        <p className="text-sm font-black text-neutral-900">{comp.visitDate}</p>
+                        {/* Specifications Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-black/5 pt-6 mt-6 text-left">
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                              <Calendar className="h-3 w-3" /> Visit Date
+                            </span>
+                            <p className="text-sm font-black text-neutral-900">{comp.visitDate}</p>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                              <Briefcase className="h-3 w-3" /> Target Role
+                            </span>
+                            <p className="text-sm font-extrabold text-neutral-800 truncate">{comp.role}</p>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                              <DollarSign className="h-3 w-3" /> Compensation
+                            </span>
+                            <p className="text-sm font-black text-emerald-600">{comp.stipendOrSalary}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
-                          <Briefcase className="h-3 w-3" /> Target Role
-                        </span>
-                        <p className="text-sm font-extrabold text-neutral-800 truncate">{comp.role}</p>
-                      </div>
-                      <div className="space-y-1">
-                        <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
-                          <DollarSign className="h-3 w-3" /> Compensation
-                        </span>
-                        <p className="text-sm font-black text-emerald-600">{comp.stipendOrSalary}</p>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 );
               })}

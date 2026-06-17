@@ -1085,6 +1085,7 @@ export interface UpcomingCompany {
   stipendOrSalary: string;
   targetBatch: string;
   status: "Scheduled" | "Confirmed" | "Tentative";
+  bannerUrl?: string;
 }
 
 const DEFAULT_UPCOMING_COMPANIES: UpcomingCompany[] = [

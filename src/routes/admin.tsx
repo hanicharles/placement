@@ -165,6 +165,7 @@ function AdminDashboardPage() {
   const [bannerIndex, setBannerIndex] = useState<number | null>(null);
   const [isBannerFormOpen, setIsBannerFormOpen] = useState(false);
   const [uploadingBannerImage, setUploadingBannerImage] = useState(false);
+  const [uploadingUpcomingBannerImage, setUploadingUpcomingBannerImage] = useState(false);
 
   // Journey Stats States
   const [stats, setStats] = useState<any[]>([]);
@@ -279,7 +280,8 @@ function AdminDashboardPage() {
       role: "",
       stipendOrSalary: "",
       targetBatch: "AY24-26",
-      status: "Scheduled"
+      status: "Scheduled",
+      bannerUrl: ""
     });
     setUpcomingCompanyIndex(null);
     setIsUpcomingCompanyFormOpen(true);
@@ -745,6 +747,43 @@ function AdminDashboardPage() {
       showNotification("error", err.message || "Failed to upload banner.");
     } finally {
       setUploadingBannerImage(false);
+    }
+  };
+
+  const handleUpcomingBannerImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingUpcomingCompany) return;
+
+    if (!file.type.startsWith("image/")) {
+      showNotification("error", "Only image files are supported.");
+      return;
+    }
+
+    const bannerSlug = slugify("upcoming-" + (editingUpcomingCompany.companyName || "temp") + "-" + Date.now());
+    setUploadingUpcomingBannerImage(true);
+
+    try {
+      const compressedBase64 = await compressImage(file, 1200, 900, 0.85);
+
+      const result = await uploadPlacementBannerFn({
+        data: {
+          slug: bannerSlug,
+          base64: compressedBase64,
+          filename: file.name,
+        },
+      });
+
+      if (result.success && result.filePath) {
+        setEditingUpcomingCompany((prev) => prev ? { ...prev, bannerUrl: result.filePath } : null);
+        showNotification("success", "Upcoming drive banner image uploaded successfully!");
+      } else {
+        showNotification("error", "Failed to upload banner image.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      showNotification("error", err.message || "Failed to upload banner.");
+    } finally {
+      setUploadingUpcomingBannerImage(false);
     }
   };
 
@@ -3258,6 +3297,62 @@ function AdminDashboardPage() {
                           <option value="Confirmed">Confirmed</option>
                           <option value="Tentative">Tentative</option>
                         </select>
+                      </div>
+                    </div>
+
+                    {/* Banner Image Upload (Full Width Row) */}
+                    <div className="space-y-1 mt-2 text-left">
+                      <label className="block text-[10px] font-black uppercase tracking-wider text-neutral-500">
+                        Drive Banner / Poster Image (Optional)
+                      </label>
+                      <div className="mt-1 flex flex-col sm:flex-row items-center gap-4">
+                        {editingUpcomingCompany.bannerUrl ? (
+                          <div className="relative h-24 w-32 border border-black/10 rounded-xl bg-neutral-50 overflow-hidden group/img select-none shrink-0 flex items-center justify-center">
+                            <img
+                              src={editingUpcomingCompany.bannerUrl}
+                              alt="Drive Banner Preview"
+                              className="h-full w-full object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setEditingUpcomingCompany({ ...editingUpcomingCompany, bannerUrl: "" })}
+                              className="absolute top-1.5 right-1.5 p-1 bg-red-650 text-white rounded-full hover:bg-red-750 transition shadow-md cursor-pointer"
+                              title="Remove Banner Image"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="h-24 w-32 border-2 border-dashed border-black/10 rounded-xl bg-neutral-50/50 flex flex-col items-center justify-center shrink-0 text-neutral-450 select-none text-[8px] font-bold uppercase tracking-wider text-center p-2 leading-tight">
+                            No Banner Image
+                          </div>
+                        )}
+
+                        <div className="flex-1 w-full text-left">
+                          <label className="relative flex items-center justify-center gap-2 border border-[#1E3E62]/20 hover:border-[#1E3E62]/40 rounded-xl px-4 py-2.5 bg-[#1E3E62]/5 hover:bg-[#1E3E62]/10 text-[#1E3E62] font-black text-xs transition cursor-pointer select-none">
+                            {uploadingUpcomingBannerImage ? (
+                              <>
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="h-3.5 w-3.5" />
+                                Upload Drive Banner
+                              </>
+                            )}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleUpcomingBannerImageChange}
+                              className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                              disabled={uploadingUpcomingBannerImage}
+                            />
+                          </label>
+                          <p className="text-[9px] text-neutral-450 font-medium mt-1.5 leading-relaxed">
+                            Upload a landscape banner image (e.g. 16:9 poster) for this drive. It will be showcased in the homepage slideshow.
+                          </p>
+                        </div>
                       </div>
                     </div>
 
