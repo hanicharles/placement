@@ -4,9 +4,9 @@ import { db } from "../server/db";
 export const Route = createFileRoute("/api/banners/$slug")({
   server: {
     handlers: {
-      GET: async ({ request }) => {
+      GET: async ({ request, params }) => {
         const url = new URL(request.url);
-        const slug = url.pathname.substring(url.pathname.lastIndexOf("/") + 1);
+        const slug = params?.slug || url.pathname.substring(url.pathname.lastIndexOf("/") + 1);
 
         try {
           let base64Data = await db.getSetting(`banner_image:${slug}`);
@@ -45,10 +45,15 @@ export const Route = createFileRoute("/api/banners/$slug")({
           const contentType = parts.length > 1 ? parts[0].split(";")[0].split(":")[1] : "image/jpeg";
           const base64Str = parts.length > 1 ? parts[1] : parts[0];
 
-          const { Buffer } = await import("buffer");
-          const buffer = Buffer.from(base64Str, "base64");
+          // Decode base64 to Uint8Array using web standard atob for Cloudflare compat
+          const binaryStr = atob(base64Str);
+          const len = binaryStr.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+          }
 
-          return new Response(buffer, {
+          return new Response(bytes, {
             headers: {
               "Content-Type": contentType,
               "Cache-Control": "public, max-age=31536000, immutable",

@@ -725,8 +725,8 @@ function AdminDashboardPage() {
     setUploadingBannerImage(true);
 
     try {
-      // Compress with 1200px max bounds for high quality horizontal banners
-      const compressedBase64 = await compressImage(file, 1200, 900, 0.85);
+      // Compress to 1000x600 at 0.75 quality for lightweight base64 D1 DB storage compatibility
+      const compressedBase64 = await compressImage(file, 1000, 600, 0.75);
 
       const result = await uploadPlacementBannerFn({
         data: {
@@ -763,7 +763,8 @@ function AdminDashboardPage() {
     setUploadingUpcomingBannerImage(true);
 
     try {
-      const compressedBase64 = await compressImage(file, 1200, 900, 0.85);
+      // Compress to 1000x600 at 0.75 quality for lightweight base64 D1 DB storage compatibility
+      const compressedBase64 = await compressImage(file, 1000, 600, 0.75);
 
       const result = await uploadPlacementBannerFn({
         data: {
