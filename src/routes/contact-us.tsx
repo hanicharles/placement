@@ -470,7 +470,7 @@ function ContactUsPage() {
 
 
         {/* Corporate Research & Trainers */}
-        <section className="mt-12 flex flex-wrap justify-center gap-8">
+        <section className="mt-12 grid gap-8 grid-cols-1 lg:grid-cols-2 justify-items-center">
           <ContactBusinessCard
             layout="photo-left"
             name="Paramesh G"
