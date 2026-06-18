@@ -367,7 +367,7 @@ function HomePage() {
             {/* Grid for Description, Actions & Image */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Left content column */}
-              <div className="md:col-span-7 flex flex-col justify-center text-left">
+              <div className="md:col-span-6 flex flex-col justify-center text-left">
                 <p className="text-sm sm:text-base leading-relaxed text-neutral-600 font-medium max-w-xl">
                   Progressive and integrated learning capabilities for working professionals. Specialized techno-functional and interdisciplinary programs designed to suit the needs of working professionals.
                 </p>
@@ -398,8 +398,8 @@ function HomePage() {
               </div>
 
               {/* Right column: Cohort Image */}
-              <div className="md:col-span-5 flex justify-center md:justify-end">
-                <div className="w-full max-w-[480px] rounded-3xl overflow-hidden shadow-xl border border-black/5 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl">
+              <div className="md:col-span-6 flex justify-center md:justify-end">
+                <div className="w-full rounded-3xl overflow-hidden shadow-xl border border-black/5 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl">
                   <img
                     src="/image/cohort_group.jpg"
                     alt="RACE Cohort Group"
@@ -723,8 +723,8 @@ function HomePage() {
                   <button
                     onClick={() => setVisibleSeries(p => ({ ...p, admitted: !p.admitted }))}
                     className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${visibleSeries.admitted
-                        ? "bg-blue-50 border-blue-200 text-blue-700 shadow-xs"
-                        : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
+                      ? "bg-blue-50 border-blue-200 text-blue-700 shadow-xs"
+                      : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
                       }`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${visibleSeries.admitted ? "bg-[#3b82f6]" : "bg-neutral-300"}`} />
@@ -733,8 +733,8 @@ function HomePage() {
                   <button
                     onClick={() => setVisibleSeries(p => ({ ...p, internships: !p.internships }))}
                     className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${visibleSeries.internships
-                        ? "bg-amber-50 border-amber-200 text-amber-700 shadow-xs"
-                        : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
+                      ? "bg-amber-50 border-amber-200 text-amber-700 shadow-xs"
+                      : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
                       }`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${visibleSeries.internships ? "bg-[#f59e0b]" : "bg-neutral-300"}`} />
@@ -743,8 +743,8 @@ function HomePage() {
                   <button
                     onClick={() => setVisibleSeries(p => ({ ...p, placements: !p.placements }))}
                     className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${visibleSeries.placements
-                        ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs"
-                        : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
+                      ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs"
+                      : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
                       }`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${visibleSeries.placements ? "bg-[#10b981]" : "bg-neutral-300"}`} />
@@ -753,8 +753,8 @@ function HomePage() {
                   <button
                     onClick={() => setVisibleSeries(p => ({ ...p, highestCtc: !p.highestCtc }))}
                     className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${visibleSeries.highestCtc
-                        ? "bg-orange-50 border-orange-200 text-orange-700 shadow-xs"
-                        : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
+                      ? "bg-orange-50 border-orange-200 text-orange-700 shadow-xs"
+                      : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
                       }`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${visibleSeries.highestCtc ? "bg-[#ff5900]" : "bg-neutral-300"}`} />
@@ -971,8 +971,8 @@ function HomePage() {
                         key={yr}
                         onClick={() => setSelectedYear(yr)}
                         className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-black tracking-wider transition-all uppercase shrink-0 text-center cursor-pointer ${selectedYear === yr
-                            ? "bg-[#1E3E62] text-white shadow-xs"
-                            : "text-neutral-500 hover:text-neutral-800"
+                          ? "bg-[#1E3E62] text-white shadow-xs"
+                          : "text-neutral-500 hover:text-neutral-800"
                           }`}
                       >
                         {yr}
