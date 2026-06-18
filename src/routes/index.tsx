@@ -356,9 +356,12 @@ function HomePage() {
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5900]/10 px-3 py-1 text-xs font-bold text-[#FF5900] border border-[#FF5900]/15">
                 🎓 Developing Visionary Enterprise Leaders
               </span>
-              <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black text-neutral-900 tracking-tight leading-tight">
-                REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence</span>
+              <h1 className="mt-4 text-xl sm:text-2xl md:text-3xl lg:text-[38px] xl:text-[44px] font-black text-neutral-900 tracking-tight leading-tight sm:whitespace-nowrap">
+                REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence (RACE)</span>
               </h1>
+              <p className="mt-2 text-base sm:text-lg md:text-xl font-bold text-neutral-500">
+                REVA University. Bengaluru
+              </p>
             </div>
 
             {/* Grid for Description, Actions & Image */}
