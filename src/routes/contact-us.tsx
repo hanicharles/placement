@@ -501,7 +501,7 @@ function ContactUsPage() {
             email="kirankumar.kv@reva.edu.in"
             web="race.reva.edu.in"
             address="RACE, REVA University, Bengaluru"
-            photoUrl=""
+            photoUrl="/image/kiran_kumar.jpg"
           />
         </section>
 
