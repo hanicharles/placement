@@ -56,7 +56,7 @@ const MandalaPattern = () => (
     <circle cx="60" cy="60" r="25" />
     <circle cx="60" cy="60" r="15" />
     <circle cx="60" cy="60" r="8" />
-    
+
     {Array.from({ length: 16 }).map((_, i) => {
       const angle = (i * 360) / 16;
       return (
@@ -92,7 +92,7 @@ function StatItem({ value, label, icon: Icon }: { value: string; label: string; 
 
 function CompanyLogo({ partner, className }: { partner: any; className?: string }) {
   const [error, setError] = useState(false);
-  
+
   if (partner.logoUrl && !error) {
     return (
       <img
@@ -103,7 +103,7 @@ function CompanyLogo({ partner, className }: { partner: any; className?: string 
       />
     );
   }
-  
+
   return (
     <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${partner.themeColor} text-white font-black text-xs flex items-center justify-center shadow-sm shrink-0`}>
       {partner.logoLetter || partner.name.charAt(0)}
@@ -328,9 +328,6 @@ function HomePage() {
       highestCtc: "0 (Upcoming)"
     }
   };
-  const activeComp = upcomingCompanies[activeUpcomingIdx];
-  const hasBanner = !!activeComp?.bannerUrl;
-
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
       {/* Top Navigation */}
@@ -352,19 +349,16 @@ function HomePage() {
         <section className="relative rounded-3xl bg-white p-8 md:p-12 shadow-sm border border-black/5 overflow-hidden mb-12">
           {/* Subtle mesh background effect */}
           <div className="absolute inset-0 opacity-40 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(255,211,165,0.4),transparent_50%),radial-gradient(circle_at_bottom_left,rgba(255,240,220,0.5),transparent_50%)]" />
-          
+
           <div className="max-w-6xl mx-auto relative z-10 text-left">
             {/* Header / Badge (Full Width) */}
             <div className="mb-8 border-b border-black/5 pb-6">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5900]/10 px-3 py-1 text-xs font-bold text-[#FF5900] border border-[#FF5900]/15">
                 🎓 Developing Visionary Enterprise Leaders
               </span>
-              <h1 className="mt-4 text-xl sm:text-2xl md:text-3xl lg:text-[38px] xl:text-[44px] font-black text-neutral-900 tracking-tight leading-tight sm:whitespace-nowrap">
-                REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence (RACE)</span>
+              <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black text-neutral-900 tracking-tight leading-tight">
+                REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence</span>
               </h1>
-              <p className="mt-2 text-base sm:text-lg md:text-xl font-bold text-neutral-500">
-                REVA University, Bengaluru
-              </p>
             </div>
 
             {/* Grid for Description, Actions & Image */}
@@ -400,24 +394,14 @@ function HomePage() {
                 </div>
               </div>
 
-              {/* Right tilted card column */}
+              {/* Right column: Cohort Image */}
               <div className="md:col-span-5 flex justify-center md:justify-end">
-                <div className="w-full max-w-[480px] rounded-2xl p-2 bg-gradient-to-br from-[#FFFBDC] to-[#FFD3A5] shadow-lg border border-[#FFAA6E]/30 transition-transform duration-300 hover:scale-[1.02] flex flex-col gap-2">
-                  <div className="w-full aspect-[16/9] bg-[#f2f2f2] rounded-xl flex items-center justify-center overflow-hidden relative shadow-inner">
-                    <img
-                      src="/image/cohort_group.jpg"
-                      alt="RACE Cohort Group"
-                      className="w-full h-full object-cover rounded-xl"
-                    />
-                  </div>
-                  {/* Badge footer */}
-                  <div className="bg-[#1E3E62] border border-white/10 rounded-xl p-3 text-white flex items-center justify-between shadow-md">
-                    <div>
-                      <p className="text-[10px] uppercase tracking-widest text-[#FFD3A5] font-black">Executive Cohort</p>
-                      <p className="text-xs font-bold">M.Tech / M.Sc AI & Cybersecurity</p>
-                    </div>
-                    <span className="rounded bg-[#FF5900] px-2 py-0.5 text-[9px] font-black uppercase">2026</span>
-                  </div>
+                <div className="w-full max-w-[480px] rounded-3xl overflow-hidden shadow-xl border border-black/5 transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl">
+                  <img
+                    src="/image/cohort_group.jpg"
+                    alt="RACE Cohort Group"
+                    className="w-full h-auto object-cover"
+                  />
                 </div>
               </div>
             </div>
@@ -442,16 +426,12 @@ function HomePage() {
               </div>
             </div>
 
-            <div 
-              className={`relative mx-auto max-w-3xl w-full transition-all duration-300 group select-none rounded-3xl ${
-                hasBanner 
-                  ? "overflow-hidden" 
-                  : "bg-white border border-black/5 shadow-sm hover:shadow-md min-h-[220px] overflow-hidden"
-              }`}
+            <div
+              className="relative mx-auto max-w-3xl w-full min-h-[220px] bg-white border border-black/5 rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 group select-none overflow-hidden"
               onMouseEnter={() => setIsUpcomingAutoplayPaused(true)}
               onMouseLeave={() => setIsUpcomingAutoplayPaused(false)}
             >
-              {!hasBanner && <div className="absolute top-0 left-0 w-2 h-full bg-[#1E3E62] z-20" />}
+              <div className="absolute top-0 left-0 w-2 h-full bg-[#1E3E62]" />
 
               {/* Slides */}
               {upcomingCompanies.map((comp, idx) => {
@@ -465,24 +445,31 @@ function HomePage() {
                 return (
                   <div
                     key={comp.id || idx}
-                    className={`transition-all duration-500 ease-in-out ${
-                      isActive 
-                        ? "opacity-100 translate-x-0 z-10 relative w-full" 
-                        : "opacity-0 translate-x-4 pointer-events-none z-0 absolute inset-0 w-full h-full"
-                    }`}
+                    className={`transition-all duration-500 ease-in-out absolute inset-0 flex flex-col justify-between ${isActive ? "opacity-100 translate-x-0 z-10" : "opacity-0 translate-x-4 pointer-events-none z-0"
+                      }`}
                   >
                     {comp.bannerUrl ? (
                       /* Display the banner image */
-                      <img
-                        src={comp.bannerUrl}
-                        alt={`${comp.companyName} Recruitment Drive`}
-                        onClick={() => setLightboxImage(comp.bannerUrl!)}
-                        className="w-full h-auto cursor-pointer rounded-3xl hover:scale-[1.005] hover:brightness-[1.02] transition-all duration-300 block shadow-md border border-black/5"
-                        loading="lazy"
-                      />
+                      <div className="absolute inset-0 flex items-center justify-center cursor-pointer bg-neutral-950">
+                        {/* Ambient blurred backdrop */}
+                        <div className="absolute inset-0 select-none pointer-events-none overflow-hidden">
+                          <img
+                            src={comp.bannerUrl}
+                            alt=""
+                            className="w-full h-full object-cover blur-xl opacity-35 scale-105"
+                          />
+                        </div>
+                        <img
+                          src={comp.bannerUrl}
+                          alt={`${comp.companyName} Recruitment Drive`}
+                          onClick={() => setLightboxImage(comp.bannerUrl!)}
+                          className="max-w-full max-h-full object-contain shadow-lg border border-white/10 hover:scale-[1.01] transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
                     ) : (
                       /* Display the textual details layout */
-                      <div className="w-full p-6 md:p-8 flex flex-col justify-between text-left">
+                      <div className="flex-1 p-6 md:p-8 flex flex-col justify-between h-full">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                           {/* Logo and Company Header */}
                           <div className="flex items-center gap-4">
@@ -540,7 +527,7 @@ function HomePage() {
                       e.stopPropagation();
                       setActiveUpcomingIdx((prev) => (prev - 1 + upcomingCompanies.length) % upcomingCompanies.length);
                     }}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-white/85 backdrop-blur-xs hover:bg-white text-neutral-800 hover:scale-105 border border-black/10 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer shadow-sm"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
                     title="Previous Visit"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
@@ -552,7 +539,7 @@ function HomePage() {
                       e.stopPropagation();
                       setActiveUpcomingIdx((prev) => (prev + 1) % upcomingCompanies.length);
                     }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-white/85 backdrop-blur-xs hover:bg-white text-neutral-800 hover:scale-105 border border-black/10 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer shadow-sm"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
                     title="Next Visit"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
@@ -564,9 +551,7 @@ function HomePage() {
 
               {/* Navigation Dots */}
               {upcomingCompanies.length > 1 && (
-                <div className={`absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5 px-2.5 py-1.5 rounded-full backdrop-blur-md transition-all duration-300 ${
-                  hasBanner ? "bg-black/30" : "bg-black/5"
-                }`}>
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
                   {upcomingCompanies.map((_, idx) => (
                     <button
                       key={idx}
@@ -574,9 +559,8 @@ function HomePage() {
                         e.stopPropagation();
                         setActiveUpcomingIdx(idx);
                       }}
-                      className={`h-1.5 rounded-full transition-all duration-350 cursor-pointer ${
-                        idx === activeUpcomingIdx ? "w-4 bg-[#FF5900]" : "w-1.5 bg-neutral-300 hover:bg-neutral-400"
-                      }`}
+                      className={`h-1.5 rounded-full transition-all duration-350 cursor-pointer ${idx === activeUpcomingIdx ? "w-4 bg-[#FF5900]" : "w-1.5 bg-neutral-200 hover:bg-neutral-300"
+                        }`}
                       title={`Go to slide ${idx + 1}`}
                     />
                   ))}
@@ -735,44 +719,40 @@ function HomePage() {
                 <div className="flex flex-wrap gap-2 mb-6 justify-center sm:justify-start">
                   <button
                     onClick={() => setVisibleSeries(p => ({ ...p, admitted: !p.admitted }))}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${
-                      visibleSeries.admitted 
-                        ? "bg-blue-50 border-blue-200 text-blue-700 shadow-xs" 
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${visibleSeries.admitted
+                        ? "bg-blue-50 border-blue-200 text-blue-700 shadow-xs"
                         : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
-                    }`}
+                      }`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${visibleSeries.admitted ? "bg-[#3b82f6]" : "bg-neutral-300"}`} />
                     Admitted Students
                   </button>
                   <button
                     onClick={() => setVisibleSeries(p => ({ ...p, internships: !p.internships }))}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${
-                      visibleSeries.internships 
-                        ? "bg-amber-50 border-amber-200 text-amber-700 shadow-xs" 
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${visibleSeries.internships
+                        ? "bg-amber-50 border-amber-200 text-amber-700 shadow-xs"
                         : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
-                    }`}
+                      }`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${visibleSeries.internships ? "bg-[#f59e0b]" : "bg-neutral-300"}`} />
                     Internships
                   </button>
                   <button
                     onClick={() => setVisibleSeries(p => ({ ...p, placements: !p.placements }))}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${
-                      visibleSeries.placements 
-                        ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs" 
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${visibleSeries.placements
+                        ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs"
                         : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
-                    }`}
+                      }`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${visibleSeries.placements ? "bg-[#10b981]" : "bg-neutral-300"}`} />
                     Placements
                   </button>
                   <button
                     onClick={() => setVisibleSeries(p => ({ ...p, highestCtc: !p.highestCtc }))}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${
-                      visibleSeries.highestCtc 
-                        ? "bg-orange-50 border-orange-200 text-orange-700 shadow-xs" 
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider uppercase transition-all border cursor-pointer ${visibleSeries.highestCtc
+                        ? "bg-orange-50 border-orange-200 text-orange-700 shadow-xs"
                         : "bg-neutral-50 border-neutral-200 text-neutral-400 opacity-60"
-                    }`}
+                      }`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${visibleSeries.highestCtc ? "bg-[#ff5900]" : "bg-neutral-300"}`} />
                     Highest Package (LPA)
@@ -972,7 +952,7 @@ function HomePage() {
             <div className="lg:col-span-5 flex flex-col">
               <div className="bg-white border border-black/5 rounded-3xl p-6 shadow-sm flex flex-col justify-between h-full relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#FFAA6E]/5 to-transparent pointer-events-none rounded-bl-full" />
-                
+
                 <div>
                   <h3 className="text-base font-black text-neutral-900 tracking-tight mb-2 uppercase">
                     Cohort Detail Analysis
@@ -987,11 +967,10 @@ function HomePage() {
                       <button
                         key={yr}
                         onClick={() => setSelectedYear(yr)}
-                        className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-black tracking-wider transition-all uppercase shrink-0 text-center cursor-pointer ${
-                          selectedYear === yr
+                        className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-black tracking-wider transition-all uppercase shrink-0 text-center cursor-pointer ${selectedYear === yr
                             ? "bg-[#1E3E62] text-white shadow-xs"
                             : "text-neutral-500 hover:text-neutral-800"
-                        }`}
+                          }`}
                       >
                         {yr}
                       </button>
@@ -1298,7 +1277,7 @@ function HomePage() {
             {/* Left and Right blur shadows for premium look */}
             <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-neutral-50 to-transparent z-10 pointer-events-none" />
             <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-neutral-50 to-transparent z-10 pointer-events-none" />
-            
+
             <div className="flex animate-marquee whitespace-nowrap">
               {[...partners, ...partners].map((partner, idx) => (
                 <div
