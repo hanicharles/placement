@@ -243,10 +243,10 @@ function HomePage() {
       const placementChart = dashboardCharts.find(c => c.id === "ft_placements");
       const highestChart = dashboardCharts.find(c => c.id === "highest_ctc");
 
-      const bPt = batchChart?.data.find(d => d.year === yr || d.year.replace("–", "-") === yr);
-      const iPt = internChart?.data.find(d => d.year === yr || d.year.replace("–", "-") === yr);
-      const pPt = placementChart?.data.find(d => d.year === yr || d.year.replace("–", "-") === yr);
-      const hPt = highestChart?.data.find(d => d.year === yr || d.year.replace("–", "-") === yr);
+      const bPt = batchChart?.data.find((d: any) => d.year === yr || d.year.replace("–", "-") === yr);
+      const iPt = internChart?.data.find((d: any) => d.year === yr || d.year.replace("–", "-") === yr);
+      const pPt = placementChart?.data.find((d: any) => d.year === yr || d.year.replace("–", "-") === yr);
+      const hPt = highestChart?.data.find((d: any) => d.year === yr || d.year.replace("–", "-") === yr);
 
       return {
         year: yr,
