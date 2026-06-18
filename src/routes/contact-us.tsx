@@ -165,6 +165,26 @@ function ContactBusinessCard({
   photoUrl,
 }: ContactBusinessCardProps) {
   const isPhotoLeft = layout === "photo-left";
+  const [hasError, setHasError] = useState(false);
+
+  const renderPhoto = () => (
+    <div className="w-full md:w-[32%] shrink-0 flex items-center justify-center relative z-10">
+      <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white flex items-center justify-center">
+        {photoUrl && !hasError ? (
+          <img
+            src={photoUrl}
+            alt={name}
+            className="w-full h-full object-cover"
+            onError={() => setHasError(true)}
+          />
+        ) : (
+          <div className="w-full h-full bg-[#1E3E62]/10 flex items-center justify-center text-[#1E3E62] font-black text-3xl uppercase select-none">
+            {name.split(" ").map((n) => n[0]).join("").substring(0, 2)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div className={`relative w-full max-w-[560px] bg-[#F8F9FA] border border-black/5 rounded-[24px] shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden px-6 py-8 sm:px-10 sm:py-10 flex ${
@@ -192,16 +212,7 @@ function ContactBusinessCard({
       {/* Conditionally render photo first if photo-left, else render details first */}
       {isPhotoLeft ? (
         <>
-          {/* Photo container (Left on Desktop, Top on Mobile) */}
-          <div className="w-full md:w-[32%] shrink-0 flex items-center justify-center relative z-10">
-            <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white">
-              <img
-                src={photoUrl}
-                alt={name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
+          {renderPhoto()}
 
           {/* Details container (Right on Desktop, Bottom on Mobile) */}
           <div className="flex-1 text-left relative z-10 w-full flex flex-col justify-center">
@@ -321,16 +332,7 @@ function ContactBusinessCard({
             </div>
           </div>
 
-          {/* Photo container (Right on Desktop, Bottom on Mobile) */}
-          <div className="w-full md:w-[32%] shrink-0 flex items-center justify-center relative z-10">
-            <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-[20px] overflow-hidden shadow-md border-4 border-white bg-white">
-              <img
-                src={photoUrl}
-                alt={name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
+          {renderPhoto()}
         </>
       )}
     </div>
@@ -468,7 +470,7 @@ function ContactUsPage() {
 
 
         {/* Corporate Research & Trainers */}
-        <section className="mt-12 grid gap-8 grid-cols-1 lg:grid-cols-2 justify-items-center">
+        <section className="mt-12 flex flex-wrap justify-center gap-8">
           <ContactBusinessCard
             layout="photo-left"
             name="Paramesh G"
@@ -489,6 +491,17 @@ function ContactUsPage() {
             web="race.reva.edu.in"
             address="RACE, REVA University, Bengaluru"
             photoUrl="/image/shinu_abhi.png"
+          />
+
+          <ContactBusinessCard
+            layout="photo-left"
+            name="Kiran Kumar K V"
+            role="Assistant Professor & Capstone Project Head"
+            phone="+91 99457 47014"
+            email="kirankumar.kv@reva.edu.in"
+            web="race.reva.edu.in"
+            address="RACE, REVA University, Bengaluru"
+            photoUrl=""
           />
         </section>
 
