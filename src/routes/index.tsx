@@ -360,8 +360,11 @@ function HomePage() {
                 🎓 Developing Visionary Enterprise Leaders
               </span>
               <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black text-neutral-900 tracking-tight leading-tight">
-                REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence</span>
+                REVA Academy for <span className="bg-gradient-to-r from-[#FF5900] to-[#FF8237] bg-clip-text text-transparent">Corporate Excellence (RACE)</span>
               </h1>
+              <p className="mt-2 text-base sm:text-lg md:text-xl font-bold text-neutral-500">
+                REVA University, Bengaluru
+              </p>
             </div>
 
             {/* Grid for Description, Actions & Image */}
