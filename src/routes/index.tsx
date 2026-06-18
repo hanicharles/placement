@@ -365,9 +365,9 @@ function HomePage() {
             </div>
 
             {/* Grid for Description, Actions & Image */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
               {/* Left content column */}
-              <div className="md:col-span-6 flex flex-col justify-center text-left">
+              <div className="md:col-span-6 flex flex-col justify-start text-left">
                 <p className="text-sm sm:text-base leading-relaxed text-neutral-600 font-medium max-w-xl">
                   Progressive and integrated learning capabilities for working professionals. Specialized techno-functional and interdisciplinary programs designed to suit the needs of working professionals.
                 </p>
