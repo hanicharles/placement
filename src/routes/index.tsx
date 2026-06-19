@@ -411,168 +411,6 @@ function HomePage() {
           </div>
         </section>
 
-        {/* Section 1.5: Upcoming Placements drives */}
-        {upcomingCompanies && upcomingCompanies.length > 0 && (
-          <section className="mt-16 bg-gradient-to-br from-[#FFFBDC]/40 to-[#FFD3A5]/20 border border-[#FFAA6E]/15 p-8 rounded-3xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-radial-gradient from-[#FF8237]/5 to-transparent pointer-events-none rounded-bl-full" />
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-black/5">
-              <div className="text-left">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5900]/10 px-2.5 py-0.5 text-[10px] font-black text-[#FF5900] uppercase tracking-wider border border-[#FF5900]/15 mb-3">
-                  📅 Live Recruitment Calendar
-                </span>
-                <h2 className="text-2xl font-black text-neutral-900 tracking-tight">
-                  Upcoming Campus Placement Drives
-                </h2>
-                <p className="text-xs text-neutral-500 font-semibold mt-1">
-                  Upcoming corporate recruitment schedules and selection drives for M.Tech & M.Sc Cohorts
-                </p>
-              </div>
-            </div>
-
-            <div
-              className="relative mx-auto max-w-3xl w-full min-h-[220px] bg-white border border-black/5 rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 group select-none overflow-hidden"
-              onMouseEnter={() => setIsUpcomingAutoplayPaused(true)}
-              onMouseLeave={() => setIsUpcomingAutoplayPaused(false)}
-            >
-              <div className="absolute top-0 left-0 w-2 h-full bg-[#1E3E62]" />
-
-              {/* Slides */}
-              {upcomingCompanies.map((comp, idx) => {
-                const isActive = idx === activeUpcomingIdx;
-                const statusColors = {
-                  Confirmed: "bg-emerald-500/10 text-emerald-600 border-emerald-500/15",
-                  Scheduled: "bg-amber-500/10 text-amber-600 border-amber-500/15",
-                  Tentative: "bg-slate-500/10 text-slate-600 border-slate-500/15"
-                };
-
-                return (
-                  <div
-                    key={comp.id || idx}
-                    className={`transition-all duration-500 ease-in-out absolute inset-0 flex flex-col justify-between ${isActive ? "opacity-100 translate-x-0 z-10" : "opacity-0 translate-x-4 pointer-events-none z-0"
-                      }`}
-                  >
-                    {comp.bannerUrl ? (
-                      /* Display the banner image */
-                      <div className="absolute inset-0 flex items-center justify-center cursor-pointer bg-neutral-950">
-                        {/* Ambient blurred backdrop */}
-                        <div className="absolute inset-0 select-none pointer-events-none overflow-hidden">
-                          <img
-                            src={comp.bannerUrl}
-                            alt=""
-                            className="w-full h-full object-cover blur-xl opacity-35 scale-105"
-                          />
-                        </div>
-                        <img
-                          src={comp.bannerUrl}
-                          alt={`${comp.companyName} Recruitment Drive`}
-                          onClick={() => setLightboxImage(comp.bannerUrl!)}
-                          className="max-w-full max-h-full object-contain shadow-lg border border-white/10 hover:scale-[1.01] transition-transform duration-300"
-                          loading="lazy"
-                        />
-                      </div>
-                    ) : (
-                      /* Display the textual details layout */
-                      <div className="flex-1 p-6 md:p-8 flex flex-col justify-between h-full">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                          {/* Logo and Company Header */}
-                          <div className="flex items-center gap-4">
-                            <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#1E3E62]/10 to-[#1E3E62]/5 text-[#1E3E62] font-black flex items-center justify-center border border-[#1E3E62]/15 text-lg uppercase shadow-inner shrink-0">
-                              {comp.companyName.charAt(0)}
-                            </div>
-                            <div className="text-left">
-                              <h3 className="text-xl font-black text-neutral-900 tracking-tight">
-                                {comp.companyName}
-                              </h3>
-                              <span className="text-[10px] text-neutral-450 font-bold uppercase tracking-wider block mt-0.5">
-                                Target Batch: {comp.targetBatch}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Status badge */}
-                          <span className={`px-3 py-1 rounded-full text-xs font-black uppercase border w-fit ${statusColors[comp.status] || statusColors.Tentative}`}>
-                            {comp.status}
-                          </span>
-                        </div>
-
-                        {/* Specifications Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-black/5 pt-6 mt-6 text-left">
-                          <div className="space-y-1">
-                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
-                              <Calendar className="h-3 w-3" /> Visit Date
-                            </span>
-                            <p className="text-sm font-black text-neutral-900">{comp.visitDate}</p>
-                          </div>
-                          <div className="space-y-1">
-                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
-                              <Briefcase className="h-3 w-3" /> Target Role
-                            </span>
-                            <p className="text-sm font-extrabold text-neutral-800 truncate">{comp.role}</p>
-                          </div>
-                          <div className="space-y-1">
-                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
-                              <DollarSign className="h-3 w-3" /> Compensation
-                            </span>
-                            <p className="text-sm font-black text-emerald-600">{comp.stipendOrSalary}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-
-              {/* Navigation Arrows */}
-              {upcomingCompanies.length > 1 && (
-                <>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveUpcomingIdx((prev) => (prev - 1 + upcomingCompanies.length) % upcomingCompanies.length);
-                    }}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
-                    title="Previous Visit"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveUpcomingIdx((prev) => (prev + 1) % upcomingCompanies.length);
-                    }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
-                    title="Next Visit"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </>
-              )}
-
-              {/* Navigation Dots */}
-              {upcomingCompanies.length > 1 && (
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
-                  {upcomingCompanies.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveUpcomingIdx(idx);
-                      }}
-                      className={`h-1.5 rounded-full transition-all duration-350 cursor-pointer ${idx === activeUpcomingIdx ? "w-4 bg-[#FF5900]" : "w-1.5 bg-neutral-200 hover:bg-neutral-300"
-                        }`}
-                      title={`Go to slide ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
         {/* Section 2: Core Programs Showcase */}
         <section className="mt-16">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -1384,6 +1222,165 @@ function HomePage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </section>
+        )}
+
+        {/* Section 9: Upcoming Placements drives */}
+        {upcomingCompanies && upcomingCompanies.length > 0 && (
+          <section className="mt-20 pt-8 border-t border-black/5">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FF5900]/10 px-2.5 py-0.5 text-[10px] font-black text-[#FF5900] uppercase tracking-wider border border-[#FF5900]/15 mb-3">
+                📅 Live Recruitment Calendar
+              </span>
+              <h2 className="text-3xl font-black text-neutral-900 tracking-tight">
+                Upcoming Campus Placement Drives
+              </h2>
+              <p className="text-sm text-neutral-500 mt-2 font-medium">
+                Upcoming corporate recruitment schedules and selection drives for M.Tech & M.Sc Cohorts
+              </p>
+            </div>
+
+            <div
+              className="relative mx-auto max-w-3xl w-full min-h-[220px] bg-white border border-black/5 rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 group select-none overflow-hidden"
+              onMouseEnter={() => setIsUpcomingAutoplayPaused(true)}
+              onMouseLeave={() => setIsUpcomingAutoplayPaused(false)}
+            >
+              <div className="absolute top-0 left-0 w-2 h-full bg-[#1E3E62]" />
+
+              {/* Slides */}
+              {upcomingCompanies.map((comp, idx) => {
+                const isActive = idx === activeUpcomingIdx;
+                const statusColors = {
+                  Confirmed: "bg-emerald-500/10 text-emerald-600 border-emerald-500/15",
+                  Scheduled: "bg-amber-500/10 text-amber-600 border-amber-500/15",
+                  Tentative: "bg-slate-500/10 text-slate-600 border-slate-500/15"
+                };
+
+                return (
+                  <div
+                    key={comp.id || idx}
+                    className={`transition-all duration-500 ease-in-out absolute inset-0 flex flex-col justify-between ${isActive ? "opacity-100 translate-x-0 z-10" : "opacity-0 translate-x-4 pointer-events-none z-0"
+                      }`}
+                  >
+                    {comp.bannerUrl ? (
+                      /* Display the banner image */
+                      <div className="absolute inset-0 flex items-center justify-center cursor-pointer bg-neutral-950">
+                        {/* Ambient blurred backdrop */}
+                        <div className="absolute inset-0 select-none pointer-events-none overflow-hidden">
+                          <img
+                            src={comp.bannerUrl}
+                            alt=""
+                            className="w-full h-full object-cover blur-xl opacity-35 scale-105"
+                          />
+                        </div>
+                        <img
+                          src={comp.bannerUrl}
+                          alt={`${comp.companyName} Recruitment Drive`}
+                          onClick={() => setLightboxImage(comp.bannerUrl!)}
+                          className="max-w-full max-h-full object-contain shadow-lg border border-white/10 hover:scale-[1.01] transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      /* Display the textual details layout */
+                      <div className="flex-1 p-6 md:p-8 flex flex-col justify-between h-full">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          {/* Logo and Company Header */}
+                          <div className="flex items-center gap-4">
+                            <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#1E3E62]/10 to-[#1E3E62]/5 text-[#1E3E62] font-black flex items-center justify-center border border-[#1E3E62]/15 text-lg uppercase shadow-inner shrink-0">
+                              {comp.companyName.charAt(0)}
+                            </div>
+                            <div className="text-left">
+                              <h3 className="text-xl font-black text-neutral-900 tracking-tight">
+                                {comp.companyName}
+                              </h3>
+                              <span className="text-[10px] text-neutral-450 font-bold uppercase tracking-wider block mt-0.5">
+                                Target Batch: {comp.targetBatch}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Status badge */}
+                          <span className={`px-3 py-1 rounded-full text-xs font-black uppercase border w-fit ${statusColors[comp.status] || statusColors.Tentative}`}>
+                            {comp.status}
+                          </span>
+                        </div>
+
+                        {/* Specifications Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-black/5 pt-6 mt-6 text-left">
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                              <Calendar className="h-3 w-3" /> Visit Date
+                            </span>
+                            <p className="text-sm font-black text-neutral-900">{comp.visitDate}</p>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                              <Briefcase className="h-3 w-3" /> Target Role
+                            </span>
+                            <p className="text-sm font-extrabold text-neutral-800 truncate">{comp.role}</p>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[9px] font-black uppercase text-neutral-400 tracking-wider flex items-center gap-1">
+                              <DollarSign className="h-3 w-3" /> Compensation
+                            </span>
+                            <p className="text-sm font-black text-emerald-600">{comp.stipendOrSalary}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Navigation Arrows */}
+              {upcomingCompanies.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveUpcomingIdx((prev) => (prev - 1 + upcomingCompanies.length) % upcomingCompanies.length);
+                    }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
+                    title="Previous Visit"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveUpcomingIdx((prev) => (prev + 1) % upcomingCompanies.length);
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-neutral-105 hover:bg-neutral-200 text-neutral-600 hover:scale-105 border border-black/5 opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
+                    title="Next Visit"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </>
+              )}
+
+              {/* Navigation Dots */}
+              {upcomingCompanies.length > 1 && (
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
+                  {upcomingCompanies.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveUpcomingIdx(idx);
+                      }}
+                      className={`h-1.5 rounded-full transition-all duration-350 cursor-pointer ${idx === activeUpcomingIdx ? "w-4 bg-[#FF5900]" : "w-1.5 bg-neutral-200 hover:bg-neutral-300"
+                        }`}
+                      title={`Go to slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         )}
